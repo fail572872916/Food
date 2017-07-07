@@ -8,89 +8,87 @@ import java.util.List;
 
 public class TemporaryOrder {
 
-    private List<RECORDSBean> RECORDS;
+    /**
+     * date : fsad
+     * time : fsdaff
+     * desk_no : 2
+     * consumptionID : fsda
+     * foodName : fsad
+     * foodPrice : 232
+     * foodCount : 2
+     */
 
-    public List<RECORDSBean> getRECORDS() {
-        return RECORDS;
+    private String date;
+    private String time;
+    private String desk_no;
+    private String consumptionId;
+    private String foodName;
+    private String foodPrice;
+    private int foodCount;
+
+    public String getDate() {
+        return date;
     }
 
-    public void setRECORDS(List<RECORDSBean> RECORDS) {
-        this.RECORDS = RECORDS;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public static class RECORDSBean {
-        /**
-         * date : fsad
-         * time : fsdaff
-         * desk_no : 2
-         * consumptionID : fsda
-         * foodName : fsad
-         * foodPrice : 232
-         * foodCount : 2
-         */
+    public String getTime() {
+        return time;
+    }
 
-        private String date;
-        private String time;
-        private int desk_no;
-        private String consumptionId;
-        private String foodName;
-        private String foodPrice;
-        private int foodCount;
+    public void setTime(String time) {
+        this.time = time;
+    }
 
-        public String getDate() {
-            return date;
-        }
+    public String getDesk_no() {
+        return desk_no;
+    }
 
-        public void setDate(String date) {
-            this.date = date;
-        }
+    public void setDesk_no(String desk_no) {
+        this.desk_no = desk_no;
+    }
 
-        public String getTime() {
-            return time;
-        }
+    public String consumptionId() {
+        return consumptionId;
+    }
 
-        public void setTime(String time) {
-            this.time = time;
-        }
+    public void consumptionId(String consumptionID) {
+        this.consumptionId = consumptionID;
+    }
 
-        public int getDesk_no() {
-            return desk_no;
-        }
+    public String getFoodName() {
+        return foodName;
+    }
 
-        public void setDesk_no(int desk_no) {
-            this.desk_no = desk_no;
-        }
+    public void setFoodName(String foodName) {
+        this.foodName = foodName;
+    }
 
-        public String consumptionId() {
-            return consumptionId;
-        }
+    public String getFoodPrice() {
+        return foodPrice;
+    }
 
-        public void consumptionId(String consumptionID) {
-            this.consumptionId = consumptionID;
-        }
+    public void setFoodPrice(String foodPrice) {
+        this.foodPrice = foodPrice;
+    }
 
-        public String getFoodName() {
-            return foodName;
-        }
+    public int getFoodCount() {
+        return foodCount;
+    }
 
-        public void setFoodName(String foodName) {
-            this.foodName = foodName;
-        }
+    public void setFoodCount(int foodCount) {
+        this.foodCount = foodCount;
+    }
 
-        public String getFoodPrice() {
-            return foodPrice;
-        }
-
-        public void setFoodPrice(String foodPrice) {
-            this.foodPrice = foodPrice;
-        }
-
-        public int getFoodCount() {
-            return foodCount;
-        }
-
-        public void setFoodCount(int foodCount) {
-            this.foodCount = foodCount;
-        }
+    public TemporaryOrder(String date, String time, String desk_no, String consumptionId, String foodName, String foodPrice, int foodCount) {
+        this.date = date;
+        this.time = time;
+        this.desk_no = desk_no;
+        this.consumptionId = consumptionId;
+        this.foodName = foodName;
+        this.foodPrice = foodPrice;
+        this.foodCount = foodCount;
     }
 }

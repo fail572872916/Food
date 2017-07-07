@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,7 @@ public class BlankFragment extends Fragment {
         for (int i = 1; i <4; i++) {
             data.add( i+"");
         }
+
     }
     /**
      *
@@ -128,86 +130,88 @@ public class BlankFragment extends Fragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
 
 //            container.removeView((View) object);
-            LinearLayout view = (LinearLayout) object;
-            container.removeView(view);
-            viewList.add(new WeakReference<LinearLayout>(view));
+//            LinearLayout view = (LinearLayout) object;
+//            container.removeView(view);
+//            viewList.add(new WeakReference<LinearLayout>(view));
+            container.removeView(viewList.get(position).get());
+
         }
 
         @Override
         public int getCount() {
             return data.size();
-        }
 
+        }
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-
-
-            if (pager == null) {
-                pager = (ViewPager) container;
-            }
-            View view = null;
-            // 从废弃的里去取 取到则使用 取不到则创建
-            if (viewList.size() > 0) {
-                if (viewList.get(0) != null) {
-                    view = initView(viewList.get(0).get(), position);
-                    viewList.remove(0);
-                }
-            }
-            view = initView(null, position);
-            pager.addView(view);
-            return view;
-
-//            LayoutInflater inflater=getActivity().getLayoutInflater();
-            //第二种方式： inflater=LayoutInflater.from(this);
-            //将布局加载到程序中
-//            View layout =inflater.inflate(R.layout.fragment_plus_one, null);
-//            im_big = (ImageView) layout.findViewById(R.id.im_big);
-//            im_small = (ImageView) layout.findViewById(R.id.im_small);
-//            tv_small_text = (TextView) layout.findViewById(R.id.tv_small_text);
-
-//               int  positionNum   =Integer.parseInt(data.get(position));
-//                gd_frgment1 = (ScrollGridView) layout.findViewById(R.id.gd_frgment1);
+//            if (pager == null) {
+//                pager = (ViewPager) container;
+//            }
+//            View view = null;
+//            // 从废弃的里去取 取到则使用 取不到则创建
+//            if (viewList.size() > 0) {
+//                if (viewList.get(0) != null) {
+//                    view = initView(viewList.get(0).get(), position);
+//                    viewList.remove(0);
+//                }
+//            }
+//            view = initView(null, position);
+//            pager.addView(view);
 //
-//
-//            initData(positionNum);
-//            container.addView(layout);
-//            return layout;
+//            return view;
+
+            LayoutInflater inflater=getActivity().getLayoutInflater();
+//            第二种方式： inflater=LayoutInflater.from(this);
+//            将布局加载到程序中
+           ViewHolder viewHolder = new ViewHolder();
+            View layout =inflater.inflate(R.layout.fragment_plus_one, null);
+            viewHolder.im_big = (ImageView) layout.findViewById(R.id.im_big);
+            viewHolder.im_small = (ImageView) layout.findViewById(R.id.im_small);
+            viewHolder.tv_small_text = (TextView) layout.findViewById(R.id.tv_small_text);
+
+               int  positionNum   =Integer.parseInt(data.get(position));
+                gd_frgment1 = (ScrollGridView) layout.findViewById(R.id.gd_frgment1);
+
+
+            initData(positionNum,viewHolder);
+            container.addView(layout);
+            return layout;
 
         }
 
     }
 
 
-    private View initView(LinearLayout view, int position) {
-        ViewHolder viewHolder = null;
-        if (view == null) {
-            view = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_plus_one, null);
-            viewHolder = new ViewHolder();
-            viewHolder.im_big = (ImageView) view.findViewById(R.id.im_big);
-            viewHolder. im_small = (ImageView) view.findViewById(R.id.im_small);
-            viewHolder. tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
-        }
-        /**
-         * 初始化数据
-         */
-        int  positionNum   =Integer.parseInt(data.get(position));
-        gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
-
-        initData(positionNum, viewHolder);
-
-        return view;
-    }
-
-
+//    private View initView(LinearLayout view, int position) {
+//        Log.d("BlankFragment", "position:fsafd" + position);
+//        ViewHolder viewHolder = null;
+//        if (view == null) {
+//            view = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_plus_one, null);
+//            viewHolder = new ViewHolder();
+//            viewHolder.im_big = (ImageView) view.findViewById(R.id.im_big);
+//            viewHolder. im_small = (ImageView) view.findViewById(R.id.im_small);
+//            viewHolder. tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
+//            view.setTag(viewHolder);
+//        } else {
+//            viewHolder = (ViewHolder) view.getTag();
+//        }
+//        /**
+//         * 初始化数据
+//         */
+//        int  positionNum   =Integer.parseInt(data.get(position));
+//        Log.d("BlankFragment", "positionNum:" + (positionNum-1));
+//
+//        gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
+//
+//        initData(positionNum, viewHolder);
+//
+//        return view;
+//    }
     /**
      *
      * @param position 传入第i页进行翻转  加载每一页 的数据
      */
-
     private void initData(int position ,ViewHolder viewHolder) {
         pageIndex=position;
         personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,pageIndex,pageSize);
@@ -225,22 +229,17 @@ public class BlankFragment extends Fragment {
         utils.display(big_imageUrl,viewHolder.im_big);
         utils.display(small_imageUrl,viewHolder.im_small);
         viewHolder.tv_small_text.setText(text+"");
-//        mAdapter = new FoodStyle1Adapter(subListGridView, getActivity(), new ClothAddCallback() {
-//            @Override
-//            public void updateRedDot(ImageView clothIcon, int position) {
-////                addCloth(clothIcon);
-//                sendOrder(position);
-//            }
-mAdapter =new FoodStyle1Adapter(subListGridView,getActivity());
+        mAdapter =new FoodStyle1Adapter(subListGridView,getActivity());
 
+        Log.d("BlankFragment", "subListGridView:" +position);
 //        });
 //        initAnimation();
-
         gd_frgment1.setAdapter(mAdapter);
-        long delayTime=1000;
+
         gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("BlankFragment", subListGridView.get(position).getName());
                 EventBus.getDefault().post(new OrderInfo(0, subListGridView.get(position).getName(),
                 subListGridView.get(position).getPrice(), 0));
             }

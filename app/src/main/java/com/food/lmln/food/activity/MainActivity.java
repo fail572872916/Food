@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.icu.text.IDNA;
@@ -13,14 +14,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-
-import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
+
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.text.format.Time;
+
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,16 +31,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.food.lmln.food.BuildConfig;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
 import com.food.lmln.food.base.BaseActivity;
+import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
+
+import com.food.lmln.food.bean.TemporaryOrder;
 import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MySqlDbManger;
@@ -57,12 +54,14 @@ import com.food.lmln.food.view.DialogTablde;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.mysql.jdbc.ResultSetMetaData;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -90,6 +89,7 @@ import okhttp3.Response;
 import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
 import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
+import static com.food.lmln.food.db.Constant.DSK_NO;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
 import static com.food.lmln.food.db.Constant.send_msg_code2;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
@@ -101,8 +101,6 @@ import static com.food.lmln.food.utils.OrderUtils.getOrderId;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
-
     /**
      * 布局1
      * 布局2
@@ -134,16 +132,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Blank4Fragment fragment4;
     private Blank5Fragment fragment5;
     private DbManger dbManager;
-    private List<OrderInfo> newList;
+    private List<OrderInfo> newList =new ArrayList<>();
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
     private FloatingActionButton fab_vending_machine; //售卖机
-
+    public boolean  flag=true;
     private String timeNow;//当前时间
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
-    private int deskNo = 1;
+    private String deskNo = "4号桌";
 
     Handler mHandler = new Handler() {
         @Override
@@ -182,10 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     for (OrderInfo orderInfo : newList) {
                         money += orderInfo.getCount() * orderInfo.getPrice();
                     }
-
                     tv_order_sum.setText("￥:" + money);
-                    Log.d("MainActivity", "list_order:" + list_order);
-                    Log.d("MainActivity", "newList:" + newList);
                     break;
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
@@ -199,33 +194,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case send_msg_code4:
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
-                    if(num1==2){
+                    newList  = (List<OrderInfo>) bundle1.getSerializable("List");
 
-                        close=num1;
+                    if(num1>1){
+                        mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
+                        lv_main_order.setAdapter(mAdapter_order);
+                        mAdapter_order.notifyDataSetChanged();
+                        bt_order_place.setEnabled(true);
+
                         break;
                     }
-
-                    break;
-                case send_msg_code5:
-//                    mHandler.postDelayed(runnable1, 2000);//每两秒执行一次runnable.
-                    new Thread(runnable1).start();
                     break;
 
-            }
-            if(close==2){
-            list_order.clear();
-            newList.clear();
-            mAdapter_order.notifyDataSetChanged();
-            bt_order_place.setEnabled(true);
-
-                mHandler.removeCallbacks(runnable1);
-                mHandler.removeCallbacks(new Thread());
-                mHandler.removeCallbacks(runnable);
-
-
-                Log.d("MainActivity", "new Thread(runnable1).getState():" + new Thread(runnable1).getState());
-                Log.d("MainActivity", "new Thread(runnable1).getState():" + new Thread(new Thread()).getState());
-                Log.d("MainActivity", "new Thread(runnable1).getState():" + new Thread(runnable).getState());
             }
         }
     };
@@ -246,9 +226,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //注册事件
         EventBus.getDefault().register(this);
-
         initView();
         initData();
+
+        new Thread(new MyThread()).start();
 //        post();
 
     }
@@ -335,9 +316,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
     Runnable runnable = new Runnable() {
         private Connection con = null;
-
         @Override
         public void run() {
             // TODO Auto-generated method stub
@@ -389,20 +370,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-
     public class MyThread implements Runnable {
-        private Connection con = null;
+
         @Override
         public void run() {
-
-
-            while (true) {
+            while (flag) {
                 try {
-                    Thread.sleep(5000);// 线程暂停10秒，单位毫秒
-                    Message message = new Message();
-                    message.what = send_msg_code5;
-                    mHandler.sendMessage(message);// 发送消息
-
+                    Thread.sleep(3000);// 线程暂停10秒，单位毫秒
+                    new Thread(runnable1).start();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -436,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bundle.putInt("upOrder", count);
             msg.setData(bundle);
             mHandler.sendMessage(msg);
-            new Thread(new MyThread()).start();
+
 
             con1.close();
             return true;
@@ -455,10 +430,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             String sql = "select "+CONSUMPTIONID+" from "+DESK_TEMP+" order by "+DESKTEMP_TIME+" desc limit 0,1;";
             Statement stmt = con1.createStatement();        //创建Statement
-                    //ResultSet类似Cursor
+            //ResultSet类似Cursor
             ResultSet rs=stmt.executeQuery(sql);
             while(rs.next()){//将结果集信息添加到返回向量中
-                 isNull=rs.getString("CONSUMPTIONID");
+                isNull=rs.getString("CONSUMPTIONID");
             }
             if(!isNull.equals("")){
                 rewriteOrdera(isNull);
@@ -476,25 +451,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         }
     }
+
+
+    /**
+     * 定时查询
+     * @param con1
+     * @return
+     * @throws java.sql.SQLException
+     */
     public boolean selectClear(Connection con1) throws java.sql.SQLException {
-      int num=0;
-
+        int count=1;
         try {
-            String sql = "select "+CONSUMPTIONID+" from "+DESK_TEMP+";";
+            String sql = "select * from "+DESK_TEMP+" where "+DSK_NO+"='" +deskNo+"';";
+            Log.d("MainActivity", sql);
             Statement stmt = con1.createStatement();        //创建Statement
-                    //ResultSet类似Cursor
-//            ResultSet rs=stmt.executeQuery(sql);
-
+            //ResultSet类似Cursor
             ResultSet rs = stmt.executeQuery(sql);
+//            if(!rs.next()){
+            newList.clear();
+                while (rs.next()){
+                    //                String data=rs.getString("date");
+//                String time=rs.getString("time");
+//                String desk_no=rs.getString("desk_no");
+//                String consumptionID=rs.getString("consumptionID");
+                String foodName=rs.getString("foodName");
+                String foodPrice=rs.getString("foodPrice");
+                int foodCount=rs.getInt("foodCount");
 
-            if(rs.next()){
-              num=1;
-            }else{
-                num=2;
-            }
+                OrderInfo info=new OrderInfo(count++,foodName,Double.valueOf(foodPrice),foodCount);
+                    Log.d("MainActivity", "count:" + count);
+                newList.add(info);
+                }
 
-
-
+//            }else{
+//                num=2;
+//            }
+            Message message = new Message();
+            message.what = send_msg_code4;
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("List", (Serializable) newList);
+            bundle.putInt("Select", count);
+            message.setData(bundle);
+            mHandler.sendMessage(message);
         } catch (SQLException e) {
 
         } finally {
@@ -505,12 +503,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (SQLException e) {
                 }
         }
-        Message message = new Message();
-        message.what = send_msg_code4;
-        Bundle bundle = new Bundle();
-        bundle.putInt("Select", num);
-        message.setData(bundle);
-        mHandler.sendMessage(message);
+
         return false;
     }
 

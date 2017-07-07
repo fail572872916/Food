@@ -4,17 +4,22 @@ package com.food.lmln.food.db;
  * Created by Weili on 2017/7/4.
  */
 
-import java.sql.ResultSet;
+
+import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 
+import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
+import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
+import static com.food.lmln.food.db.Constant.DESK_TEMP;
 
 
 public class Service {
 
-    public Boolean login( String table, int desk_no) {
+    public boolean login(   ) {
 
+            String result="";
         // 获取Sql查询语句
-        String logSql = "select * from "+table+" where desk_no ='" + desk_no
+        String logSql =  "select "+CONSUMPTIONID+" from "+DESK_TEMP+";";
                 ;
 
         // 获取DB对象
