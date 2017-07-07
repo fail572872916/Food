@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.icu.text.IDNA;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -119,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_order_sum;              //菜单价格
     TextView tv_order_price;            //  200
     TextView tv_order_sum_name;         //总计
-
-    private RelativeLayout rlAddBill;
     List<MenuButton> list;  //数据
     FoodOrderAdapter mAdapter_order; //l类型适配器
     List<OrderInfo> list_order;  //数据
@@ -150,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            int close=0;
             tv_order_title.setText(R.string.main_title);
             bt_order_add_settlement.setText(R.string.settlement);
             bt_order_add_water.setText(R.string.add_water);
@@ -182,7 +182,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     for (OrderInfo orderInfo : newList) {
                         money += orderInfo.getCount() * orderInfo.getPrice();
                     }
+
                     tv_order_sum.setText("￥:" + money);
+                    Log.d("MainActivity", "list_order:" + list_order);
+                    Log.d("MainActivity", "newList:" + newList);
                     break;
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
@@ -196,19 +199,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case send_msg_code4:
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
-                    Log.d("MainActivity", "num1:" + num1);
-                    if(num1!=0){
-                    newList.clear();
-                    mAdapter_order.notifyDataSetChanged();
+                    if(num1==2){
+
+                        close=num1;
+                        break;
                     }
+
                     break;
                 case send_msg_code5:
+//                    mHandler.postDelayed(runnable1, 2000);//每两秒执行一次runnable.
+                    new Thread(runnable1).start();
+                    break;
 
             }
+            if(close==2){
+            list_order.clear();
+            newList.clear();
+            mAdapter_order.notifyDataSetChanged();
+            bt_order_place.setEnabled(true);
+
+                mHandler.removeCallbacks(runnable1);
+                mHandler.removeCallbacks(new Thread());
+                mHandler.removeCallbacks(runnable);
 
 
+                Log.d("MainActivity", "new Thread(runnable1).getState():" + new Thread(runnable1).getState());
+                Log.d("MainActivity", "new Thread(runnable1).getState():" + new Thread(new Thread()).getState());
+                Log.d("MainActivity", "new Thread(runnable1).getState():" + new Thread(runnable).getState());
+            }
         }
     };
+
+
 
 
     @Override
@@ -414,7 +436,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bundle.putInt("upOrder", count);
             msg.setData(bundle);
             mHandler.sendMessage(msg);
-            new Thread(runnable1).start();
+            new Thread(new MyThread()).start();
+
             con1.close();
             return true;
         } catch (SQLException e) {
@@ -454,18 +477,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     public boolean selectClear(Connection con1) throws java.sql.SQLException {
-        String  isNull="";
-        int rs=0;
+      int num=0;
+
         try {
             String sql = "select "+CONSUMPTIONID+" from "+DESK_TEMP+";";
             Statement stmt = con1.createStatement();        //创建Statement
                     //ResultSet类似Cursor
 //            ResultSet rs=stmt.executeQuery(sql);
-             rs=stmt.executeUpdate(sql);
-            if (rs==0)
-                return true;
-            else
-                return false;
+
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if(rs.next()){
+              num=1;
+            }else{
+                num=2;
+            }
 
 
 
@@ -482,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Message message = new Message();
         message.what = send_msg_code4;
         Bundle bundle = new Bundle();
-        bundle.putInt("Select", rs);
+        bundle.putInt("Select", num);
         message.setData(bundle);
         mHandler.sendMessage(message);
         return false;
