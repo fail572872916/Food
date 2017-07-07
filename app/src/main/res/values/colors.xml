@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccen1t">#FF4081</color>
+    <!--透明-->
+    <color name="transparent">#00000000</color>
+    <!--黑色-->
+    <color name="colorBlack">#000000</color>
+    <!--<淡蓝色-->
+    <color name="colorBlue">#18b4ed</color>
+</resources>

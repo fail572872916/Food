@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Food</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+
+
+    <string name="main_title">我的菜单</string>
+    <string name="settlement">结算</string>
+    <string name="add_water">加水</string>
+    <string name="add_rice">加饭</string>
+    <string name="order_place">下/改单</string>
+    <string name="order_menu_sum">菜单价格</string>
+    <string name="order_sum">总计</string>
+    <string name="setting">设置</string>
+    <string name="vending_machine">售卖机</string>
+    <string name="robot">机器人</string>
+    <string name="tesk">桌台</string>
+    <string name="ip">IP</string>
+
+    <string name="order_item_text">%1$s&#160;%2$d</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+<string name="toast_notOrder">您还没有点菜!</string>
+</resources>

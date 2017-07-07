@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.food.lmln.food.fragment.Blank2Fragment">
+
+<com.food.lmln.food.view.PageWidget
+    android:id="@+id/main_pageWidget"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+android:layout_margin="30dp"
+    >
+</com.food.lmln.food.view.PageWidget>
+</LinearLayout>

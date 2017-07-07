@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context="com.food.lmln.food.activity.MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/lin_one"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginBottom="60px"
+            android:layout_marginTop="60px"
+            android:orientation="vertical">
+
+
+
+
+            <ListView
+                android:id="@+id/lv_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+
+                android:scrollbars="none"></ListView>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/myContent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+
+            android:orientation="horizontal">
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_three"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60px"
+                android:orientation="vertical"
+
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="5"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/tv_order_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_gravity="center"
+                        android:textSize="@dimen/textSize_16"
+
+                        />
+                    <ImageView
+                        android:id="@+id/main_holdCart"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:src="@color/transparent"
+                        />
+
+                    <ListView
+                        android:id="@+id/lv_main_order"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:scrollbars="none"
+
+                        ></ListView>
+                </LinearLayout>
+
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+
+                    android:id="@+id/include_pay"
+
+                    layout="@layout/layout_main_pay"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/bt_order_add_rice"
+
+        android:layout_marginTop="20dp"
+
+        android:layout_marginRight="5dp"
+        app:menu_fab_size="mini"
+        app:menu_colorNormal="@color/transparent"
+
+        app:menu_icon="@mipmap/ic_build_black_48dp"
+        app:menu_labels_ellipsize="end"
+        app:menu_labels_singleLine="true"
+        app:menu_backgroundColor="@color/transparent">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_vending_machine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_record_voice_over_black_48dp"
+            app:fab_colorNormal="@color/transparent"
+            app:menu_icon="@mipmap/ic_record_voice_over_black_48dp"
+            app:fab_size="mini"
+            app:fab_label="@string/vending_machine" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_robot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/transparent"
+            android:src="@mipmap/ic_android_black_48dp"
+            app:menu_icon="@mipmap/ic_android_black_48dp"
+            app:fab_size="mini"
+            app:fab_label="@string/robot" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/transparent"
+            android:src="@mipmap/ic_card_membership_black_48dp"
+            app:menu_icon="@mipmap/ic_card_membership_black_48dp"
+            app:fab_size="mini"
+            app:fab_label="@string/setting" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+</RelativeLayout>
