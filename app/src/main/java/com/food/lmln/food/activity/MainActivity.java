@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
     private FloatingActionButton fab_vending_machine; //售卖机
-    public boolean  flag=true;
+    public boolean  mHandlerFlag=true;
     private String timeNow;//当前时间
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    }else {
 //                    bt_order_place.setEnabled(true);}
                     bt_order_place.setEnabled(num >= 1 ? false : true);
+                    isFlag(true);
                     break;
                 case send_msg_code4:
                     Bundle bundle1 = msg.getData();
@@ -303,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (newList == null) {
                         Toast.makeText(MainActivity.this, "你还没有点菜", Toast.LENGTH_SHORT).show();
                     } else {
+                        mHandlerFlag=false;
                         new Thread(runnable).start();
                     }
                     break;
@@ -374,9 +376,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void run() {
-            while (flag) {
+            while (mHandlerFlag) {
                 try {
-                    Thread.sleep(3000);// 线程暂停10秒，单位毫秒
+                    Thread.sleep(5000);// 线程暂停10秒，单位毫秒
                     new Thread(runnable1).start();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
@@ -399,10 +401,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dateNow = VeDate.getStringDateShort();
                 timeNow = VeDate.getTimeShort();
                 orderNowNo = getOrderId();
-                sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow+ "', " + deskNo + ",'" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
+                sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow+ "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
                 //创建Statement
                 stmt = con1.createStatement();
+                Log.d("MainActivity", sql);
+
                 int rs = stmt.executeUpdate(sql);
+
                 count += rs;
             }
             Message msg = new Message();
@@ -411,8 +416,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bundle.putInt("upOrder", count);
             msg.setData(bundle);
             mHandler.sendMessage(msg);
-
-
             con1.close();
             return true;
         } catch (SQLException e) {
@@ -605,7 +608,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info) {
 
+
+
         info = new OrderInfo(index, info.getName(), info.getPrice(), count);
+     if(info.getId()==1){
+         isFlag(false);
+     }
+
         list_order.add(info);
 
         newList = new ArrayList<OrderInfo>();
@@ -629,14 +638,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 newList.add(d);
                 d.setCount(1);
-
-
             }
         }
 
 
         mHandler.sendEmptyMessage(send_msg_code2);
-
     }
 
     @Override
@@ -658,7 +664,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } catch (Exception ex) {
         }
-
     }
 
     @Override
@@ -695,10 +700,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         fab.toggle(false);
-
     }
-
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -706,6 +708,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             hideNavigationBar();
         }
     }
+
+
+   public void isFlag(boolean  falg){
+       mHandlerFlag=falg;
+       new Thread(new MyThread()).start();
+
+   }
 
     private void hideNavigationBar() {
         // TODO Auto-generated method stub
