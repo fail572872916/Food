@@ -49,7 +49,7 @@ import java.util.List;
 import static com.food.lmln.food.utils.HttpUtils.Url;
 
 public class BlankFragment extends Fragment {
-    private List<String> data;
+    private List<Integer> data;
     private List<FoodInfo> subListGridView;
     private FoodStyle1Adapter mAdapter;
     private String text;
@@ -102,37 +102,25 @@ public class BlankFragment extends Fragment {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
                 selectPosition=++position;
-                select(selectPosition);
+
+                adapter.setPrimaryItem(selectPosition);
         }
             @Override
             public void onPageSelected(int position) {
                 selectPosition=++position;
-                select(selectPosition);
+
+
+                adapter.setPrimaryItem(selectPosition);
             }
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
-
         }
-
         );
-
         return view;
+    }
 
-    }
-    public void select(int postion){
-        getPosition=postion;
-//        viewPager.setAdapter(adapter);
-//    initdataaa();
-    }
-//    private List initdataaa() {
-//       int a=getPosition;
-//        Log.d("BlankFragment", "a:" + a);
-//
-//        personListOn = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,pageIndex,pageSize);
-//    return personListOn;
-//    }
+
 
     /**
      * 获得数据
@@ -143,7 +131,7 @@ public class BlankFragment extends Fragment {
         pageNum = (int) Math.ceil(pageCount/(double)pageSize);
         data = new ArrayList<>();
         for (int i = 1; i <4; i++) {
-            data.add( i+"");
+            data.add( +i);
         }
     }
     /**
@@ -152,12 +140,12 @@ public class BlankFragment extends Fragment {
      */
     class MyAdapter extends PagerAdapter {
         Context mContxt;
-        int currentPostion=1;
+      public int currentPostion=1;
         private ViewPager pager;
-
         LayoutInflater inflater = null;
         //用于存储回收掉的View
         private List<WeakReference<LinearLayout>> viewList=new ArrayList<WeakReference<LinearLayout>>();  ;
+
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
@@ -172,27 +160,26 @@ public class BlankFragment extends Fragment {
         public int getCount() {
             return data.size();
         }
+
+        public int getCurrentPostion() {
+        int       num=currentPostion;
+            return num;
+
+        }
+        public void setPrimaryItem(int selectPosition) {
+            currentPostion=selectPosition;
+
+
+        }
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            Log.d("MyAdapter", "data.get(position):" + data.get(position));
+//            position=currentPostion;
             if (pager == null) {
                 pager = (ViewPager) container;
             }
             View view = null;
-            // 从废弃的里去取 取到则使用 取不到则创建
-            if (viewList.size() > 0) {
-                if (viewList.get(0) != null) {
-                    view = initView(viewList.get(0).get(), position);
-                    viewList.remove(0);
-                }
-            }
-            view = initView(null,0 );
-            pager.addView(view);
-            return view;
-        }
-    }
-    private View initView(LinearLayout view, int position) {
-
-        ViewHolder viewHolder = null;
+               ViewHolder viewHolder = null;
         if (view == null) {
             view = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_plus_one, null);
             viewHolder = new ViewHolder();
@@ -203,14 +190,13 @@ public class BlankFragment extends Fragment {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        pageIndex=selectPosition;
+        pageIndex=data.get(position);
+            Log.d("MyAdapter", "我是简接获取:" + pageIndex);
         personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,pageIndex,pageSize);
         gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
-
 //        获取子列表
         subListGridView = personList.subList(2, personList.size());
         List<FoodInfo> bigList = personList.subList(0, 2);
-
         MyBitmapUtil utils;   utils = new MyBitmapUtil();
         for (int i = 0; i < bigList.size(); i++) {
             big_imageUrl=  bigList.get(0).getIamge();
@@ -224,7 +210,6 @@ public class BlankFragment extends Fragment {
         viewHolder.tv_small_text.setText(text+"");
         mAdapter =new FoodStyle1Adapter(subListGridView,getActivity());
         gd_frgment1.setAdapter(mAdapter);
-
                 gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -232,8 +217,59 @@ public class BlankFragment extends Fragment {
                                 subListGridView.get(position).getPrice(), 0));
                     }
                 });
-        return view;
+            pager.addView(view);
+
+            return view;
+        }
+
     }
+//    private View initView(LinearLayout view, int position,int currentPostion) {
+//
+//
+//        ViewHolder viewHolder = null;
+//        if (view == null) {
+//            view = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_plus_one, null);
+//            viewHolder = new ViewHolder();
+//            viewHolder.im_big = (ImageView) view.findViewById(R.id.im_big);
+//            viewHolder. im_small = (ImageView) view.findViewById(R.id.im_small);
+//            viewHolder. tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
+//            view.setTag(viewHolder);
+//        } else {
+//            viewHolder = (ViewHolder) view.getTag();
+//        }
+//
+//        Log.d("BlankFragment", "pageIndex:" + position);
+//
+//        personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,pageIndex,pageSize);
+//        gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
+//
+////        获取子列表
+//        subListGridView = personList.subList(2, personList.size());
+//        List<FoodInfo> bigList = personList.subList(0, 2);
+//
+//        MyBitmapUtil utils;   utils = new MyBitmapUtil();
+//        for (int i = 0; i < bigList.size(); i++) {
+//            big_imageUrl=  bigList.get(0).getIamge();
+//            small_imageUrl= bigList.get(1).getIamge();
+//            text=bigList.get(1).getName();
+//        }
+//        big_imageUrl=Url+big_imageUrl;
+//        small_imageUrl=Url+small_imageUrl;
+//        utils.display(big_imageUrl,viewHolder.im_big);
+//        utils.display(small_imageUrl,viewHolder.im_small);
+//        viewHolder.tv_small_text.setText(text+"");
+//        mAdapter =new FoodStyle1Adapter(subListGridView,getActivity());
+//        gd_frgment1.setAdapter(mAdapter);
+//
+//                gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        EventBus.getDefault().post(new OrderInfo(0, subListGridView.get(position).getName(),
+//                                subListGridView.get(position).getPrice(), 0));
+//                    }
+//                });
+//        return view;
+//    }
     /**
      * positon 根据页数进行变化
      * @param viewHolder 传入第i页进行翻转  加载每一页 的数据
