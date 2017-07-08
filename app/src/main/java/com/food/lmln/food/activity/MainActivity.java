@@ -607,14 +607,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info) {
-
-
-
         info = new OrderInfo(index, info.getName(), info.getPrice(), count);
      if(info.getId()==1){
          isFlag(false);
      }
-
         list_order.add(info);
 
         newList = new ArrayList<OrderInfo>();
