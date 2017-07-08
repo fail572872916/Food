@@ -44,12 +44,14 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import static com.food.lmln.food.utils.HttpUtils.Url;
 
 public class BlankFragment extends Fragment {
-    private List<Integer> data;
+    private List<String> data;
     private List<FoodInfo> subListGridView;
     private FoodStyle1Adapter mAdapter;
     private String text;
@@ -60,7 +62,7 @@ public class BlankFragment extends Fragment {
     private int pageIndex=1; //当前页数;
     private int  pageSize=8;//每页显示的个数
     private int  pageNum;//每页显示的个数
-    private List<FoodInfo> personList;
+    private List<FoodInfo> personList= new ArrayList<FoodInfo>();
     private List<FoodInfo> personListOn=new ArrayList<>();
     private SQLiteDatabase db;
     SqlHelper helper;
@@ -74,10 +76,12 @@ public class BlankFragment extends Fragment {
     private int goodsCount = 0;
     LinearLayout   rl;
 
-    int  getPosition=1;
+
     private ViewPager viewPager;
     private MyAdapter adapter;
     int  selectPosition=1;
+    private List<FoodInfo> list;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,8 +135,9 @@ public class BlankFragment extends Fragment {
         pageNum = (int) Math.ceil(pageCount/(double)pageSize);
         data = new ArrayList<>();
         for (int i = 1; i <4; i++) {
-            data.add( +i);
+            data.add("a"+ i);
         }
+
     }
     /**
      *
@@ -190,9 +195,20 @@ public class BlankFragment extends Fragment {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        pageIndex=data.get(position);
-            Log.d("MyAdapter", "我是简接获取:" + pageIndex);
-        personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,pageIndex,pageSize);
+     String   a=data.get(position);
+            a=a.trim();
+            String str2="";
+            if(a != null && !"".equals(a)){
+                for(int i=0;i<a.length();i++){
+                    if(a.charAt(i)>=48 && a.charAt(i)<=57){
+                        str2+=a.charAt(i);
+                    }
+                }
+
+            }
+
+        pageIndex=Integer.valueOf(str2);
+            personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,pageIndex,pageSize);
         gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
 //        获取子列表
         subListGridView = personList.subList(2, personList.size());
