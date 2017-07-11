@@ -13,6 +13,8 @@ import java.sql.Statement;
 import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
 import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
+import static com.food.lmln.food.db.Constant.ORDERID;
+import static com.food.lmln.food.db.Constant.ORDERINFO;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
 
@@ -50,7 +52,7 @@ public class MYsqlHelper {
         {
             Connection con=getConnection();
             Statement st=con.createStatement();
-            String sql = "select "+CONSUMPTIONID+" from "+DESK_TEMP+" order by "+DESKTEMP_TIME+" desc limit 0,1;";
+            String sql = "select "+ORDERID+" from "+ORDERINFO+" order by "+ORDERID+" desc limit 0,1;";
             ResultSet rs=st.executeQuery(sql);
             if(rs.next())
             {

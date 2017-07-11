@@ -16,9 +16,12 @@ public class Constant {
     public static  final   String  PASSWORD="root";
 
     public static  final String  DESK_TEMP ="lm_food.desk_temp" ;//临时点菜
-    public static  final String  CONSUMPTIONID ="consumptionID" ;//订单号
+    public static  final String  CONSUMPTIONID ="consumptionID" ;//临时点菜
+
+    public static  final String  ORDERID ="order_id" ;//订单号
     public static  final String  DSK_NO ="desk_no" ;//订单号
     public static  final String  DESKTEMP_TIME ="time" ;//订单号
+    public static  final String  ORDERINFO ="order_info" ;//订单表
 
 
     public static  final  String  FILENAME="conTumpTionidOrder.dat";

@@ -77,8 +77,6 @@ public class FoodOrderAdapter extends BaseAdapter {
 
         }
 
-
-
         vieewHolder.tv_item_id.setText(list.get(position).getId()+"");
         vieewHolder.tv_item_name.setText(list.get(position).getName());
 

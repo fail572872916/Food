@@ -58,11 +58,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
 import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.DSK_NO;
+import static com.food.lmln.food.db.Constant.ORDERID;
+import static com.food.lmln.food.db.Constant.ORDERINFO;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
 import static com.food.lmln.food.db.Constant.send_msg_code2;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_order_sum_name;         //总计
     List<MenuButton> list;  //数据
     FoodOrderAdapter mAdapter_order; //l类型适配器
-    List<OrderInfo> list_order;  //数据
+//    List<OrderInfo> list_order;  //数据
     FrameLayout myContent;
     /**
      * 用于对Fragment进行管理
@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Blank5Fragment fragment5;
     private DbManger dbManager;
     private List<OrderInfo> newList =new ArrayList<>();
+    private List<OrderInfo> addList =new ArrayList<>();
+    private List<OrderInfo> list_order =new ArrayList<>();
+
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -113,11 +116,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
     private String deskNo = "4号桌";
-    private boolean running = true;
+    private   int stopCode=2;
 
-    public void stop() {
-        this.running = false;
-    }
+
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -150,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case send_msg_code2:
                     double money = 0.0;
-                    mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
+                    mAdapter_order = new FoodOrderAdapter(addList, MainActivity.this);
                     lv_main_order.setAdapter(mAdapter_order);
-                    for (OrderInfo orderInfo : newList) {
+                    for (OrderInfo orderInfo : addList) {
                         money += orderInfo.getCount() * orderInfo.getPrice();
                     }
                     tv_order_sum.setText("￥:" + money);
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
                     newList  = (List<OrderInfo>) bundle1.getSerializable("List");
-
+                    if(stopCode==2){
                     if(num1>1){
                         mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
                         lv_main_order.setAdapter(mAdapter_order);
@@ -179,6 +180,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         bt_order_place.setEnabled(true);
 
                         break;
+                    }
+                    }else{
+                        newList.clear();
+
                     }
                     break;
 
@@ -204,12 +209,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EventBus.getDefault().register(this);
         initView();
         initData();
-
         new Thread(new MyThread()).start();
 //        post();
 
     }
-
     private void initView() {
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
@@ -246,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initData() {
         list = new ArrayList<MenuButton>();
-        list_order = new ArrayList<>();
         selectFoodemu();
         bt_order_place.setOnClickListener(listerner);
         bt_order_add_water.setOnClickListener(listerner);
@@ -254,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_robot.setOnClickListener(this);
         fab_setting.setOnClickListener(this);
         fab_vending_machine.setOnClickListener(this);
-
     }
 
     /**
@@ -273,10 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.bt_order_place:
-//
-//               new Thread(runnable).start();  dateNow = VeDate.getStringDateShort();
-
-                    if (newList == null) {
+                    if (addList == null) {
                         Toast.makeText(MainActivity.this, "你还没有点菜", Toast.LENGTH_SHORT).show();
                     } else {
                         mHandlerFlag=false;
@@ -317,7 +315,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
-
     Runnable runnable1 = new Runnable() {
         private Connection con = null;
 
@@ -382,19 +379,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String sql;
         int count = 0;
         try {
-            for (OrderInfo orderInfo : newList) {
+            orderNowNo = getOrderId();
+            for (OrderInfo orderInfo : addList) {
                 dateNow = VeDate.getStringDateShort();
                 timeNow = VeDate.getTimeShort();
-                orderNowNo = getOrderId();
+
                 sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow+ "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
                 //创建Statement
                 stmt = con1.createStatement();
-                Log.d("MainActivity", sql);
+
 
                 int rs = stmt.executeUpdate(sql);
 
                 count += rs;
             }
+      String      sql1 = "INSERT INTO " + ORDERINFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
+                    + orderNowNo + "', '" + deskNo+ "', '" + timeNow + "','" + "" + "', '" + dateNow+ "', '" + ""+ "', '" + "20"+ "','" + 1+ "','" + 0+ "');";
+            //创建Statement
+            stmt = con1.createStatement();
+            Log.d("bbb", sql1);
+
+            int rs1= stmt.executeUpdate(sql1);
+
+            addList=null;
+            list_order.clear();
             Message msg = new Message();
             msg.what = send_msg_code3;
             Bundle bundle = new Bundle();
@@ -402,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             msg.setData(bundle);
             mHandler.sendMessage(msg);
             con1.close();
+            stopCode=2;
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -416,12 +425,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void selectCONSUMPTIONID(Connection con1) throws java.sql.SQLException {
         String  isNull="";
         try {
-            String sql = "select "+CONSUMPTIONID+" from "+DESK_TEMP+" order by "+DESKTEMP_TIME+" desc limit 0,1;";
+            String sql = "select "+ORDERID+" from "+ORDERINFO+" order by "+ORDERID+" desc limit 0,1;";
+            Log.d("MainActivity", sql);
             Statement stmt = con1.createStatement();        //创建Statement
             //ResultSet类似Cursor
             ResultSet rs=stmt.executeQuery(sql);
             while(rs.next()){//将结果集信息添加到返回向量中
-                isNull=rs.getString("CONSUMPTIONID");
+                isNull=rs.getString(ORDERID);
             }
             if(!isNull.equals("")){
                 rewriteOrdera(isNull);
@@ -440,7 +450,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     /**
      * 定时查询
      * @param con1
@@ -451,29 +460,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int count=1;
         try {
             String sql = "select * from "+DESK_TEMP+" where "+DSK_NO+"='" +deskNo+"';";
-            Log.d("MainActivity", sql);
+
             Statement stmt = con1.createStatement();        //创建Statement
             //ResultSet类似Cursor
             ResultSet rs = stmt.executeQuery(sql);
 //            if(!rs.next()){
             newList.clear();
-                while (rs.next()){
-                    //                String data=rs.getString("date");
+            while (rs.next()){
+                //                String data=rs.getString("date");
 //                String time=rs.getString("time");
 //                String desk_no=rs.getString("desk_no");
 //                String consumptionID=rs.getString("consumptionID");
                 String foodName=rs.getString("foodName");
                 String foodPrice=rs.getString("foodPrice");
                 int foodCount=rs.getInt("foodCount");
-
                 OrderInfo info=new OrderInfo(count++,foodName,Double.valueOf(foodPrice),foodCount,false);
-                    Log.d("MainActivity", "count:" + count);
                 newList.add(info);
-                }
-
-//            }else{
-//                num=2;
-//            }
+            }
             Message message = new Message();
             message.what = send_msg_code4;
             Bundle bundle = new Bundle();
@@ -482,7 +485,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             message.setData(bundle);
             mHandler.sendMessage(message);
         } catch (SQLException e) {
-
         } finally {
 
             if (con1 != null)
@@ -491,16 +493,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (SQLException e) {
                 }
         }
-
         return false;
     }
-
-
-
-
     @SuppressLint("NewApi")
     private void setTabSelection(int index) {
-
         // 开启一个Fragment事务
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
@@ -592,25 +588,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info ) {
+
         info = new OrderInfo(index, info.getName(), info.getPrice(), count,true);
-        Log.d("info", "info.isFlag():" + info.isFlag());
-
-
-
-     if(info.isFlag()){
-
-         isFlag(false);
-
-     }
-   new Thread(new MyThread()).interrupt();
+        if(info.isFlag()){
+            stopCode=1;
+            isFlag(false);
+        }
+        new Thread(new MyThread()).interrupt();
 
         list_order.add(info);
-        newList = new ArrayList<OrderInfo>();
+        addList = new ArrayList<OrderInfo>();
+
         Iterator<OrderInfo> it = list_order.iterator();
         while (it.hasNext()) {
             OrderInfo d = it.next();
 
-            Iterator<OrderInfo> temp = newList.iterator();
+            Iterator<OrderInfo> temp = addList.iterator();
             boolean flag = false;
             while (temp.hasNext()) {
                 OrderInfo dt = temp.next();
@@ -624,7 +617,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (flag == false) {
 
-                newList.add(d);
+                addList.add(d);
                 d.setCount(1);
             }
         }
@@ -698,25 +691,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-   public void isFlag(boolean  falg){
-       mHandlerFlag=falg;
-       if(mHandlerFlag== true){
-           new Thread(new MyThread()).start();
+    public void isFlag(boolean  falg){
+        mHandlerFlag=falg;
+        if(mHandlerFlag== true){
+            new Thread(new MyThread()).start();
+        }else {
+            MyThread callable = new MyThread();
+            Thread th = new Thread(callable);
+            th.interrupt();
+            callable.stop();
+            mHandler.removeCallbacks(runnable1);
+            mHandler.removeCallbacks(new MyThread());
+            new Thread(new MyThread()).interrupt();
 
-       }else {
-           MyThread callable = new MyThread();
-           Thread th = new Thread(callable);
-           th.interrupt();
-           callable.stop();
-
-
-
-           callable.stop();
-           mHandler.removeCallbacks(new MyThread());
-           mHandler.removeCallbacks(new MyThread());
-           new Thread(new MyThread()).interrupt();
-       }
-   }
+        }
+    }
 
     private void hideNavigationBar() {
         // TODO Auto-generated method stub
