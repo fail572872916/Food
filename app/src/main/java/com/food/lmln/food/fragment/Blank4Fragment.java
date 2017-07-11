@@ -21,6 +21,7 @@ import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodStyle1Adapter;
 import com.food.lmln.food.adapter.FoodStyle2Adapter;
 import com.food.lmln.food.bean.FoodInfo;
+import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.utils.MyBitmapUtil;
 
@@ -89,7 +90,7 @@ public class Blank4Fragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_plus_one, container, false);
         initView();
-        initData();
+//        initData();
 
         return view;
     }
@@ -97,38 +98,38 @@ public class Blank4Fragment extends Fragment {
     /**
      * 初始化组件
      */
-    private void initData() {
-        List<FoodInfo> list= new ArrayList<FoodInfo>();
-        getLayoutInfo();
-        dbManager = new DbManger(getActivity());
-        list = dbManager.getAllFoodInfo();
-        List<FoodInfo> subList = list.subList(11, 17);    //获取子列表
-
-
-        mAdapter = new FoodStyle2Adapter(subList, getActivity(),getInfo);
-        gd_frgment1.setAdapter(mAdapter);
-        handlerMain.sendEmptyMessage(send_msg_code1);
-        List<FoodInfo> bigList = list.subList(8, 10);
-
-
-        MyBitmapUtil utils;   utils = new MyBitmapUtil();
-        String urlBig = null;
-        String urlSmall = null;
-        String tesxtSmall = null;
-        for (int i = 0; i < bigList.size(); i++) {
-            urlBig=  bigList.get(0).getIamge();
-            urlSmall= bigList.get(1).getIamge();
-            tesxtSmall=bigList.get(1).getName();
-        }
-        String url=Url+urlBig;
-        String url1=Url+urlSmall;
-        Log.d(TAG, url);
-        Log.d(TAG, url1);
-        utils.display(url,ib_big);
-        utils.display(url1,ib_small);
-        tv_small_text.setText(tesxtSmall+"");
-
-    }
+//    private void initData() {
+//        List<FoodinfoSmall> list= new ArrayList<FoodInfo>();
+//        getLayoutInfo();
+//        dbManager = new DbManger(getActivity());
+//        list = dbManager.getAllFoodInfo();
+//        List<FoodInfo> subList = list.subList(11, 17);    //获取子列表
+//
+//
+//        mAdapter = new FoodStyle2Adapter(subList, getActivity(),getInfo);
+//        gd_frgment1.setAdapter(mAdapter);
+//        handlerMain.sendEmptyMessage(send_msg_code1);
+//        List<FoodInfo> bigList = list.subList(8, 10);
+//
+//
+//        MyBitmapUtil utils;   utils = new MyBitmapUtil();
+//        String urlBig = null;
+//        String urlSmall = null;
+//        String tesxtSmall = null;
+//        for (int i = 0; i < bigList.size(); i++) {
+//            urlBig=  bigList.get(0).getIamge();
+//            urlSmall= bigList.get(1).getIamge();
+//            tesxtSmall=bigList.get(1).getName();
+//        }
+//        String url=Url+urlBig;
+//        String url1=Url+urlSmall;
+//        Log.d(TAG, url);
+//        Log.d(TAG, url1);
+//        utils.display(url,ib_big);
+//        utils.display(url1,ib_small);
+//        tv_small_text.setText(tesxtSmall+"");
+//
+//    }
 
     private void initView() {
         gd_frgment1 = (GridView) view.findViewById(R.id.gd_frgment1);

@@ -79,14 +79,14 @@ public class FoodStyle2Adapter extends BaseAdapter    {
         } else {
             vieewHolder = (FoodStyle2Adapter.VieewHolder) convertView.getTag();
         }
-        vieewHolder.tv_item_name.setText(list.get(position).getName());
-        vieewHolder.tv_item_price.setText("￥"+list.get(position).getPrice()+"");
-
-        String url=Url+list.get(position).getIamge();
-        Log.d("FoodStyle1Adapter", url+"fdasf");
-
-        MyBitmapUtil utils;   utils = new MyBitmapUtil();
-        utils.display(url,vieewHolder.im_item_image);
+//        vieewHolder.tv_item_name.setText(list.get(position).getName());
+//        vieewHolder.tv_item_price.setText("￥"+list.get(position).getPrice()+"");
+//
+//        String url=Url+list.get(position).getIamge();
+//        Log.d("FoodStyle1Adapter", url+"fdasf");
+//
+//        MyBitmapUtil utils;   utils = new MyBitmapUtil();
+//        utils.display(url,vieewHolder.im_item_image);
 
 
         return convertView;

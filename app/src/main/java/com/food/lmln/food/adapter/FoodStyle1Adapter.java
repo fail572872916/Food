@@ -1,27 +1,23 @@
 package com.food.lmln.food.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.food.lmln.food.R;
-import com.food.lmln.food.bean.FoodInfo;
+import com.food.lmln.food.bean.FoodinfoSmall;
+import com.food.lmln.food.bean.OrderInfo;
 import com.food.lmln.food.callback.ClothAddCallback;
-import com.food.lmln.food.fragment.BlankFragment;
-import com.food.lmln.food.utils.CommonUtils;
 import com.food.lmln.food.utils.MyBitmapUtil;
+import com.food.lmln.food.view.ScrollGridView;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 import static com.food.lmln.food.utils.HttpUtils.Url;
 import static com.food.lmln.food.utils.ScreenUtils.getGridViewWeight;
@@ -33,13 +29,16 @@ import static com.food.lmln.food.utils.ScreenUtils.getGridViewWeight;
 
 public class FoodStyle1Adapter extends BaseAdapter    {
     LayoutInflater mInfnflater;
-    private List<FoodInfo> list;    //功能集合
-    private Context mContext;
-    private ClothAddCallback callback;
+    private List<FoodinfoSmall> list;    //功能集合
+    private Context mContext; //上下文
+    private ClothAddCallback callback; //回调接口
 
-    public FoodStyle1Adapter(List<FoodInfo> list, Context mContext) {
+    ScrollGridView gd_frgment1;
+
+    public FoodStyle1Adapter(List<FoodinfoSmall> list, Context mContext, ScrollGridView gd_frgment1) {
         this.list = list;
         this.mContext = mContext;
+        this.gd_frgment1 = gd_frgment1;
     }
 
 //    public FoodStyle1Adapter(List<FoodInfo> list, Context mContext, ClothAddCallback callback) {
@@ -47,8 +46,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 //        this.mContext = mContext;
 //        this.callback = callback;
 //    }
-
-
 
     @Override
     public int getCount() {
@@ -103,10 +100,25 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 //                    notifyDataSetChanged();
 //                }            }
 //        });
+        gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                EventBus.getDefault().post(new OrderInfo(0, list.get(position).getName(),
+                        Double.valueOf( list.get(position).getPrice()), 0,true));
+
+
+
+            }
+        });
 
             return convertView;
         }
-        public class VieewHolder {
+
+
+
+    public class VieewHolder {
 
             public ImageView im_item_image;
             public TextView tv_item_name;

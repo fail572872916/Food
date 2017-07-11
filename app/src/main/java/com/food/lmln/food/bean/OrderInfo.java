@@ -10,14 +10,26 @@ public class OrderInfo {
     private String  name;
     private  double  price;
     private int  count;
+    private  boolean  flag;
 
-    public OrderInfo(int id, String name, double price, int count) {
+    public OrderInfo(int id, String name, double price, int count, boolean flag) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.count = count;
+        this.flag = flag;
     }
 
+    @Override
+    public String toString() {
+        return "OrderInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", count=" + count +
+                ", flag=" + flag +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -51,19 +63,11 @@ public class OrderInfo {
         this.count = count;
     }
 
-    @Override
-    public String toString() {
-        return "OrderInfo{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", count=" + count +
-                '}';
+    public boolean isFlag() {
+        return flag;
     }
 
-    //判断是否是同一个箱子
-    public boolean equals(Object o){
-        OrderInfo s = (OrderInfo)o;
-        return s.getName().equals(name)&& s.getName().equals(name)?true:false;
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 }

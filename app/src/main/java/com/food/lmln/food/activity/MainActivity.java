@@ -1,14 +1,8 @@
 package com.food.lmln.food.activity;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.icu.text.IDNA;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,24 +19,17 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
-import com.food.lmln.food.base.BaseActivity;
-import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
 
-import com.food.lmln.food.bean.TemporaryOrder;
-import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
-import com.food.lmln.food.db.MySqlDbManger;
 import com.food.lmln.food.fragment.Blank1Fragment;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
@@ -54,37 +41,23 @@ import com.food.lmln.food.view.DialogTablde;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.mysql.jdbc.ResultSetMetaData;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import jp.wasabeef.glide.transformations.BlurTransformation;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
 import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
@@ -94,8 +67,6 @@ import static com.food.lmln.food.db.Constant.send_msg_code1;
 import static com.food.lmln.food.db.Constant.send_msg_code2;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
-import static com.food.lmln.food.db.Constant.send_msg_code5;
-import static com.food.lmln.food.utils.FileUtils.rewrite;
 import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
 
@@ -142,7 +113,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
     private String deskNo = "4号桌";
+    private boolean running = true;
 
+    public void stop() {
+        this.running = false;
+    }
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -310,8 +285,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case R.id.bt_order_add_water:
 
-
-
                     break;
                 default:
                     break;
@@ -373,18 +346,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     public class MyThread implements Runnable {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        public void stop() {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         @Override
         public void run() {
-            while (mHandlerFlag) {
-                try {
-                    Thread.sleep(5000);// 线程暂停10秒，单位毫秒
+
+            try {
+
+                while (mHandlerFlag) {
+                    Thread.sleep(2000);// 线程暂停10秒，单位毫秒
                     new Thread(runnable1).start();
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
+
         }
     }
     /**
@@ -481,7 +466,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String foodPrice=rs.getString("foodPrice");
                 int foodCount=rs.getInt("foodCount");
 
-                OrderInfo info=new OrderInfo(count++,foodName,Double.valueOf(foodPrice),foodCount);
+                OrderInfo info=new OrderInfo(count++,foodName,Double.valueOf(foodPrice),foodCount,false);
                     Log.d("MainActivity", "count:" + count);
                 newList.add(info);
                 }
@@ -606,13 +591,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onMoonEvent(OrderInfo info) {
-        info = new OrderInfo(index, info.getName(), info.getPrice(), count);
-     if(info.getId()==1){
-         isFlag(false);
-     }
-        list_order.add(info);
+    public void onMoonEvent(OrderInfo info ) {
+        info = new OrderInfo(index, info.getName(), info.getPrice(), count,true);
+        Log.d("info", "info.isFlag():" + info.isFlag());
 
+
+
+     if(info.isFlag()){
+
+         isFlag(false);
+
+     }
+   new Thread(new MyThread()).interrupt();
+
+        list_order.add(info);
         newList = new ArrayList<OrderInfo>();
         Iterator<OrderInfo> it = list_order.iterator();
         while (it.hasNext()) {
@@ -708,8 +700,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
    public void isFlag(boolean  falg){
        mHandlerFlag=falg;
-       new Thread(new MyThread()).start();
+       if(mHandlerFlag== true){
+           new Thread(new MyThread()).start();
 
+       }else {
+           MyThread callable = new MyThread();
+           Thread th = new Thread(callable);
+           th.interrupt();
+           callable.stop();
+
+
+
+           callable.stop();
+           mHandler.removeCallbacks(new MyThread());
+           mHandler.removeCallbacks(new MyThread());
+           new Thread(new MyThread()).interrupt();
+       }
    }
 
     private void hideNavigationBar() {

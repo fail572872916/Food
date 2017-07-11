@@ -163,13 +163,13 @@ public class Blank3Fragment extends Fragment {
         LayoutAnimationController controller = new LayoutAnimationController(set, 1);
 
         gd_frgment1.setLayoutAnimation(controller);
-        gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EventBus.getDefault().post(new OrderInfo(0,subListGridView.get(position).getName(),
-                        subListGridView.get(position).getPrice(),0));
-            }
-        });
+//        gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                EventBus.getDefault().post(new OrderInfo(0,subListGridView.get(position).getName(),
+//                        subListGridView.get(position).getPrice(),0));
+//            }
+//        });
 
     }
 

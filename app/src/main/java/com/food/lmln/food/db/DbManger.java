@@ -3,11 +3,10 @@ package com.food.lmln.food.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.text.IDNA;
 import android.os.Environment;
-import android.util.Log;
 
 import com.food.lmln.food.bean.FoodInfo;
+import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.MenuButton;
 
 import java.io.File;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.food.lmln.food.db.Constant.ASSETS_NAME;
@@ -106,11 +104,11 @@ public class DbManger {
         return result;
     }
 
-    public List<FoodInfo> getAllFoodInfo(){
+    public List<FoodinfoSmall> getAllFoodInfo(){
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_FOODINFO, null);
-        List<FoodInfo> result = new ArrayList<>();
-        FoodInfo  foodInfo;
+        List<FoodinfoSmall> result = new ArrayList<>();
+        FoodinfoSmall  foodInfo;
         while (cursor.moveToNext()){
 
             int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(MID)));
@@ -118,7 +116,7 @@ public class DbManger {
             String describe = cursor.getString(cursor.getColumnIndex(DESCRIBE));
             Double price = Double.valueOf(cursor.getString(cursor.getColumnIndex(PRICE)));
             String  iamge= cursor.getString(cursor.getColumnIndex(IMAGEURL));
-            foodInfo = new FoodInfo(id,name,describe,price,iamge);
+            foodInfo = new FoodinfoSmall(id,name,describe,String.valueOf(price),iamge);
 //            foodInfo = new FoodInfo(id,name);
             result.add(foodInfo);
         }
@@ -140,7 +138,7 @@ public class DbManger {
      *  20,40 2
      *  40,60 3
      */
-    public static List<FoodInfo> getListByPageIndex(SQLiteDatabase db, String tabName, int pageIndex ,int pagesize) {
+    public static List<FoodinfoSmall> getListByPageIndex(SQLiteDatabase db, String tabName, int pageIndex , int pagesize) {
         Cursor cursor = null;
 
         int index = (pageIndex-1) * pagesize;
@@ -152,8 +150,8 @@ public class DbManger {
         return cursorToLsit(cursor);
     }
 
-    public static List<FoodInfo> cursorToLsit(Cursor cursor) {
-        List<FoodInfo> list = new ArrayList<>();
+    public static List<FoodinfoSmall> cursorToLsit(Cursor cursor) {
+        List<FoodinfoSmall> list = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             int columnIndex = cursor.getColumnIndex(Constant.MID);
@@ -163,7 +161,7 @@ public class DbManger {
             int mid = cursor.getInt(cursor.getColumnIndex(Constant.MEAT_MID));
             double price = cursor.getDouble(cursor.getColumnIndex(Constant.MEAT_PRICE));
             String  image = cursor.getString(cursor.getColumnIndex(Constant.MEAT_IMAGE));
-            FoodInfo person = new FoodInfo(id, name,describe,price,image);
+            FoodinfoSmall person = new FoodinfoSmall(id, name,describe,String.valueOf(price),image);
             list.add(person);
         }
 
