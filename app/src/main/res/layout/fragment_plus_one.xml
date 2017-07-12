@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/main_bg6"
+    android:background="@mipmap/main_bg7"
     android:orientation="horizontal">
 
     <LinearLayout

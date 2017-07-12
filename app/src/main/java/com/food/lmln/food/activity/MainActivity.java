@@ -37,6 +37,7 @@ import com.food.lmln.food.fragment.Blank4Fragment;
 import com.food.lmln.food.fragment.Blank5Fragment;
 
 import com.food.lmln.food.utils.VeDate;
+import com.food.lmln.food.utils.socket_client;
 import com.food.lmln.food.view.DialogTablde;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -45,6 +46,9 @@ import com.github.clans.fab.FloatingActionMenu;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,7 +62,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
+
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.DSK_NO;
 import static com.food.lmln.food.db.Constant.ORDERID;
@@ -92,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<MenuButton> list;  //数据
     FoodOrderAdapter mAdapter_order; //l类型适配器
 //    List<OrderInfo> list_order;  //数据
+    //创建Socket通信
+static socket_client client=new socket_client();
     FrameLayout myContent;
     /**
      * 用于对Fragment进行管理
@@ -106,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<OrderInfo> newList =new ArrayList<>();
     private List<OrderInfo> addList =new ArrayList<>();
     private List<OrderInfo> list_order =new ArrayList<>();
-
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -117,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String orderNowNo;//当前订单编号
     private String deskNo = "4号桌";
     private   int stopCode=2;
-
+     String serverIP_str ="192.168.0.198";
+     String desk_num_str =deskNo;
 
     Handler mHandler = new Handler() {
         @Override
@@ -210,9 +216,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         initData();
         new Thread(new MyThread()).start();
+        initSokect();
 //        post();
 
     }
+
+    private void initSokect() {
+        if(serverIP_str.isEmpty()&&desk_num_str.isEmpty()){
+            System.out.println("主机信息为空，请补充后再试试");
+        }else{
+            // 连线 server
+            client.runclient(serverIP_str);
+            //此线程为接收菜单的线程，循环接收，
+            new Thread(){
+                @Override
+                public void run() {
+                    while (true) {
+                        if(client.i){
+                            foodcontent();
+                            client.i = false;
+                        }else if(client.j){
+                            jiezhang();
+                            client.j=false;
+                        }
+                    }
+                }
+            }.start();
+        }
+
+    }
+
     private void initView() {
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
@@ -278,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "你还没有点菜", Toast.LENGTH_SHORT).show();
                     } else {
                         mHandlerFlag=false;
+
                         new Thread(runnable).start();
                     }
                     break;
@@ -393,13 +427,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 count += rs;
             }
+
       String      sql1 = "INSERT INTO " + ORDERINFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
                     + orderNowNo + "', '" + deskNo+ "', '" + timeNow + "','" + "" + "', '" + dateNow+ "', '" + ""+ "', '" + "20"+ "','" + 1+ "','" + 0+ "');";
             //创建Statement
             stmt = con1.createStatement();
-            Log.d("bbb", sql1);
-
             int rs1= stmt.executeUpdate(sql1);
+
+            JSONObject jsonObj = new JSONObject();//创建json格式的数据
+
+            JSONArray jsonArr = new JSONArray();//json格式的数组
+            JSONObject jsonObjArr = new JSONObject();
+                try {
+                    for (OrderInfo orderInfo : list_order) {
+                    jsonObjArr.put("name", orderInfo.getName());
+                    jsonObjArr.put("price", String.valueOf(orderInfo.getPrice()));
+                    jsonObjArr.put("count", String.valueOf(orderInfo.getCount()));
+                    jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
+                    }
+                    jsonObj.put("orderInstruct", "8906063211##");//再将这个json格式的的数组放到最终的json对象中。
+                    jsonObj.put("desk_num_str", desk_num_str);//再将这个json格式的的数组放到最终的json对象中。
+                    jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            MainActivity.client.sendfood(jsonObj);
 
             addList=null;
             list_order.clear();
@@ -628,7 +681,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
+        client.finish();
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
@@ -727,4 +782,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    //接收服务器菜品信息并写到数据库
+    public void foodcontent(){
+//        if(null != client.foods() && client.foods().size()!=0 ){
+//            List<String> list=client.foods();
+//            String foodTY = list.get(0);
+//            String foodName  = list.get(1);
+//            String foodPrice = list.get(2);
+//            SQLiteDatabase db1 = sql.getWritableDatabase();
+//            db1.execSQL("insert into LM_food(foodName,foodTY,foodPrice)values(?,?,?)",new String[]{foodName,foodTY,foodPrice});
+//            db1.close();
+
+        }
+    public void jiezhang(){
+//        SQLiteDatabase db1 = sql.getWritableDatabase();
+//        db1.execSQL("delete from LM_desk");
+//        db1.close();
+    }
 }
