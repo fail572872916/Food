@@ -30,6 +30,7 @@ import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
 
 import com.food.lmln.food.db.DbManger;
+import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.fragment.Blank1Fragment;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
@@ -42,6 +43,7 @@ import com.food.lmln.food.view.DialogTablde;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,6 +69,9 @@ import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.DSK_NO;
 import static com.food.lmln.food.db.Constant.ORDERID;
 import static com.food.lmln.food.db.Constant.ORDERINFO;
+import static com.food.lmln.food.db.Constant.PASSWORD;
+import static com.food.lmln.food.db.Constant.SQLURL;
+import static com.food.lmln.food.db.Constant.USERNAME;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
 import static com.food.lmln.food.db.Constant.send_msg_code2;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
@@ -291,7 +296,6 @@ static socket_client client=new socket_client();
         mHandler.sendEmptyMessage(send_msg_code1);
     }
 
-
     View.OnClickListener listerner = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -315,28 +319,16 @@ static socket_client client=new socket_client();
     };
 
     Runnable runnable = new Runnable() {
-        private Connection con = null;
+        private Connection conn = null;
         @Override
         public void run() {
-            // TODO Auto-generated method stub
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                //引用代码此处需要修改，address为数据IP，Port为端口号，DBName为数据名称，UserName为数据库登录账户，Password为数据库登录密码
-                con = (Connection) DriverManager.getConnection("jdbc:mysql://120.77.221.1/lm_food",
-                        "root", "lm123456");
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+       String     isNull=    MysqlDb.query(conn, "select order_id from order_info order by order_id desc limit 0,1;");
+            if(isNull!=null){
+                rewriteOrdera(isNull);
             }
-            //测试数据库连接
-            try {
-                selectCONSUMPTIONID(con);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            insert(conn);
+
         }
     };
     Runnable runnable1 = new Runnable() {
@@ -433,7 +425,7 @@ static socket_client client=new socket_client();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            MainActivity.client.sendfood(jsonObj);
+//            MainActivity.client.sendfood(jsonObj);
             addList=null;
             list_order.clear();
             Message msg = new Message();
@@ -450,38 +442,7 @@ static socket_client client=new socket_client();
             return false;
         }
     }
-    /**
-     * 查询最后一个订单
-     * @param con1
-     * @throws java.sql.SQLException
-     */
-    public void selectCONSUMPTIONID(Connection con1) throws java.sql.SQLException {
-        String  isNull="";
-        try {
-            String sql = "select "+ORDERID+" from "+ORDERINFO+" order by "+ORDERID+" desc limit 0,1;";
-            Log.d("MainActivity", sql);
-            Statement stmt = con1.createStatement();        //创建Statement
-            //ResultSet类似Cursor
-            ResultSet rs=stmt.executeQuery(sql);
-            while(rs.next()){//将结果集信息添加到返回向量中
-                isNull=rs.getString(ORDERID);
-            }
-            if(!isNull.equals("")){
-                rewriteOrdera(isNull);
-            }
-            insert(con1);
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
 
-        } finally {
-            if (con1 != null)
-                try {
-                    con1.close();
-                } catch (SQLException e) {
-                }
-        }
-    }
     /**
      * 定时查询
      * @param con1

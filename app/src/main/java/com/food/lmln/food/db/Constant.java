@@ -11,9 +11,10 @@ public class Constant {
      * MyslSqlConnection
      */
     public static final String DRIVER = "com.mysql.jdbc.Driver";
-    public static  final   String  SQLURL="jdbc:mysql://103.45.11.232/lm_food";
+
+    public static  final   String  SQLURL="jdbc:mysql://120.77.221.1/lm_food";
     public static  final   String  USERNAME="root";
-    public static  final   String  PASSWORD="root";
+    public static  final   String  PASSWORD="lm123456";
 
     public static  final String  DESK_TEMP ="lm_food.desk_temp" ;//临时点菜
     public static  final String  CONSUMPTIONID ="consumptionID" ;//临时点菜

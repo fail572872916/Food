@@ -7,27 +7,16 @@ package com.food.lmln.food.bean;
 public class CountMomey {
 
     private int id;
-    private double money;
+    private String name;
+    private String describe;
+    private String price;
+    private String version;
 
-    public CountMomey(int id, double money) {
+    public CountMomey(int id, String name, String describe, String price, String version) {
         this.id = id;
-        this.money = money;
-    }
-
-    public int getId() {
-
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
+        this.name = name;
+        this.describe = describe;
+        this.price = price;
+        this.version = version;
     }
 }
