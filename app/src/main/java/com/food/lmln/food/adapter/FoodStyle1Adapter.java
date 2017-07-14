@@ -117,7 +117,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         }
 
 
-
     public class VieewHolder {
 
             public ImageView im_item_image;

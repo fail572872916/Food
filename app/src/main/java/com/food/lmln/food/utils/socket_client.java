@@ -15,7 +15,6 @@ import java.util.List;
 public class socket_client  extends Activity {
     Socket client;
 	private BufferedWriter writer = null;
-
 	private String foodTY ;
 	private String foodName ;
 	private String foodPrice ;

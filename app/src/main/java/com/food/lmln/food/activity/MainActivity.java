@@ -73,8 +73,6 @@ import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
-
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * 布局1
@@ -124,12 +122,11 @@ static socket_client client=new socket_client();
     private   int stopCode=2;
      String serverIP_str ="192.168.0.198";
      String desk_num_str =deskNo;
-
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            int close=0;
+
             tv_order_title.setText(R.string.main_title);
             bt_order_add_settlement.setText(R.string.settlement);
             bt_order_add_water.setText(R.string.add_water);
@@ -137,13 +134,6 @@ static socket_client client=new socket_client();
             tv_order_price.setText(R.string.order_menu_sum);
             tv_order_sum_name.setText(R.string.order_sum);
             bt_order_place.setText(R.string.order_place);
-
-            Bundle data = new Bundle();
-            data = msg.getData();
-
-//            Log.d("data", "id:"+data.get("id"));
-//            Log.d("data", "id:"+data.get("id").toString());
-//            Toast.makeText(MainActivity.this, data.get("id").toString(), Toast.LENGTH_SHORT).show();
             switch (msg.what) {
                 case send_msg_code1:
                     lv_main.setAdapter(new FoodTypeMenuAdapter(list, MainActivity.this));
@@ -332,8 +322,8 @@ static socket_client client=new socket_client();
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 //引用代码此处需要修改，address为数据IP，Port为端口号，DBName为数据名称，UserName为数据库登录账户，Password为数据库登录密码
-                con = (Connection) DriverManager.getConnection("jdbc:mysql://103.45.11.232/lm_food",
-                        "root", "root");
+                con = (Connection) DriverManager.getConnection("jdbc:mysql://120.77.221.1/lm_food",
+                        "root", "lm123456");
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -358,8 +348,8 @@ static socket_client client=new socket_client();
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 //引用代码此处需要修改，address为数据IP，Port为端口号，DBName为数据名称，UserName为数据库登录账户，Password为数据库登录密码
-                con = (Connection) DriverManager.getConnection("jdbc:mysql://103.45.11.232/lm_food",
-                        "root", "root");
+                con = (Connection) DriverManager.getConnection("jdbc:mysql://120.77.221.1/lm_food",
+                        "root", "lm123456");
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -389,7 +379,6 @@ static socket_client client=new socket_client();
 
         @Override
         public void run() {
-
             try {
 
                 while (mHandlerFlag) {
@@ -399,7 +388,6 @@ static socket_client client=new socket_client();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
 
         }
     }
@@ -417,43 +405,35 @@ static socket_client client=new socket_client();
             for (OrderInfo orderInfo : addList) {
                 dateNow = VeDate.getStringDateShort();
                 timeNow = VeDate.getTimeShort();
-
                 sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow+ "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
                 //创建Statement
                 stmt = con1.createStatement();
-
-
                 int rs = stmt.executeUpdate(sql);
-
                 count += rs;
             }
-
       String      sql1 = "INSERT INTO " + ORDERINFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
                     + orderNowNo + "', '" + deskNo+ "', '" + timeNow + "','" + "" + "', '" + dateNow+ "', '" + ""+ "', '" + "20"+ "','" + 1+ "','" + 0+ "');";
             //创建Statement
             stmt = con1.createStatement();
             int rs1= stmt.executeUpdate(sql1);
-
             JSONObject jsonObj = new JSONObject();//创建json格式的数据
-
             JSONArray jsonArr = new JSONArray();//json格式的数组
-            JSONObject jsonObjArr = new JSONObject();
                 try {
                     for (OrderInfo orderInfo : list_order) {
+                        JSONObject jsonObjArr = new JSONObject();
                     jsonObjArr.put("name", orderInfo.getName());
                     jsonObjArr.put("price", String.valueOf(orderInfo.getPrice()));
                     jsonObjArr.put("count", String.valueOf(orderInfo.getCount()));
-                    jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
+                        jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
                     }
                     jsonObj.put("orderInstruct", "8906063211##");//再将这个json格式的的数组放到最终的json对象中。
                     jsonObj.put("desk_num_str", desk_num_str);//再将这个json格式的的数组放到最终的json对象中。
                     jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             MainActivity.client.sendfood(jsonObj);
-
             addList=null;
             list_order.clear();
             Message msg = new Message();
@@ -502,7 +482,6 @@ static socket_client client=new socket_client();
                 }
         }
     }
-
     /**
      * 定时查询
      * @param con1

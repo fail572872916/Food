@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@mipmap/pic_10"
+    android:background="@mipmap/main_backgranod1"
     tools:context="com.food.lmln.food.activity.MainActivity">
 
 
@@ -22,8 +22,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7"
-            android:layout_marginBottom="60px"
-            android:layout_marginTop="60px"
+            android:paddingTop="60px"
+            android:paddingBottom="60px"
+            android:background="@mipmap/main_backgranoud2"
             android:orientation="vertical">
 
             <ListView
@@ -57,7 +58,9 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="60px"
+                android:paddingTop="60px"
+                android:paddingBottom="60px"
+                android:background="@mipmap/main_backgranoud3"
                 android:orientation="vertical"
 
                 >
