@@ -11,8 +11,7 @@ public class Constant {
      * MyslSqlConnection
      */
     public static final String DRIVER = "com.mysql.jdbc.Driver";
-
-    public static  final   String  SQLURL="jdbc:mysql://120.77.221.1/lm_food";
+    public static  final   String  SQLURL="jdbc:mysql://120.77.221.1:3036/lm_food";
     public static  final   String  USERNAME="root";
     public static  final   String  PASSWORD="lm123456";
 
@@ -26,7 +25,6 @@ public class Constant {
 
 
     public static  final  String  FILENAME="conTumpTionidOrder.dat";
-
 
     public static  final   String  DATABASE_NAME="lm_foodsql.db";//数据库的名称
     public static  final   int  DATABASE_VERSION=1 ;//数据库的版本

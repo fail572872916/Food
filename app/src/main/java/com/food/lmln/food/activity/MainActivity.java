@@ -96,11 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_order_sum;              //菜单价格
     TextView tv_order_price;            //  200
     TextView tv_order_sum_name;         //总计
-    List<MenuButton> list;  //数据
+//    List<MenuButton> list;  //数据
     FoodOrderAdapter mAdapter_order; //l类型适配器
-//    List<OrderInfo> list_order;  //数据
-    //创建Socket通信
-static socket_client client=new socket_client();
+
     FrameLayout myContent;
     /**
      * 用于对Fragment进行管理
@@ -112,9 +110,10 @@ static socket_client client=new socket_client();
     private Blank4Fragment fragment4;
     private Blank5Fragment fragment5;
     private DbManger dbManager;
-    private List<OrderInfo> newList =new ArrayList<>();
+    private List<OrderInfo> newList =new ArrayList<OrderInfo>();
     private List<OrderInfo> addList =new ArrayList<>();
     private List<OrderInfo> list_order =new ArrayList<>();
+    private List<MenuButton> listRight =new ArrayList<MenuButton>();
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -125,13 +124,16 @@ static socket_client client=new socket_client();
     private String orderNowNo;//当前订单编号
     private String deskNo = "4号桌";
     private   int stopCode=2;
+
+    private Connection conn; //Connection连接
+    //创建Socket通信
+    static socket_client client=new socket_client();
      String serverIP_str ="192.168.0.198";
      String desk_num_str =deskNo;
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
             tv_order_title.setText(R.string.main_title);
             bt_order_add_settlement.setText(R.string.settlement);
             bt_order_add_water.setText(R.string.add_water);
@@ -140,16 +142,16 @@ static socket_client client=new socket_client();
             tv_order_sum_name.setText(R.string.order_sum);
             bt_order_place.setText(R.string.order_place);
             switch (msg.what) {
-                case send_msg_code1:
-                    lv_main.setAdapter(new FoodTypeMenuAdapter(list, MainActivity.this));
-                    lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                            setTabSelection(position);
-                        }
-                    });
-                    break;
+//                case send_msg_code1:
+//                    lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
+//                    lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                            setTabSelection(position);
+//                        }
+//                    });
+//                    break;
                 case send_msg_code2:
                     double money = 0.0;
                     mAdapter_order = new FoodOrderAdapter(addList, MainActivity.this);
@@ -170,23 +172,17 @@ static socket_client client=new socket_client();
                     isFlag(true);
                     break;
                 case send_msg_code4:
-                    Bundle bundle1 = msg.getData();
-                    int num1 = bundle1.getInt("Select");
-                    newList  = (List<OrderInfo>) bundle1.getSerializable("List");
-                    if(stopCode==2){
-                    if(num1>1){
-                        mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
-                        lv_main_order.setAdapter(mAdapter_order);
-                        mAdapter_order.notifyDataSetChanged();
-                        bt_order_place.setEnabled(true);
+//                    Bundle bundle1 = msg.getData();
+//                    newList  = (List<OrderInfo>) bundle1.getSerializable("List");
+//                        mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
+//                        lv_main_order.setAdapter(mAdapter_order);
+//                        mAdapter_order.notifyDataSetChanged();
+//                        bt_order_place.setEnabled(true);
 
                         break;
-                    }
-                    }else{
-                        newList.clear();
 
-                    }
-                    break;
+
+
 
             }
         }
@@ -210,7 +206,7 @@ static socket_client client=new socket_client();
         EventBus.getDefault().register(this);
         initView();
         initData();
-        new Thread(new MyThread()).start();
+
         initSokect();
 //        post();
 
@@ -263,6 +259,14 @@ static socket_client client=new socket_client();
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
 
 
+
+        bt_order_place.setOnClickListener(listerner);
+        bt_order_add_water.setOnClickListener(listerner);
+
+        fab_robot.setOnClickListener(this);
+        fab_setting.setOnClickListener(this);
+        fab_vending_machine.setOnClickListener(this);
+
         fragmentManager = getSupportFragmentManager();
 
 
@@ -274,25 +278,77 @@ static socket_client client=new socket_client();
 //        mNoNetworkFab.setOnClickListener(this);
     }
 
-
+    /**
+     * 加载数据
+     * 启动线程
+     */
     private void initData() {
-        list = new ArrayList<MenuButton>();
         selectFoodemu();
-        bt_order_place.setOnClickListener(listerner);
-        bt_order_add_water.setOnClickListener(listerner);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        fab_robot.setOnClickListener(this);
-        fab_setting.setOnClickListener(this);
-        fab_vending_machine.setOnClickListener(this);
+
+//                mHandler.postDelayed(this, 2000);
+                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+                listRight = MysqlDb.selectCuisine(conn, "select  * from  fd_describe");
+                Log.d("MainActivity", "listRight:" + listRight);
+//                mHandler.sendEmptyMessage(send_msg_code1);
+
+                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+
+                newList = MysqlDb.selectRiht(conn, "select  * from   desk_temp where desk_no='4号桌'");
+
+                Log.d("MainActivity", "newList:" + newList);
+                mHandler.sendEmptyMessage(send_msg_code1);
+
+
+            }
+        }).start();
+
+
+
+//        mHandler.postDelayed(runnable, 2000);
+//
+//        new Thread(runnable).run();
     }
 
+//     Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            try {
+//                mHandler.postDelayed(this, 2000);
+//                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+//                listRight = MysqlDb.selectCuisine(conn, "select  * from  fd_describe");
+//                Log.d("MainActivity", "listRight:" + listRight);
+////                mHandler.sendEmptyMessage(send_msg_code1);
+//
+//                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+//
+//                newList = MysqlDb.selectRiht(conn, "select  * from   desk_temp where desk_no='4号桌'");
+//
+//                Log.d("MainActivity", "newList:" + newList);
+//                Message message = new Message();
+//                message.what = send_msg_code4;
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("List", (Serializable) newList);
+//                bundle.putInt("Select", count);
+//                message.setData(bundle);
+//                mHandler.sendMessage(message);
+//
+//            } catch (Exception e) {
+//                System.out.println("exception " + e);
+//
+//            }
+//        }
+//    };
     /**
      * 查询菜单
      */
     private void selectFoodemu() {
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
-        list = dbManager.getAlldDscribe();
+
         mHandler.sendEmptyMessage(send_msg_code1);
     }
 
@@ -306,7 +362,7 @@ static socket_client client=new socket_client();
                     } else {
                         mHandlerFlag=false;
 
-                        new Thread(runnable).start();
+//                        new Thread(runnable).start();
                     }
                     break;
                 case R.id.bt_order_add_water:
@@ -318,176 +374,176 @@ static socket_client client=new socket_client();
         }
     };
 
-    Runnable runnable = new Runnable() {
-        private Connection conn = null;
-        @Override
-        public void run() {
-            conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
-       String     isNull=    MysqlDb.query(conn, "select order_id from order_info order by order_id desc limit 0,1;");
-            if(isNull!=null){
-                rewriteOrdera(isNull);
-            }
-            insert(conn);
+//    Runnable runnable = new Runnable() {
+//        private Connection conn = null;
+//        @Override
+//        public void run() {
+//            conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+//       String     isNull=    MysqlDb.query(conn, "select order_id from order_info order by order_id desc limit 0,1;");
+//            if(isNull!=null){
+//                rewriteOrdera(isNull);
+//            }
+////            insert(conn);
+//
+//        }
+//    };
+//    Runnable runnable1 = new Runnable() {
+//        private Connection con = null;
+//
+//        @Override
+//        public void run() {
+//            // TODO Auto-generated method stub
+//            try {
+//                Class.forName("com.mysql.jdbc.Driver");
+//                //引用代码此处需要修改，address为数据IP，Port为端口号，DBName为数据名称，UserName为数据库登录账户，Password为数据库登录密码
+//                con = (Connection) DriverManager.getConnection("jdbc:mysql://120.77.221.1/lm_food",
+//                        "root", "lm123456");
+//            } catch (SQLException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            } catch (ClassNotFoundException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            //测试数据库连接
+//            try {
+//                selectClear(con);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    };
 
-        }
-    };
-    Runnable runnable1 = new Runnable() {
-        private Connection con = null;
-
-        @Override
-        public void run() {
-            // TODO Auto-generated method stub
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                //引用代码此处需要修改，address为数据IP，Port为端口号，DBName为数据名称，UserName为数据库登录账户，Password为数据库登录密码
-                con = (Connection) DriverManager.getConnection("jdbc:mysql://120.77.221.1/lm_food",
-                        "root", "lm123456");
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            //测试数据库连接
-            try {
-                selectClear(con);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    public class MyThread implements Runnable {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-        public void stop() {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void run() {
-            try {
-
-                while (mHandlerFlag) {
-                    Thread.sleep(2000);// 线程暂停10秒，单位毫秒
-                    new Thread(runnable1).start();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
+//    public class MyThread implements Runnable {
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//
+//        public void stop() {
+//            try {
+//                reader.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public void run() {
+//            try {
+//
+//                while (mHandlerFlag) {
+//                    Thread.sleep(2000);// 线程暂停10秒，单位毫秒
+//                    new Thread(runnable1).start();
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
     /**
      *   插入临时订单
      * @param con1
      * @return
      */
-    public boolean insert(Connection con1) {
-        Statement stmt;
-        String sql;
-        int count = 0;
-        try {
-            orderNowNo = getOrderId();
-            for (OrderInfo orderInfo : addList) {
-                dateNow = VeDate.getStringDateShort();
-                timeNow = VeDate.getTimeShort();
-                sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow+ "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
-                //创建Statement
-                stmt = con1.createStatement();
-                int rs = stmt.executeUpdate(sql);
-                count += rs;
-            }
-      String      sql1 = "INSERT INTO " + ORDERINFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
-                    + orderNowNo + "', '" + deskNo+ "', '" + timeNow + "','" + "" + "', '" + dateNow+ "', '" + ""+ "', '" + "20"+ "','" + 1+ "','" + 0+ "');";
-            //创建Statement
-            stmt = con1.createStatement();
-            int rs1= stmt.executeUpdate(sql1);
-            JSONObject jsonObj = new JSONObject();//创建json格式的数据
-            JSONArray jsonArr = new JSONArray();//json格式的数组
-                try {
-                    for (OrderInfo orderInfo : list_order) {
-                        JSONObject jsonObjArr = new JSONObject();
-                    jsonObjArr.put("name", orderInfo.getName());
-                    jsonObjArr.put("price", String.valueOf(orderInfo.getPrice()));
-                    jsonObjArr.put("count", String.valueOf(orderInfo.getCount()));
-                        jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
-                    }
-                    jsonObj.put("orderInstruct", "8906063211##");//再将这个json格式的的数组放到最终的json对象中。
-                    jsonObj.put("desk_num_str", desk_num_str);//再将这个json格式的的数组放到最终的json对象中。
-                    jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-//            MainActivity.client.sendfood(jsonObj);
-            addList=null;
-            list_order.clear();
-            Message msg = new Message();
-            msg.what = send_msg_code3;
-            Bundle bundle = new Bundle();
-            bundle.putInt("upOrder", count);
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-            con1.close();
-            stopCode=2;
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public boolean insert(Connection con1) {
+//        Statement stmt;
+//        String sql;
+//        int count = 0;
+//        try {
+//            orderNowNo = getOrderId();
+//            for (OrderInfo orderInfo : addList) {
+//                dateNow = VeDate.getStringDateShort();
+//                timeNow = VeDate.getTimeShort();
+//                sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow+ "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
+//                //创建Statement
+//                stmt = con1.createStatement();
+//                int rs = stmt.executeUpdate(sql);
+//                count += rs;
+//            }
+//      String      sql1 = "INSERT INTO " + ORDERINFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
+//                    + orderNowNo + "', '" + deskNo+ "', '" + timeNow + "','" + "" + "', '" + dateNow+ "', '" + ""+ "', '" + "20"+ "','" + 1+ "','" + 0+ "');";
+//            //创建Statement
+//            stmt = con1.createStatement();
+//            int rs1= stmt.executeUpdate(sql1);
+//            JSONObject jsonObj = new JSONObject();//创建json格式的数据
+//            JSONArray jsonArr = new JSONArray();//json格式的数组
+//                try {
+//                    for (OrderInfo orderInfo : list_order) {
+//                        JSONObject jsonObjArr = new JSONObject();
+//                    jsonObjArr.put("name", orderInfo.getName());
+//                    jsonObjArr.put("price", String.valueOf(orderInfo.getPrice()));
+//                    jsonObjArr.put("count", String.valueOf(orderInfo.getCount()));
+//                        jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
+//                    }
+//                    jsonObj.put("orderInstruct", "8906063211##");//再将这个json格式的的数组放到最终的json对象中。
+//                    jsonObj.put("desk_num_str", desk_num_str);//再将这个json格式的的数组放到最终的json对象中。
+//                    jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+////            MainActivity.client.sendfood(jsonObj);
+//            addList=null;
+//            list_order.clear();
+//            Message msg = new Message();
+//            msg.what = send_msg_code3;
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("upOrder", count);
+//            msg.setData(bundle);
+//            mHandler.sendMessage(msg);
+//            con1.close();
+//            stopCode=2;
+//            return true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     /**
      * 定时查询
-     * @param con1
+//     * @param con1
      * @return
      * @throws java.sql.SQLException
      */
-    public boolean selectClear(Connection con1) throws java.sql.SQLException {
-        int count=1;
-        try {
-            String sql = "select * from "+DESK_TEMP+" where "+DSK_NO+"='" +deskNo+"';";
-
-            Statement stmt = con1.createStatement();        //创建Statement
-            //ResultSet类似Cursor
-            ResultSet rs = stmt.executeQuery(sql);
-//            if(!rs.next()){
-            newList.clear();
-            while (rs.next()){
-                //                String data=rs.getString("date");
-//                String time=rs.getString("time");
-//                String desk_no=rs.getString("desk_no");
-//                String consumptionID=rs.getString("consumptionID");
-                String foodName=rs.getString("foodName");
-                String foodPrice=rs.getString("foodPrice");
-                int foodCount=rs.getInt("foodCount");
-                OrderInfo info=new OrderInfo(count++,foodName,Double.valueOf(foodPrice),foodCount,false);
-                newList.add(info);
-            }
-            Message message = new Message();
-            message.what = send_msg_code4;
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("List", (Serializable) newList);
-            bundle.putInt("Select", count);
-            message.setData(bundle);
-            mHandler.sendMessage(message);
-        } catch (SQLException e) {
-        } finally {
-
-            if (con1 != null)
-                try {
-                    con1.close();
-                } catch (SQLException e) {
-                }
-        }
-        return false;
-    }
+//    public boolean selectClear(Connection con1) throws java.sql.SQLException {
+//        int count=1;
+//        try {
+//            String sql = "select * from "+DESK_TEMP+" where "+DSK_NO+"='" +deskNo+"';";
+//
+//            Statement stmt = con1.createStatement();        //创建Statement
+//            //ResultSet类似Cursor
+//            ResultSet rs = stmt.executeQuery(sql);
+////            if(!rs.next()){
+//            newList.clear();
+//            while (rs.next()){
+//                //                String data=rs.getString("date");
+////                String time=rs.getString("time");
+////                String desk_no=rs.getString("desk_no");
+////                String consumptionID=rs.getString("consumptionID");
+//                String foodName=rs.getString("foodName");
+//                String foodPrice=rs.getString("foodPrice");
+//                int foodCount=rs.getInt("foodCount");
+//                OrderInfo info=new OrderInfo(count++,foodName,Double.valueOf(foodPrice),foodCount,false);
+//                newList.add(info);
+//            }
+//            Message message = new Message();
+//            message.what = send_msg_code4;
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("List", (Serializable) newList);
+//            bundle.putInt("Select", count);
+//            message.setData(bundle);
+//            mHandler.sendMessage(message);
+//        } catch (SQLException e) {
+//        } finally {
+//
+//            if (con1 != null)
+//                try {
+//                    con1.close();
+//                } catch (SQLException e) {
+//                }
+//        }
+//        return false;
+//    }
     @SuppressLint("NewApi")
     private void setTabSelection(int index) {
         // 开启一个Fragment事务
@@ -583,11 +639,11 @@ static socket_client client=new socket_client();
     public void onMoonEvent(OrderInfo info ) {
 
         info = new OrderInfo(index, info.getName(), info.getPrice(), count,true);
-        if(info.isFlag()){
-            stopCode=1;
-            isFlag(false);
-        }
-        new Thread(new MyThread()).interrupt();
+//        if(info.isFlag()){
+//            stopCode=1;
+//            isFlag(false);
+//        }
+
 
         list_order.add(info);
         addList = new ArrayList<OrderInfo>();
@@ -688,18 +744,19 @@ static socket_client client=new socket_client();
 
     public void isFlag(boolean  falg){
         mHandlerFlag=falg;
-        if(mHandlerFlag== true){
-            new Thread(new MyThread()).start();
-        }else {
-            MyThread callable = new MyThread();
-            Thread th = new Thread(callable);
-            th.interrupt();
-            callable.stop();
-            mHandler.removeCallbacks(runnable1);
-            mHandler.removeCallbacks(new MyThread());
-            new Thread(new MyThread()).interrupt();
-
-        }
+//        mHandler.removeCallbacks(runnable1);
+//        if(mHandlerFlag== true){
+//            new Thread(new MyThread()).start();
+//        }else {
+//            MyThread callable = new MyThread();
+//            Thread th = new Thread(callable);
+//            th.interrupt();
+//            callable.stop();
+//            mHandler.removeCallbacks(runnable1);
+//            mHandler.removeCallbacks(new MyThread());
+//            new Thread(new MyThread()).interrupt();
+//
+//        }
     }
 
     private void hideNavigationBar() {

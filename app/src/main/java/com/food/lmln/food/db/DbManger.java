@@ -86,23 +86,23 @@ public class DbManger {
      * 读取所有菜系
      * @return
      */
-    public List<MenuButton> getAlldDscribe(){
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
-        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_DESCRIBE, null);
-        List<MenuButton> result = new ArrayList<>();
-        MenuButton  menu;
-        while (cursor.moveToNext()){
-
-            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(UID)));
-            String name = cursor.getString(cursor.getColumnIndex(NAME));
-            menu = new MenuButton(id,name);
-            result.add(menu);
-        }
-        cursor.close();
-        db.close();
-
-        return result;
-    }
+//    public List<MenuButton> getAlldDscribe(){
+//        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
+//        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_DESCRIBE, null);
+//        List<MenuButton> result = new ArrayList<>();
+//        MenuButton  menu;
+//        while (cursor.moveToNext()){
+//
+//            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(UID)));
+//            String name = cursor.getString(cursor.getColumnIndex(NAME));
+//            menu = new MenuButton(id,name);
+//            result.add(menu);
+//        }
+//        cursor.close();
+//        db.close();
+//
+//        return result;
+//    }
 
     public List<FoodinfoSmall> getAllFoodInfo(){
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);

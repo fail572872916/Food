@@ -5,12 +5,21 @@ package com.food.lmln.food.bean;
  */
 
 public class MenuButton {
-        private int id; //相应id
-      private  String name; //功能名字
+    private int id;
+    private String name;
+    private String describe;
+    private String price;
+    private String version;
 
-    public MenuButton(int id, String name) {
-        this.id = id;
-        this.name = name;
+    @Override
+    public String toString() {
+        return "MenuButton{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", describe='" + describe + '\'' +
+                ", price='" + price + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 
     public int getId() {
@@ -29,11 +38,35 @@ public class MenuButton {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "MenuButton{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public MenuButton(int id, String name, String describe, String price, String version) {
+        this.id = id;
+        this.name = name;
+        this.describe = describe;
+        this.price = price;
+        this.version = version;
     }
 }
