@@ -2,15 +2,6 @@
 <items version="2" >
 
     <item
-        is-multidex="true"
-        jar="E:\Food\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a6f6af715e29a7522e2b13c84c6be4b161cd7a2f\classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="E:\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
         jumboMode="false"
@@ -36,24 +27,6 @@
         revision="25.0.3"
         sha1="df451c6f391e3e32022fc964ed87bd57a5869128">
         <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_761bba7b9dd634b1a02cf6946dab83f13cec9661.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="E:\Food\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="15db75348b874c85749941dd5b968569802c8e81">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_7e35e9c725e6ea600c8d493baa5b986e6b528150\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="E:\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="7b9bfb6c4e4885660378a9c13330915c321f6cca">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\mysql-connector-java-5.0.8-bin_f43d52e0116862e6d8d290c799f39c0e865af733\classes.dex" />
     </item>
 
 </items>

@@ -5,5 +5,5 @@ package com.food.lmln.food.utils;
  */
 
 public class HttpUtils  {
-    public static  final  String  Url="http://192.168.0.102/";
+    public static  final  String  Url="http://120.77.221.1/";
 }

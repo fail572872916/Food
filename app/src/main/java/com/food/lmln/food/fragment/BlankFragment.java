@@ -8,6 +8,8 @@ import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -36,6 +38,7 @@ import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.OrderInfo;
 import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
+import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.db.SqlHelper;
 import com.food.lmln.food.utils.MoveImageView;
 import com.food.lmln.food.utils.MyBitmapUtil;
@@ -43,18 +46,24 @@ import com.food.lmln.food.view.ScrollGridView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
 
+import static com.food.lmln.food.db.Constant.PASSWORD;
+import static com.food.lmln.food.db.Constant.SQLURL;
+import static com.food.lmln.food.db.Constant.USERNAME;
+import static com.food.lmln.food.db.Constant.send_msg_code1;
+import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.utils.HttpUtils.Url;
 
 public class BlankFragment extends Fragment {
-
     private List<FoodinfoSmall> simpleList = new ArrayList<FoodinfoSmall>();
     private List<FoodinfoSmall> personList= new ArrayList<FoodinfoSmall>();
-
+    private List<FoodinfoSmall> foodList1= new ArrayList<FoodinfoSmall>();
     List<FoodInfo> foodList=new ArrayList<FoodInfo>();
     private FoodStyle1Adapter mAdapter;
     private String big_imageUrl;
@@ -75,12 +84,24 @@ public class BlankFragment extends Fragment {
     // 购物车商品数目
     private int goodsCount = 0;
     LinearLayout   rl;
-    FoodinfoSmall food;
     private ViewPager viewPager;
     private MyAdapter adapter;
-    int  selectPosition=1;
+    private Connection conn; //Connection连接
+    private  String   tableName;
 
-    private String big_text;
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            foodList  = (List<FoodInfo>) bundle.getSerializable("lookList");
+            Log.d("BlankFragment", "foodList:" + foodList);
+            adapter = new MyAdapter();
+            adapter.notifyDataSetChanged();
+            viewPager.setOffscreenPageLimit(0);
+            viewPager.setAdapter(adapter);
+        }
+    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +110,19 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View  view= inflater.inflate(R.layout.fragment_blank1, container, false);
+        Bundle bundle= BlankFragment.this.getArguments();
+                    //显示传递来的数据
+        tableName = bundle.getString("foodName");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+                foodList1 = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
+//                initFood();
+            }
+        }).start();
+
+
         viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
         rl  = (LinearLayout) view.findViewById(R.id.f1);
         holdCart = (ImageView) getActivity().findViewById(R.id.main_holdCart);
@@ -96,35 +130,66 @@ public class BlankFragment extends Fragment {
         helper=DbManger.getInstance(getActivity());
         db = helper.getWritableDatabase();
         init();
-        adapter = new MyAdapter();
-        adapter.notifyDataSetChanged();
-        viewPager.setOffscreenPageLimit(0);
-        viewPager.setAdapter(adapter);
+
         return view;
     }
+
+//    private void initFood() {
+//        int pageCount;  //总页数
+//
+//        pageCount = (int) Math.ceil(foodList1.size()/(double)pageSize);
+//        pageNum = (int) Math.ceil(pageCount/(double)pageSize);
+//        String tableName="荤菜";
+//        for (int i = 1;  i <pageNum+1; i++) {
+//            FoodInfo f =  new FoodInfo();
+//            f.setKey(i);
+//            personList = MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
+//            f.setList(personList);
+//            foodList.add(f);
+//        }
+//        Log.d("aaaa", "foodLisst:" + foodList);
+//        Message msg = new Message();
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("lookList", (Serializable) foodList);
+//        msg.setData(bundle);
+//        mHandler.sendMessage(msg);
+//
+////        Log.d("BlankFragment", "foodList:" + foodList);
+////        foodList1=MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
+//
+//    }
+
+
     /**
      * 获得数据
      * 判断操作
      */
     private void init() {
+
+
         pageCount= DbManger.getCountPerson(db, Constant.TABLE_NAME_FOODINFO);
         pageNum = (int) Math.ceil(pageCount/(double)pageSize);
         for (int i = 1;  i <pageNum+1; i++) {
-
             FoodInfo f =  new FoodInfo();
             f.setKey(i);
             personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO,i,pageSize);
             f.setList(personList);
             foodList.add(f);
         }
+
     }
     /**
      *
      * 适配器  MyAdapter
      */
     class MyAdapter extends PagerAdapter {
+        private String  bigName;
+        private String smallName;
+        private String   smallPrice;
+        private String bigPrice;
         private ViewPager pager;
-        LayoutInflater inflater = null;
+
         //用于存储回收掉的View
         private List<WeakReference<LinearLayout>> viewList=new ArrayList<WeakReference<LinearLayout>>();  ;
         @Override
@@ -159,29 +224,53 @@ public class BlankFragment extends Fragment {
                 viewHolder = (ViewHolder) view.getTag();
             }
             gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
+
+
             simpleList= foodList.get(position).getList();
-            Log.d("MyAdapter", "simpleList.size():" + simpleList.size());
-
-
+            List<FoodinfoSmall> apdaterList =  new ArrayList<FoodinfoSmall>();
 //        获取子列表
-             List<FoodinfoSmall> apdaterList = simpleList.subList(2, simpleList.size());
+            Log.d("MyAdapter", "simpleList:" + simpleList);
+            if(simpleList.size()>2) {
+               apdaterList = simpleList.subList(2, simpleList.size());
+                Log.d("MyAdapter", "apdaterList:" + apdaterList);
+            }
             List<FoodinfoSmall> bigList = simpleList.subList(0, 2);
             MyBitmapUtil utils;   utils = new MyBitmapUtil();
         for (int i = 0; i < bigList.size(); i++) {
-            big_imageUrl=  bigList.get(0).getIamge();
+            smallName=bigList.get(0).getName();
             small_imageUrl= bigList.get(1).getIamge();
-            big_text = bigList.get(1).getName();
+            smallPrice=bigList.get(0).getPrice();
+            big_imageUrl=  bigList.get(0).getIamge();
+
+            bigName = bigList.get(1).getName();
+            bigPrice=bigList.get(1).getPrice();
         }
             big_imageUrl=Url+big_imageUrl;
             small_imageUrl=Url+small_imageUrl;
+            Log.d("MyAdapter", big_imageUrl);
+            Log.d("MyAdapter", small_imageUrl);
             utils.display(big_imageUrl,viewHolder.im_big);
             utils.display(small_imageUrl,viewHolder.im_small);
-            viewHolder.tv_small_text.setText(big_text+"");
-            int ke= foodList.get(position).getKey();
+            viewHolder.tv_small_text.setText(smallName+"");
             mAdapter =new FoodStyle1Adapter(apdaterList,getActivity(),gd_frgment1);
-
             gd_frgment1.setAdapter(mAdapter);
             pager.addView(view,0);
+            viewHolder.im_small.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    EventBus.getDefault().post(new OrderInfo(0, bigName,Double.valueOf(bigPrice)
+                           , 0,true));
+                }
+            }); viewHolder.im_big.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    EventBus.getDefault().post(new OrderInfo(0, smallName,Double.valueOf(smallPrice)
+                           , 0,true));
+                }
+            });
+
             return view;
         }
     }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
 
@@ -123,6 +124,94 @@ public class MysqlDb {
                 String   describe_version = result.getString("describe_version");
 
                 list.add(   new MenuButton(0,cuisine_name,cuisine_describe,describe_id,describe_version));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                    result = null;
+                }
+                if (statement != null) {
+                    statement.close();
+                    statement = null;
+                }
+
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            }
+        }
+        return   list;
+    }
+
+    /**
+     * 查询表
+     * @param conn
+     * @param sql
+     * @return
+     */
+    public static  List<FoodinfoSmall>   selectFood(Connection conn, String sql) {
+        Log.d("MysqlDb", sql);
+        List<FoodinfoSmall>  list=  new ArrayList<FoodinfoSmall>();
+        if (conn == null) {
+            return null;
+        }
+        Statement statement = null;
+        ResultSet result = null;
+//        list=null;
+        try {
+            statement = conn.createStatement();
+            result = statement.executeQuery(sql);
+            while(result.next()){//将结果集信息添加到返回向量中
+                String food_name =result.getString("food_name");
+                String food_describe =result.getString("food_describe");
+                String   food_Price = result.getString("food_Price");
+                String   food_image = result.getString("food_image");
+
+                list.add(   new FoodinfoSmall(0,food_name,food_describe,food_Price,food_image));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                    result = null;
+                }
+                if (statement != null) {
+                    statement.close();
+                    statement = null;
+                }
+
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            }
+        }
+        return   list;
+    }
+    public static  List<FoodinfoSmall>   ByPageIndex(Connection conn, String tableName ,int  pageIndex ,int pageSize ) {
+
+        int index = (pageIndex-1) * pageSize;
+        String  sql   ="select * from  "+tableName+" limit "+index+","+pageSize+"";
+        Log.d("MysqlDb", sql);
+        List<FoodinfoSmall>  list=  new ArrayList<FoodinfoSmall>();
+        if (conn == null) {
+            return null;
+        }
+        Statement statement = null;
+        ResultSet result = null;
+//        list=null;
+        try {
+            statement = conn.createStatement();
+            result = statement.executeQuery(sql);
+            while(result.next()){//将结果集信息添加到返回向量中
+                String food_name =result.getString("food_name");
+                String food_describe =result.getString("food_describe");
+                String   food_Price = result.getString("food_Price");
+                String   food_image = result.getString("food_image");
+
+                list.add(   new FoodinfoSmall(0,food_name,food_describe,food_Price,food_image));
             }
         } catch (SQLException e) {
             e.printStackTrace();

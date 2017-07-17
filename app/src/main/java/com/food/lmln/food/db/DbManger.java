@@ -55,7 +55,7 @@ public class DbManger {
     /**
      * copy数据库
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+
     public void copyDBFile(){
         File dir = new File(DB_PATH);
         if (!dir.exists()){
@@ -82,10 +82,10 @@ public class DbManger {
         }
     }
 
-    /**
-     * 读取所有菜系
-     * @return
-     */
+//    /**
+//     * 读取所有菜系
+//     * @return
+//     */
 //    public List<MenuButton> getAlldDscribe(){
 //        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
 //        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_DESCRIBE, null);

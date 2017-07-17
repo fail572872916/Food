@@ -101,6 +101,7 @@ public class socket_client  extends Activity {
 			e.printStackTrace();
 		}
 	}
+
 	public void sendfood(JSONObject obj){
 		try {
 			writer.write(String.valueOf(obj));   // 下单

@@ -72,31 +72,12 @@ public class Blank1Fragment extends Fragment {
 
         return view;
     }
-//
-//    private void update() {
-//        getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-//            }
-//
-//        });
-//    }
 
     private void initView() {
         vPager  = (ViewPager) view.findViewById(R.id.vp_fragment1);
 
-//
-//        Blank3Fragment fragment3 = new Blank3Fragment();
-//        Blank4Fragment fragment4 = new Blank4Fragment();
-//        Blank3Fragment fragment5 = new Blank3Fragment();
         BlankFragment fragment5 = new BlankFragment();
-//        list.add(fragment3);
-//        list.add(fragment4);
         list.add(fragment5);
-
-
-
         adapter = new SpecialCuisineAdapter(getActivity().getSupportFragmentManager(), list);
 
 
