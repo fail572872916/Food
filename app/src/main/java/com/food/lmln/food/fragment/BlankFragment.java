@@ -66,8 +66,10 @@ public class BlankFragment extends Fragment {
     private List<FoodinfoSmall> foodList1= new ArrayList<FoodinfoSmall>();
     List<FoodInfo> foodList=new ArrayList<FoodInfo>();
     private FoodStyle1Adapter mAdapter;
-    private String big_imageUrl;
-    private String small_imageUrl;
+    String big_imageUrl;
+    String small_imageUrl;
+    String big_img;
+    String small_img;
     ScrollGridView gd_frgment1;
     private  int  pageCount;//总个数
     private int pageIndex=1; //当前页数;
@@ -118,9 +120,10 @@ public class BlankFragment extends Fragment {
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 foodList1 = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
-//                initFood();
+                initFood();
             }
         }).start();
+
 
 
         viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
@@ -129,36 +132,38 @@ public class BlankFragment extends Fragment {
         holdRootView = (RelativeLayout) getActivity().findViewById(R.id.container);
         helper=DbManger.getInstance(getActivity());
         db = helper.getWritableDatabase();
-        init();
-
+//        init();
+        adapter = new MyAdapter();
+            adapter.notifyDataSetChanged();
+            viewPager.setOffscreenPageLimit(0);
+            viewPager.setAdapter(adapter);
         return view;
     }
+    private void initFood() {
+        int pageCount;  //总页数
 
-//    private void initFood() {
-//        int pageCount;  //总页数
-//
-//        pageCount = (int) Math.ceil(foodList1.size()/(double)pageSize);
-//        pageNum = (int) Math.ceil(pageCount/(double)pageSize);
-//        String tableName="荤菜";
-//        for (int i = 1;  i <pageNum+1; i++) {
-//            FoodInfo f =  new FoodInfo();
-//            f.setKey(i);
-//            personList = MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
-//            f.setList(personList);
-//            foodList.add(f);
-//        }
-//        Log.d("aaaa", "foodLisst:" + foodList);
-//        Message msg = new Message();
-//
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("lookList", (Serializable) foodList);
-//        msg.setData(bundle);
-//        mHandler.sendMessage(msg);
-//
-////        Log.d("BlankFragment", "foodList:" + foodList);
-////        foodList1=MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
-//
-//    }
+        pageCount = (int) Math.ceil(foodList1.size()/(double)pageSize);
+        pageNum = (int) Math.ceil(pageCount/(double)pageSize);
+        String tableName="荤菜";
+        for (int i = 1;  i <pageNum+1; i++) {
+            FoodInfo f =  new FoodInfo();
+            f.setKey(i);
+            personList = MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
+            f.setList(personList);
+            foodList.add(f);
+        }
+        Log.d("aaaa", "foodLisst:" + foodList);
+        Message msg = new Message();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("lookList", (Serializable) foodList);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+
+//        Log.d("BlankFragment", "foodList:" + foodList);
+//        foodList1=MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
+
+    }
 
 
     /**
@@ -177,6 +182,7 @@ public class BlankFragment extends Fragment {
             f.setList(personList);
             foodList.add(f);
         }
+        Log.d("BlankFragment", "foodList:" + foodList);
 
     }
     /**
@@ -208,6 +214,7 @@ public class BlankFragment extends Fragment {
         }
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+
             if (pager == null) {
                 pager = (ViewPager) container;
             }
@@ -236,19 +243,20 @@ public class BlankFragment extends Fragment {
             }
             List<FoodinfoSmall> bigList = simpleList.subList(0, 2);
             MyBitmapUtil utils;   utils = new MyBitmapUtil();
+
         for (int i = 0; i < bigList.size(); i++) {
             smallName=bigList.get(0).getName();
-            small_imageUrl= bigList.get(1).getIamge();
+            small_img= bigList.get(0).getIamge();
             smallPrice=bigList.get(0).getPrice();
-            big_imageUrl=  bigList.get(0).getIamge();
+            big_img=  bigList.get(1).getIamge();
 
             bigName = bigList.get(1).getName();
             bigPrice=bigList.get(1).getPrice();
         }
-            big_imageUrl=Url+big_imageUrl;
-            small_imageUrl=Url+small_imageUrl;
-            Log.d("MyAdapter", big_imageUrl);
-            Log.d("MyAdapter", small_imageUrl);
+            big_imageUrl=Url+String.valueOf(big_img);
+            small_imageUrl=Url+String.valueOf(small_img);
+            Log.d("MyAdapter", big_imageUrl+"");
+            Log.d("MyAdapter", small_imageUrl+"");
             utils.display(big_imageUrl,viewHolder.im_big);
             utils.display(small_imageUrl,viewHolder.im_small);
             viewHolder.tv_small_text.setText(smallName+"");

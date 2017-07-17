@@ -107,12 +107,15 @@ public class NetCacheUtil {
 
         try {
             URL url = new URL(imageUrl);
+
             conn = (HttpURLConnection) url.openConnection(); // 打开连接
 
             conn.setReadTimeout(5000); // 设置读取超时时间
             conn.setConnectTimeout(5000); // 设置连接超时时间
 
             conn.setRequestMethod("GET"); // 设置请求方式
+
+
 
             conn.connect(); // 开始连接
 
