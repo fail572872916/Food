@@ -15,30 +15,35 @@ import android.widget.Toast;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.PageWidgetAdapter;
+import com.food.lmln.food.bean.FoodInfo;
+import com.food.lmln.food.bean.FoodinfoSmall;
+import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.view.PageWidget;
 
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.food.lmln.food.db.Constant.PASSWORD;
+import static com.food.lmln.food.db.Constant.SQLURL;
+import static com.food.lmln.food.db.Constant.USERNAME;
+import static com.food.lmln.food.db.Constant.send_msg_code1;
+import static com.food.lmln.food.db.Constant.send_msg_code3;
 
 
 public class Blank2Fragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private List<FoodinfoSmall> simpleList = new ArrayList<FoodinfoSmall>();
+    private List<FoodinfoSmall> personList= new ArrayList<FoodinfoSmall>();
+    private List<FoodinfoSmall> foodList= new ArrayList<FoodinfoSmall>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Connection conn; //Connection连接
+    private int pageIndex=1; //当前页数;
+    private int  pageSize=4;//每页显示的个数
+    private int  pageNum;//每页显示的个数
     String  tableName;
     private PageWidget page;
     private BaseAdapter adapter;
-    private Integer[] imgs = { R.layout.fragment_layout1,R.layout.fragment_layout2, R.layout.fragment_layout3,
-            R.layout.fragment_layout4, R.layout.fragment_layout5, R.layout.fragment_layout6, R.layout.fragment_layout7,
-            R.layout.fragment_layout8, R.layout.fragment_layout9, R.layout.fragment_layout10, R.layout.fragment_layout11,
-            R.layout.fragment_layout12};
-//    private Integer[] imgs = { R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,
-//        R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,
-//        R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1};
     Handler mHandler;
     public Blank2Fragment() {
         // Required empty public constructor
@@ -46,7 +51,14 @@ public class Blank2Fragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                page.setAdapter(adapter);
+                switch (msg.what) {
+                    case send_msg_code1:
+
+                        adapter = new PageWidgetAdapter(getActivity(), foodList);
+                        Log.d("Blank2Fragment", "foodList:" + foodList);
+                        page.setAdapter(adapter);
+                        break;
+                }
             }
         };
     }
@@ -62,36 +74,55 @@ public class Blank2Fragment extends Fragment {
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if(bundle!=null) {
             tableName = bundle.getString("foodName");
-            Log.d("aaaaaaa", tableName);
         }
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blank2, null);
         page = (PageWidget) view.findViewById(R.id.main_pageWidget);
 
-        adapter = new PageWidgetAdapter(getActivity(), imgs);
-
-
-       initView();
+        initView();
         return view;
-
     }
-
     private void initView() {
-        new Thread(){
+
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                super.run();
-
-                mHandler.sendEmptyMessage(0);
-
+                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+                foodList = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
+                Log.d("Blank2Fragment", "foodList1:" + foodList);
+                Message msg = new Message();
+        msg.what = send_msg_code1;
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("lookList", (Serializable) foodList);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+//                initFood(tableName);
             }
-        }.start();
+        }).start();
     }
+//    private void initFood(String tableName) {
+//        int pageCount;  //总页数
+//        pageCount = (int) Math.ceil(foodList1.size() / (double) pageSize);
+//        pageNum = (int) Math.ceil(pageCount / (double) pageSize);
+//
+//        for (int i = 1; i < pageNum + 1; i++) {
+//            FoodInfo f = new FoodInfo();
+//            f.setKey(i);
+//            personList = MysqlDb.ByPageIndex(conn, tableName, pageIndex, pageSize);
+//            f.setList(personList);
+//            foodList.add(f);
+//        }
+//
+//        Message msg = new Message();
+//        msg.what = send_msg_code1;
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("lookList", (Serializable) foodList);
+//        msg.setData(bundle);
+//        mHandler.sendMessage(msg);
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Blank3Fragment", "我胡汉三回来了");
     }
 
 

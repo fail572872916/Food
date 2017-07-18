@@ -168,8 +168,8 @@ public class MysqlDb {
                 String food_describe =result.getString("food_describe");
                 String   food_Price = result.getString("food_Price");
                 String   food_image = result.getString("food_image");
-
                 list.add(   new FoodinfoSmall(0,food_name,food_describe,food_Price,food_image));
+                Log.d("MysqlDb", "list:" + list);
             }
         } catch (SQLException e) {
             e.printStackTrace();

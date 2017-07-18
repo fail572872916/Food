@@ -191,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             lv_main_order.setAdapter(mAdapter_order);
                             mAdapter_order.notifyDataSetChanged();
                             bt_order_place.setEnabled(true);
-
                             break;
                         }
                     }else{
