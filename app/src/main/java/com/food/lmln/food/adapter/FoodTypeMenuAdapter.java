@@ -88,9 +88,6 @@ public class FoodTypeMenuAdapter extends BaseAdapter {
         return convertView;
     }
 
-
-
-
     public class VieewHolder {
         public TextView bt_item_menu;
     }

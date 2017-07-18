@@ -73,9 +73,7 @@ public class FoodStyle1Adapter extends BaseAdapter    {
             vieewHolder.im_item_image = (ImageView) convertView.findViewById(R.id.im_item_image);
             vieewHolder.tv_item_name = (TextView) convertView.findViewById(R.id.tv_item_name);
             vieewHolder.tv_item_price = (TextView) convertView.findViewById(R.id.tv_item_price);
-
             vieewHolder.im_item_image.setLayoutParams(getGridViewWeight(mContext,list));
-
             convertView.setTag(vieewHolder);
         } else {
             vieewHolder = (VieewHolder) convertView.getTag();
@@ -87,8 +85,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 
         MyBitmapUtil utils;   utils = new MyBitmapUtil();
         utils.display(url,vieewHolder.im_item_image);
-
-
 //        vieewHolder.im_item_image.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -104,8 +100,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
                 EventBus.getDefault().post(new OrderInfo(0, list.get(position).getName(),
                         Double.valueOf( list.get(position).getPrice()), 0,true));
 

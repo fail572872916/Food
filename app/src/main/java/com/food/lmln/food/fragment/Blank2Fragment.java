@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +29,9 @@ public class Blank2Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-
+    String  tableName;
     private PageWidget page;
     private BaseAdapter adapter;
-
     private Integer[] imgs = { R.layout.fragment_layout1,R.layout.fragment_layout2, R.layout.fragment_layout3,
             R.layout.fragment_layout4, R.layout.fragment_layout5, R.layout.fragment_layout6, R.layout.fragment_layout7,
             R.layout.fragment_layout8, R.layout.fragment_layout9, R.layout.fragment_layout10, R.layout.fragment_layout11,
@@ -41,9 +40,6 @@ public class Blank2Fragment extends Fragment {
 //        R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,
 //        R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1,R.layout.fragment_layout1};
     Handler mHandler;
-
-
-
     public Blank2Fragment() {
         // Required empty public constructor
         mHandler= new Handler(){
@@ -51,23 +47,23 @@ public class Blank2Fragment extends Fragment {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 page.setAdapter(adapter);
-
             }
         };
-
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();//从activity传过来的Bundle
+        if(bundle!=null) {
+            tableName = bundle.getString("foodName");
+            Log.d("aaaaaaa", tableName);
+        }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_blank2, null);
         page = (PageWidget) view.findViewById(R.id.main_pageWidget);
@@ -92,6 +88,11 @@ public class Blank2Fragment extends Fragment {
         }.start();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Blank3Fragment", "我胡汉三回来了");
+    }
 
 
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -144,17 +145,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                        case send_msg_code1:
                            fragment1 = new BlankFragment();
                             Bundle bundle2=new Bundle();
+
                              bundle2.putString("foodName", listRight.get(0).getName());
                            fragment1.setArguments(bundle2);
                     FragmentManager manager = getSupportFragmentManager();
                     FragmentTransaction transaction = manager.beginTransaction();
                     transaction.replace(R.id.myContent, fragment1);
                     transaction.commit();
+
                     lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
+
                     lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            setTabSelection(position);
+                            setTabSelection(position ,String.valueOf(listRight.get(position).getName()));
                         }
                     });
                     break;
@@ -283,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 listRight = MysqlDb.selectCuisine(conn, "select  * from  fd_describe");
+                Log.d("MainActivity", "listRight:" + listRight);
                 mHandler.sendEmptyMessage(send_msg_code1);
             }
         }).start();
@@ -466,65 +471,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         }
     }
+
     @SuppressLint("NewApi")
-    private void setTabSelection(int index) {
+    private void setTabSelection(int index ,String tableName) {
+        Log.d("MainActivity", tableName);
         // 开启一个Fragment事务
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
         hideFragments(transaction);
-        switch (index + 1) {
-            case 1:
-                if (fragment1 == null) {
-                    // 如果SettingFragment为空，则创建一个并添加到界面上
-                    fragment1 = new BlankFragment();
-                    transaction.add(R.id.myContent, fragment1);
-                } else {
-                    // 如果SettingFragment不为空，则直接将它显示出来
-                    transaction.show(fragment1);
-                }
-                break;
-            case 2:
-                if (fragment2 == null) {
-                    // 如果NewsFragment为空，则创建一个并添加到界面上
-                    fragment2 = new Blank2Fragment();
-                    transaction.add(R.id.myContent, fragment2);
-                } else {
-                    // 如果NewsFragment不为空，则直接将它显示出来
-                    transaction.show(fragment2);
-                }
-                break;
-            case 3:
-                if (fragment3 == null) {
-                    // 如果NewsFragment为空，则创建一个并添加到界面上
-                    fragment3 = new Blank3Fragment();
-                    transaction.add(R.id.myContent, fragment3);
-                } else {
-                    // 如果NewsFragment不为空，则直接将它显示出来
-                    transaction.show(fragment3);
-                }
-                break;
-            case 4:
-                if (fragment4 == null) {
-                    // 如果NewsFragment为空，则创建一个并添加到界面上
-                    fragment4 = new Blank4Fragment();
-                    transaction.add(R.id.myContent, fragment4);
-                } else {
-                    // 如果NewsFragment不为空，则直接将它显示出来
-                    transaction.show(fragment4);
-                }
-                break;
-            case 5:
-                if (fragment5 == null) {
-                    // 如果NewsFragment为空，则创建一个并添加到界面上
-                    fragment5 = new Blank5Fragment();
-                    transaction.add(R.id.myContent, fragment5);
-                } else {
-                    // 如果NewsFragment不为空，则直接将它显示出来
-                    transaction.show(fragment5);
-                }
-                break;
-            default:
-                break;
+        int num=++index;
+        Log.d("MainActivity", "num:" + num);
+        if(num%3==0){
+            if (fragment3 == null) {
+                // 如果NewsFragment为空，则创建一个并添加到界面上
+                fragment3 = new Blank3Fragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("foodName",tableName);
+                fragment3.setArguments(bundle2);
+                transaction.add(R.id.myContent, fragment3);
+            } else {
+                // 如果NewsFragment不为空，则直接将它显示出来
+                FragmentManager fgManager = getSupportFragmentManager();
+                //Activity用来管理它包含的Frament，通过getFramentManager()获取
+                FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
+//获取Framgent事务
+                Fragment fragment = fgManager.findFragmentById(R.id.myContent);
+//删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
+                fragmentTransaction.remove(fragment);
+//删除获取到的Fragment
+//指定动画，可以自己添加
+                String tag = null;
+                fragmentTransaction.addToBackStack(tag);
+//如果需要，添加到back栈中
+                fragmentTransaction.commit();
+
+                fragment3 = new Blank3Fragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("foodName",tableName);
+                fragment3.setArguments(bundle2);
+                transaction.add(R.id.myContent, fragment3);
+            }
+        }else if(num%3==2){
+            if (fragment2 == null) {
+                // 如果NewsFragment为空，则创建一个并添加到界面上
+                fragment2 = new Blank2Fragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("foodName",tableName);
+                fragment2.setArguments(bundle2);
+                transaction.add(R.id.myContent, fragment2);
+            } else {
+                // 如果NewsFragment不为空，则直接将它显示出来
+                transaction.show(fragment2);
+            }
+        }
+        else {
+            if (fragment1 == null) {
+                // 如果SettingFragment为空，则创建一个并添加到界面上
+                fragment1 = new BlankFragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("foodName",tableName);
+                fragment1.setArguments(bundle2);
+                transaction.add(R.id.myContent, fragment1);
+            } else {
+                // 如果SettingFragment不为空，则直接将它显示出来
+                transaction.show(fragment1);
+            }
         }
         transaction.commit();
     }
@@ -544,12 +555,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (fragment3 != null) {
             transaction.hide(fragment3);
         }
-        if (fragment4 != null) {
-            transaction.hide(fragment4);
-        }
-        if (fragment5 != null) {
-            transaction.hide(fragment5);
-        }
+
     }
 
     private int index = 1;
@@ -591,7 +597,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 d.setCount(1);
             }
         }
-
 
         mHandler.sendEmptyMessage(send_msg_code2);
     }
