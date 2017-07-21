@@ -21,6 +21,12 @@
             android:layout_margin="15dp"
             android:scaleType="centerInside"
             />
+        <TextView
+            android:id="@+id/tv_name01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
         <ImageView
             android:id="@+id/im_item02"
             android:layout_width="wrap_content"
@@ -31,7 +37,7 @@
             android:scaleType="centerInside"
             />
         <TextView
-            android:id="@+id/item_layout_leftText"
+            android:id="@+id/tv_name02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -52,6 +58,12 @@
             android:layout_margin="15dp"
             android:scaleType="centerInside"
             />
+        <TextView
+            android:id="@+id/tv_name03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
         <ImageView
             android:id="@+id/im_item04"
             android:layout_width="wrap_content"
@@ -62,7 +74,7 @@
             android:scaleType="centerInside"
             />
         <TextView
-            android:id="@+id/item_layout_rightText"
+            android:id="@+id/tv_name04"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

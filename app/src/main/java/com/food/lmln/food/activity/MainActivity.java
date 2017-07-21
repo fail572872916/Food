@@ -7,13 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-
 import android.support.v7.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,24 +24,19 @@ import android.widget.Toast;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
+import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
-
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
-import com.food.lmln.food.fragment.Blank4Fragment;
-import com.food.lmln.food.fragment.Blank5Fragment;
-
 import com.food.lmln.food.utils.VeDate;
 import com.food.lmln.food.utils.socket_client;
 import com.food.lmln.food.view.DialogTablde;
-
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -69,7 +61,9 @@ import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.DSK_NO;
 import static com.food.lmln.food.db.Constant.ORDERID;
 import static com.food.lmln.food.db.Constant.ORDERINFO;
+import static com.food.lmln.food.db.Constant.ORDERTABLE;
 import static com.food.lmln.food.db.Constant.PASSWORD;
+import static com.food.lmln.food.db.Constant.PRINTIN;
 import static com.food.lmln.food.db.Constant.SQLURL;
 import static com.food.lmln.food.db.Constant.USERNAME;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
@@ -78,9 +72,7 @@ import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
-
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
     /**
      * 布局1
      * 布局2
@@ -98,25 +90,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_order_sum;              //菜单价格
     TextView tv_order_price;            //  200
     TextView tv_order_sum_name;         //总计
-
     FoodOrderAdapter mAdapter_order; //l类型适配器
+
     //创建Socket通信
     static socket_client client=new socket_client();
     FrameLayout myContent;
     /**
      * 用于对Fragment进行管理
      */
-    private FragmentManager fragmentManager;
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
     private BlankFragment fragment1;
     private Blank2Fragment fragment2;
     private Blank3Fragment fragment3;
-    private Blank4Fragment fragment4;
-    private Blank5Fragment fragment5;
     private DbManger dbManager;
     private List<OrderInfo> newList =new ArrayList<>();
     private List<OrderInfo> addList =new ArrayList<>();
     private List<OrderInfo> list_order =new ArrayList<>();
     private List<MenuButton> listRight =new ArrayList<MenuButton>();
+//    private List<MenuButton> getRight =new ArrayList<MenuButton>();
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -143,18 +135,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bt_order_place.setText(R.string.order_place);
                        switch (msg.what) {
                        case send_msg_code1:
+                           Log.d("aaa", listRight.get(0).getName());
                            fragment1 = new BlankFragment();
-                            Bundle bundle2=new Bundle();
+//                           Bundle bundle2=new Bundle();
+//                           bundle2.putString("foodName", listRight.get(0).getName());
 
-                             bundle2.putString("foodName", listRight.get(0).getName());
-                           fragment1.setArguments(bundle2);
-                    FragmentManager manager = getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.myContent, fragment1);
-                    transaction.commit();
 
-                    lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
-
+//                           fragment1.setArguments(bundle2);
+////                           如果transaction  commit（）过  那么我们要重新得到transaction
+//                           FragmentManager manager =getSupportFragmentManager();
+//                           FragmentTransaction             transaction = manager.beginTransaction();
+//
+//                           transaction.add(R.id.myContent, fragment1);
+//                           transaction.commitAllowingStateLoss();
+                        String  name=listRight.get(0).getName();
+                           EventBus.getDefault().post(new DeskInfo(name,name));
+                           lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
                     lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -173,14 +169,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
-                    int num = bundle.getInt("upOrder");
-//                    if(num==1){
-//                        bt_order_place.setEnabled(false);
-//                    }else {
-//                    bt_order_place.setEnabled(true);}
-                    bt_order_place.setEnabled(num >= 1 ? false : true);
-                    isFlag(true);
-                    break;
+                           int num = bundle.getInt("upOrder");
+                           bt_order_place.setEnabled(num >= 1 ? false : true);
+                           isFlag(true);
+                           break;
                 case send_msg_code4:
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
@@ -195,10 +187,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }else{
                         newList.clear();
-
                     }
                     break;
-
             }
         }
     };
@@ -216,8 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //注册事件
         EventBus.getDefault().register(this);
-        dbManager = new DbManger(this);
-        dbManager.copyDBFile();
+
         initView();
         initData();
         new Thread(new MyThread()).start();
@@ -262,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
         bt_order_place.setOnClickListener(listerner);
         bt_order_add_water.setOnClickListener(listerner);
-
+     
         fab_vending_machine = (FloatingActionButton) findViewById(R.id.fab_vending_machine);
         fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
@@ -274,27 +263,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab.setClosedOnTouchOutside(true);
 
 
+        fragment1 = new BlankFragment();
+        FragmentManager   fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.myContent, fragment1);
+        transaction.commit();
+        dbManager = new DbManger(this);
+        dbManager.copyDBFile();
+        int a=dbManager.selectDeskCount();
+        Log.d("MainActivity", "a:" + a);
+
     }
     /**
      * 查询菜单
      */
     private void initData() {
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
-                listRight = MysqlDb.selectCuisine(conn, "select  * from  fd_describe");
-                Log.d("MainActivity", "listRight:" + listRight);
+                listRight = MysqlDb.selectCuisine(conn, "select  * from  "+ORDERTABLE+"");
                 mHandler.sendEmptyMessage(send_msg_code1);
             }
         }).start();
-
-       ;
-
-        fragmentManager = getSupportFragmentManager();
-
+        Log.d("MainActivity", "listRight:" + listRight);
 
     }
     View.OnClickListener listerner = new View.OnClickListener() {
@@ -315,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 default:
                     break;
             }
+
         }
     };
 
@@ -353,12 +346,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
-
         @Override
         public void run() {
-
             try {
-
                 while (mHandlerFlag) {
                     Thread.sleep(2000);// 线程暂停10秒，单位毫秒
                     conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
@@ -402,7 +392,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //创建Statement
             stmt = con1.createStatement();
             int rs1= stmt.executeUpdate(sql1);
-            JSONObject jsonObj = new JSONObject();//创建json格式的数据
+         if(rs1>0){
+            sendPrint();
+         }else {
+
+         }
+
+            con1.close();
+            stopCode=2;
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 打印数据
+     */
+    private void sendPrint() {
+                    JSONObject jsonObj = new JSONObject();//创建json格式的数据
             JSONArray jsonArr = new JSONArray();//json格式的数组
             try {
                 for (OrderInfo orderInfo : list_order) {
@@ -412,16 +421,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObjArr.put("count", String.valueOf(orderInfo.getCount()));
                     jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
                 }
-                jsonObj.put("orderInstruct", "8906063211##");//再将这个json格式的的数组放到最终的json对象中。
+                jsonObj.put("orderInstruct", PRINTIN);//再将这个json格式的的数组放到最终的json对象中。
                 jsonObj.put("desk_num_str", desk_num_str);//再将这个json格式的的数组放到最终的json对象中。
                 jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("MainActivity", "jsonObj:" + jsonObj);
             MainActivity.client.sendfood(jsonObj);
-
             addList=null;
             list_order.clear();
             Message msg = new Message();
@@ -430,14 +436,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bundle.putInt("upOrder", count);
             msg.setData(bundle);
             mHandler.sendMessage(msg);
-            con1.close();
-            stopCode=2;
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
+
     /**
      * 查询最后一个订单
      * @param con1
@@ -447,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String  isNull="";
         try {
             String sql = "select "+ORDERID+" from "+ORDERINFO+" order by "+ORDERID+" desc limit 0,1;";
-            Log.d("MainActivity", sql);
+
             Statement stmt = con1.createStatement();        //创建Statement
             //ResultSet类似Cursor
             ResultSet rs=stmt.executeQuery(sql);
@@ -470,7 +470,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         }
     }
-
     @SuppressLint("NewApi")
     private void setTabSelection(int index ,String tableName) {
         Log.d("MainActivity", tableName);
@@ -503,7 +502,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentTransaction.addToBackStack(tag);
 //如果需要，添加到back栈中
                 fragmentTransaction.commit();
-
                 fragment3 = new Blank3Fragment();
                 Bundle bundle2=new Bundle();
                 bundle2.putString("foodName",tableName);
@@ -608,15 +606,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
-
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         try {
             super.onConfigurationChanged(newConfig);
             if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 // land
-            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 // port
             }
         } catch (Exception ex) {
@@ -666,7 +662,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    /**
+     * 判断停止线程
+     * @param falg
+     */
     public void isFlag(boolean  falg){
         mHandlerFlag=falg;
         if(mHandlerFlag== true){
@@ -701,5 +700,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-    }}
+    }
+    //定义一个回调接
+}
 

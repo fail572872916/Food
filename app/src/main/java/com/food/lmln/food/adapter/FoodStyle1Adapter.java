@@ -65,7 +65,7 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final VieewHolder vieewHolder;
+         VieewHolder vieewHolder;
         if (convertView == null) {
             vieewHolder = new VieewHolder();
             LayoutInflater mInflater = LayoutInflater.from(mContext);

@@ -35,7 +35,6 @@ public class SqlHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d("SqlHelper", "onCreate");
     }
-
     /**
      *   版本更行时
      * @param db  数据库对象
@@ -46,7 +45,6 @@ public class SqlHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("SqlHelper", "onUpgrade");
     }
-
     /**
      * 数据库打开时调用
      * @param db  数据库对象

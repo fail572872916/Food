@@ -4,6 +4,7 @@
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
+
     <!--读取SD卡权限 -->
 
 
@@ -26,7 +27,8 @@
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"
-                    android:configChanges="orientation"
+                    android:configChanges="orientation|keyboardHidden|screenSize"
+
 
                     android:launchMode="singleTask"
                     android:screenOrientation="landscape" />

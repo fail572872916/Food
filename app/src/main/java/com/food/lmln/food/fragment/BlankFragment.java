@@ -1,7 +1,9 @@
 package com.food.lmln.food.fragment;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.PathMeasure;
@@ -10,7 +12,9 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -33,6 +37,7 @@ import android.widget.Toast;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodStyle1Adapter;
+import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.OrderInfo;
@@ -45,9 +50,12 @@ import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.view.ScrollGridView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +99,8 @@ public class BlankFragment extends Fragment {
     private Connection conn; //Connection连接
     private  String   tableName;
 
+    OnArticleSelectedListener mListener;
+
 
     Handler mHandler = new Handler() {
         @Override
@@ -107,10 +117,16 @@ public class BlankFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);  //注册
+
     }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View  view= inflater.inflate(R.layout.fragment_blank1, container, false);
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if(bundle!=null) {
@@ -165,13 +181,14 @@ public class BlankFragment extends Fragment {
 //        foodList1=MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
 
     }
+    public interface OnArticleSelectedListener {
+        public void onArticleSelected(String articleUri);
+    }
     /**
      * 获得数据
      * 判断操作
      */
     private void init() {
-
-
         pageCount= DbManger.getCountPerson(db, Constant.TABLE_NAME_FOODINFO);
         pageNum = (int) Math.ceil(pageCount/(double)pageSize);
         for (int i = 1;  i <pageNum+1; i++) {
@@ -181,7 +198,6 @@ public class BlankFragment extends Fragment {
             f.setList(personList);
             foodList.add(f);
         }
-        Log.d("BlankFragment", "foodList:" + foodList);
 
     }
     /**
@@ -239,15 +255,15 @@ public class BlankFragment extends Fragment {
             Log.d("MyAdapter", "simpleList:" + simpleList);
             if (simpleList.size() >= 1) {
                 bigList = simpleList.subList(0, 1);
-                smallName = bigList.get(0).getName();
-                small_img = bigList.get(0).getIamge();
-                smallPrice = bigList.get(0).getPrice();
+                bigName = bigList.get(0).getName();
+                big_img = bigList.get(0).getIamge();
+                bigPrice = bigList.get(0).getPrice();
             }
                 if (simpleList.size() >= 2) {
                     bigList = simpleList.subList(1, 2);
-                    big_img = bigList.get(0).getIamge();
-                    bigName = bigList.get(0).getName();
-                    bigPrice = bigList.get(0).getPrice();
+                    small_img = bigList.get(0).getIamge();
+                     smallName= bigList.get(0).getName();
+                    smallPrice = bigList.get(0).getPrice();
                 }
                 big_imageUrl = Url + String.valueOf(big_img);
                 small_imageUrl = Url + String.valueOf(small_img);
@@ -264,7 +280,7 @@ public class BlankFragment extends Fragment {
                 viewHolder.im_small.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EventBus.getDefault().post(new OrderInfo(0, bigName, Double.valueOf(bigPrice)
+                        EventBus.getDefault().post(new OrderInfo(0, smallName, Double.valueOf(smallPrice)
                                 , 0, true));
                     }
                 });
@@ -272,7 +288,7 @@ public class BlankFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        EventBus.getDefault().post(new OrderInfo(0, smallName, Double.valueOf(smallPrice)
+                        EventBus.getDefault().post(new OrderInfo(0, bigName, Double.valueOf(bigPrice)
                                 , 0, true));
                     }
                 });
@@ -471,7 +487,46 @@ public class BlankFragment extends Fragment {
         });
         animator.start();
     }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Override
+    public void onDestroyView() {
+// TODO Auto-generated method stub
+        super.onDestroyView();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
 
 
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onMoonEvent(DeskInfo info ) {
 
+        Log.d("BlankFragment", info.getLocal_ip()+"fdsaf");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);//取消注册
+    }
 }

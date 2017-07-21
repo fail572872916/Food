@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.bean.MenuButton;
@@ -35,15 +36,11 @@ public class FoodOrderAdapter extends BaseAdapter {
         this.list = list;
         this.mContext = mContext;
         mInfnflater.from(mContext);
-
     }
-
-
     @Override
     public int getCount() {
         return list.size();
     }
-
 
     @Override
     public Object getItem(int position) {
@@ -59,7 +56,6 @@ public class FoodOrderAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         VieewHolder vieewHolder;
         if (convertView == null) {
-
             vieewHolder = new VieewHolder();
             LayoutInflater mInflater = LayoutInflater.from(mContext);
             convertView = mInflater.inflate(R.layout.item_order_info, null);
@@ -67,8 +63,6 @@ public class FoodOrderAdapter extends BaseAdapter {
             vieewHolder.tv_item_name = (TextView) convertView.findViewById(R.id.tv_item_name);
             vieewHolder.tv_item_count_price = (TextView) convertView.findViewById(R.id.tv_item_count_price);
             vieewHolder.tv_item_count_count = (TextView) convertView.findViewById(R.id.tv_item_count_count);
-
-
             convertView.setTag(vieewHolder);
 
 

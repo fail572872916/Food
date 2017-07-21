@@ -17,6 +17,7 @@ public class Constant {
 
     public static  final String  DESK_TEMP ="lm_food.desk_temp" ;//临时点菜
     public static  final String  CONSUMPTIONID ="consumptionID" ;//临时点菜
+    public static  final String  ORDERTABLE ="fd_describe" ;//临时点菜
 
     public static  final String  ORDERID ="order_id" ;//订单号
     public static  final String  DSK_NO ="desk_no" ;//订单号
@@ -24,8 +25,7 @@ public class Constant {
     public static  final String  ORDERINFO ="order_info" ;//订单表
 
 
-    public static  final  String  FILENAME="conTumpTionidOrder.dat";
-
+    public static  final  String  FILENAME="conTumpTionidOrder.dat"; //订单文件
     public static  final   String  DATABASE_NAME="lm_foodsql.db";//数据库的名称
     public static  final   int  DATABASE_VERSION=1 ;//数据库的版本
     public static  final   String  TABLE_NAME="" ;//数据库的名称
@@ -33,6 +33,7 @@ public class Constant {
    public   static final String ASSETS_NAME = DATABASE_NAME;
     public static final String TABLE_NAME_DESCRIBE = "describe";
     public static final String TABLE_NAME_FOODINFO = "fd_meat";
+    public static final String DESKINFO = "desk_info";
 
 
     public static final String MID = "mid";
@@ -41,11 +42,8 @@ public class Constant {
     public static final String MEAT_PRICE = "meat_price";
     public static final String MEAT_MID = "meat_mid";
     public static final String MEAT_IMAGE = "meat_image";
-
-
+    public static final String PRINTIN = "\"8906063211##\"";
     public static final int BUFFER_SIZE = 1024;
-
-
     public static final int send_msg_code1 = 0x101;
     public static final int send_msg_code2 = 0x102;
     public static final int send_msg_code3 = 0x103;

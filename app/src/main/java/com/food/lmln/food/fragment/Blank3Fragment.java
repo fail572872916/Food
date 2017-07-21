@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.ArrayList;
 
@@ -106,7 +107,7 @@ public class Blank3Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("aaaaaaa", "我进来了");
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +118,7 @@ public class Blank3Fragment extends Fragment {
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if(bundle!=null) {
             tableName = bundle.getString("foodName");
-            Log.d("aaaaaaa", tableName);
+
         }
         new Thread(new Runnable() {
             @Override
@@ -146,7 +147,7 @@ public class Blank3Fragment extends Fragment {
              f.setList(personList);
              foodList.add(f);
          }
-         Log.d("aaaaaa", "sss:" + foodList);
+
          Message msg = new Message();
          Bundle bundle = new Bundle();
          bundle.putSerializable("lookList", (Serializable) foodList);
@@ -227,10 +228,6 @@ public class Blank3Fragment extends Fragment {
                     imageUrl5 =simpleList.get(5).getIamge();
                 }
 
-//              imageUrl3 =simpleList.get(2).getIamge();
-//              imageUrl4 =simpleList.get(3).getIamge();
-//              imageUrl5 =simpleList.get(4).getIamge();
-//              imageUrl6 =simpleList.get(5).getIamge();
 
                 loadUrl2= HttpUtils.Url+imageUrl2;
                 loadUrl3= HttpUtils.Url+imageUrl3;
@@ -294,7 +291,7 @@ public class Blank3Fragment extends Fragment {
 
 
         super.onDestroyView();
-        Log.d("aaaaaaa", "我被销毁了");
+
        loadUrl1="";
        loadUrl2="";
        loadUrl3="";
@@ -309,7 +306,7 @@ public class Blank3Fragment extends Fragment {
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if(bundle!=null) {
             tableName = bundle.getString("foodName");
-            Log.d("aaaaaaa", tableName);
+
         }
         new Thread(new Runnable() {
             @Override
@@ -326,6 +323,20 @@ public class Blank3Fragment extends Fragment {
     }
 
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
 
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

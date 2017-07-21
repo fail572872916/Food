@@ -21,6 +21,7 @@ import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.view.PageWidget;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,8 @@ public class Blank2Fragment extends Fragment {
                 switch (msg.what) {
                     case send_msg_code1:
 
+
                         adapter = new PageWidgetAdapter(getActivity(), foodList);
-                        Log.d("Blank2Fragment", "foodList:" + foodList);
                         page.setAdapter(adapter);
                         break;
                 }
@@ -126,4 +127,19 @@ public class Blank2Fragment extends Fragment {
     }
 
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

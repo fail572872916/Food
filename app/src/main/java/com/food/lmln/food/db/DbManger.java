@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
+import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.MenuButton;
@@ -20,6 +21,7 @@ import java.util.List;
 import static com.food.lmln.food.db.Constant.ASSETS_NAME;
 import static com.food.lmln.food.db.Constant.BUFFER_SIZE;
 import static com.food.lmln.food.db.Constant.DATABASE_NAME;
+import static com.food.lmln.food.db.Constant.DESKINFO;
 import static com.food.lmln.food.db.Constant.TABLE_NAME_DESCRIBE;
 import static com.food.lmln.food.db.Constant.TABLE_NAME_FOODINFO;
 
@@ -38,8 +40,6 @@ public class DbManger {
     private  final String DESCRIBE = "meat_describe";
     private  final String IMAGEURL = "meat_image";
     private  final String PRICE = "meat_price";
-
-
     public   static  SqlHelper  getInstance(Context context){
         if(sqlHelper==null){
             sqlHelper =  new SqlHelper(context);
@@ -110,7 +110,6 @@ public class DbManger {
         List<FoodinfoSmall> result = new ArrayList<>();
         FoodinfoSmall  foodInfo;
         while (cursor.moveToNext()){
-
             int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(MID)));
             String name = cursor.getString(cursor.getColumnIndex(MEAT_NAME));
             String describe = cursor.getString(cursor.getColumnIndex(DESCRIBE));
@@ -125,6 +124,17 @@ public class DbManger {
 
         return result;
     }
+
+    public   int selectDeskCount(){
+int a=0;
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
+        Cursor cursor = db.rawQuery("select * from " + DESKINFO, null);
+        a=cursor.getCount();
+        cursor.close();
+        db.close();
+        return a;
+    }
+
 
     /**
      *  更具当前页面查询对应集合的数据
@@ -146,7 +156,6 @@ public class DbManger {
             String  sql = "select * from "+tabName+" limit  ?,?";
             cursor= db.rawQuery(sql,new String[]{index+"",pagesize +""});
         }
-
         return cursorToLsit(cursor);
     }
 
@@ -164,8 +173,6 @@ public class DbManger {
             FoodinfoSmall person = new FoodinfoSmall(id, name,describe,String.valueOf(price),image);
             list.add(person);
         }
-
-
         return list;
     }
 

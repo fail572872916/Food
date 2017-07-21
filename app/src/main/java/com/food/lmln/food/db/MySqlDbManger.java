@@ -28,7 +28,6 @@ public class MySqlDbManger {
     // 单态模式-懒汉模式
     public MySqlDbManger() {
     }
-
     public static MySqlDbManger createInstance() {
         if (per == null) {
             per = new MySqlDbManger();
@@ -45,7 +44,6 @@ public class MySqlDbManger {
             e.printStackTrace();
         }
     }
-
     // 连接数据库，获取句柄+对象
     public java.sql.Connection connectDB() {
         System.out.println("Connecting to database...");

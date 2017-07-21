@@ -3,7 +3,9 @@ package com.food.lmln.food.db;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
@@ -230,11 +232,14 @@ public class MysqlDb {
                 sqle.printStackTrace();
             }
         }
+
         return   list;
     }
+
+
     public static  List<OrderInfo>   selectRiht(Connection conn, String sql) {
         List<OrderInfo> newList=new ArrayList<OrderInfo>(); ;
-        Log.d("MysqlDb", "conn:" + conn);
+
         int count=1;
         if (conn == null) {
             return null;
@@ -256,7 +261,6 @@ public class MysqlDb {
                 newList.add(info);
 
             }
-            Log.d("MysqlDb", "newList:" + newList);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
