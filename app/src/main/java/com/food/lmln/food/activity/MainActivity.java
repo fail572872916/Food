@@ -134,11 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bt_order_place.setText(R.string.order_place);
                        switch (msg.what) {
                        case send_msg_code1:
-                           Log.d("aaa", listRight.get(0).getName());
+
                            fragment1 = new BlankFragment();
 
                         String  name=listRight.get(0).getName();
-//                           EventBus.getDefault().post(new DeskInfo(name,name));
+                           EventBus.getDefault().post(new DeskInfo(name,name));
                            lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
                     lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -199,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         new Thread(new MyThread()).start();
         initSokect();
-
     }
 
     /**
@@ -247,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
         bt_order_place.setOnClickListener(listerner);
         bt_order_add_water.setOnClickListener(listerner);
-     
         fab_vending_machine = (FloatingActionButton) findViewById(R.id.fab_vending_machine);
         fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
@@ -257,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myContent = (FrameLayout) findViewById(R.id.myContent);
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         fab.setClosedOnTouchOutside(true);
-
         fragment1 = new BlankFragment();
         FragmentManager   fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -265,8 +262,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
-        int a=dbManager.selectDeskCount();
-
 
     }
     /**
@@ -281,8 +276,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mHandler.sendEmptyMessage(send_msg_code1);
             }
         }).start();
-
-
     }
     View.OnClickListener listerner = new View.OnClickListener() {
         @Override
@@ -297,12 +290,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_water:
-
                     break;
                 default:
                     break;
             }
-
         }
     };
 
@@ -345,10 +336,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void run() {
             try {
                 while (mHandlerFlag) {
-                    Thread.sleep(2000);// 线程暂停10秒，单位毫秒
+                    Thread.sleep(10000);// 线程暂停10秒，单位毫秒
                     conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                     newList = MysqlDb.selectRiht(conn, "select  * from   desk_temp where desk_no='4号桌'");
-                    Log.d("MyThread", "newList:" + newList);
                     Message message = new Message();
                     message.what = send_msg_code4;
                     Bundle bundle = new Bundle();
@@ -392,7 +382,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          }else {
 
          }
-
             con1.close();
             stopCode=2;
             return true;
@@ -401,7 +390,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
     }
-
     /**
      * 打印数据
      */
@@ -432,7 +420,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             msg.setData(bundle);
             mHandler.sendMessage(msg);
     }
-
     /**
      * 查询最后一个订单
      * @param con1
@@ -465,6 +452,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         }
     }
+
+    /**
+     * 进入选中的Fragment
+     * @param index
+     * @param tableName
+     */
     @SuppressLint("NewApi")
     private void setTabSelection(int index ,String tableName) {
         Log.d("MainActivity", tableName);
@@ -513,7 +506,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 transaction.add(R.id.myContent, fragment2);
             } else {
                 // 如果NewsFragment不为空，则直接将它显示出来
-                transaction.show(fragment2);
+                FragmentManager fgManager = getSupportFragmentManager();
+                //Activity用来管理它包含的Frament，通过getFramentManager()获取
+                FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
+//获取Framgent事务
+                Fragment fragment = fgManager.findFragmentById(R.id.myContent);
+//删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
+                fragmentTransaction.remove(fragment);
+//删除获取到的Fragment
+//指定动画，可以自己添加
+                String tag = null;
+                fragmentTransaction.addToBackStack(tag);
+//如果需要，添加到back栈中
+                fragmentTransaction.commit();
+
+
+                fragment2 = new Blank2Fragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("foodName",tableName);
+                fragment2.setArguments(bundle2);
+                transaction.add(R.id.myContent, fragment2);
             }
         }
         else {
@@ -558,13 +570,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @SuppressLint("NewApi")
     private void hideFragments(FragmentTransaction transaction) {
         if (fragment1 != null) {
-            transaction.hide(fragment1);
+            transaction.remove(fragment1);
         }
         if (fragment2 != null) {
-            transaction.hide(fragment2);
+            transaction.remove(fragment2);
         }
         if (fragment3 != null) {
-            transaction.hide(fragment3);
+            transaction.remove(fragment3);
         }
 
     }
@@ -614,6 +626,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHandler.sendEmptyMessage(send_msg_code2);
     }
 
+    /**\
+     * 销毁方法
+     * 销毁
+     */
     @Override
     protected void onDestroy() {
 
@@ -622,14 +638,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
+
+    /**
+     * 设置横屏
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         try {
             super.onConfigurationChanged(newConfig);
+
             if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 // land
-            } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                // port
+
+                MainActivity.this.setRequestedOrientation(
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+            } else {
+                MainActivity.this.setRequestedOrientation(
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
             }
         } catch (Exception ex) {
         }
@@ -698,6 +724,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     *隐藏状态栏
+     */
     private void hideNavigationBar() {
         // TODO Auto-generated method stub
         final View decorView = getWindow().getDecorView();

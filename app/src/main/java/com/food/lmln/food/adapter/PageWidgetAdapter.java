@@ -120,7 +120,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             utils.display(HttpUtils.Url+foodList.get(position*4).getIamge(), image1);
             text1.setText(foodList.get(position*4).getName()+"    ￥"+foodList.get(position*4).getPrice());
         }else {
-            image1.setImageResource(R.mipmap.main_bg7);
+            image1.setImageResource(R.mipmap.not_photo);
 
             text1.setText("");
         }
@@ -129,14 +129,14 @@ public class PageWidgetAdapter extends BaseAdapter  {
             text2.setText(foodList.get(position*4+1).getName()+"    ￥"+foodList.get(position*4+1).getPrice());
 
         }else {
-            image2.setImageResource(R.mipmap.main_bg7);
+            image2.setImageResource(R.mipmap.not_photo);
             text2.setText("");
         }
         if(position*4+2<foodList.size()){
             utils.display( HttpUtils.Url+foodList.get(position*4+2).getIamge(), image3);
             text3.setText(foodList.get(position*4+2).getName()+"    ￥"+foodList.get(position*4+2).getPrice());
         }else {
-            image3.setImageResource(R.mipmap.main_bg7);
+            image3.setImageResource(R.mipmap.not_photo);
             text3.setText("");
          
         }
@@ -144,7 +144,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             utils.display(HttpUtils.Url+foodList.get(position*4+3).getIamge(), image4);
             text4.setText(foodList.get(position*4+3).getName()+"    ￥"+foodList.get(position*4+3).getPrice());
         }else {
-            image4.setImageResource(R.mipmap.main_bg7);
+            image4.setImageResource(R.mipmap.not_photo);
             text4.setText("");
 
         }
@@ -169,7 +169,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             public void onClick(View v) {
 
 
-                            if((position*4+1)<=foodList.size()){
+                            if((position*4+1)<foodList.size()){
                                 EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+1).getName(),
                                         Double.valueOf( foodList.get(position*4+2).getPrice()), 0,true));
                     }
@@ -190,7 +190,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             public void onClick(View v) {
 
 
-                            if(foodList.get(position*4+3).getName().length()==foodList.size()){
+                            if((position*4+3)<=foodList.size()){
                                 EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+3).getName(),
                                         Double.valueOf( foodList.get(position*4+3).getPrice()), 0,true));
                     }

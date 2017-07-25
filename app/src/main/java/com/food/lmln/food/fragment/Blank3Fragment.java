@@ -209,7 +209,7 @@ public class Blank3Fragment extends Fragment {
                 if(simpleList.size()>=1){
               imageUrl1 =simpleList.get(0).getIamge();
                     loadUrl1= HttpUtils.Url+imageUrl1;
-                    Log.d("aaaa", "fdasfas"+loadUrl1);
+
                     utils.display(loadUrl1,viewHolder.im_big1);
                 }
                 if(simpleList.size()>2){
@@ -234,7 +234,7 @@ public class Blank3Fragment extends Fragment {
                 loadUrl4= HttpUtils.Url+imageUrl4;
                 loadUrl5= HttpUtils.Url+imageUrl5;
                 loadUrl6= HttpUtils.Url+imageUrl6;
-                Log.d("aaaa", "load"+loadUrl1);
+
             }
 
 

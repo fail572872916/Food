@@ -85,8 +85,6 @@ public class Blank1Fragment extends Fragment {
 
 
 
-
-
         }
 
 

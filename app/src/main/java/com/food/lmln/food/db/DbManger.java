@@ -126,7 +126,7 @@ public class DbManger {
     }
 
     public   int selectDeskCount(){
-int a=0;
+    int a=0;
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
         Cursor cursor = db.rawQuery("select * from " + DESKINFO, null);
         a=cursor.getCount();
@@ -158,7 +158,6 @@ int a=0;
         }
         return cursorToLsit(cursor);
     }
-
     public static List<FoodinfoSmall> cursorToLsit(Cursor cursor) {
         List<FoodinfoSmall> list = new ArrayList<>();
 

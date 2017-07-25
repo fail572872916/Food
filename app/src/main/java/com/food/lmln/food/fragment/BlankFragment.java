@@ -104,7 +104,6 @@ public class BlankFragment extends Fragment {
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             foodList  = (List<FoodInfo>) bundle.getSerializable("lookList");
-            Log.d("BlankFragment", "foodList:" + foodList);
             adapter = new MyAdapter(getActivity(),foodList);
             adapter.notifyDataSetChanged();
             viewPager.setOffscreenPageLimit(0);
@@ -115,15 +114,10 @@ public class BlankFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);  //注册
-
     }
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View  view= inflater.inflate(R.layout.fragment_blank1, container, false);
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if(bundle!=null) {
@@ -166,7 +160,6 @@ public class BlankFragment extends Fragment {
                     foodList.add(f);
                 }
                 Message msg = new Message();
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("lookList", (Serializable) foodList);
                 msg.setData(bundle);
@@ -174,11 +167,6 @@ public class BlankFragment extends Fragment {
 
             }
         }).start();}
-
-
-
-
-
     /**
      * 获得数据
      * 判断操作
@@ -193,7 +181,6 @@ public class BlankFragment extends Fragment {
             f.setList(personList);
             foodList.add(f);
         }
-
     }
     /**
      *
@@ -412,7 +399,6 @@ public class BlankFragment extends Fragment {
         gd_frgment1.setLayoutAnimation(controller);
     }
 
-
     private class ViewHolder {
         public ImageView im_big;
         public ImageView im_small;
@@ -502,7 +488,6 @@ public class BlankFragment extends Fragment {
             throw new RuntimeException(e);
         }
     }
-
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onMoonEvent(DeskInfo info ) {
         Log.d("BlankFragment", info.getLocal_ip()+"fdsaf");

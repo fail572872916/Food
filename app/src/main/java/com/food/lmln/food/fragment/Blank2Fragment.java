@@ -1,7 +1,4 @@
 package com.food.lmln.food.fragment;
-
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,12 +29,10 @@ import static com.food.lmln.food.db.Constant.USERNAME;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
 
-
 public class Blank2Fragment extends Fragment {
     private List<FoodinfoSmall> simpleList = new ArrayList<FoodinfoSmall>();
     private List<FoodinfoSmall> personList= new ArrayList<FoodinfoSmall>();
     private List<FoodinfoSmall> foodList= new ArrayList<FoodinfoSmall>();
-
     private Connection conn; //Connection连接
     private int pageIndex=1; //当前页数;
     private int  pageSize=4;//每页显示的个数
@@ -54,8 +49,6 @@ public class Blank2Fragment extends Fragment {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case send_msg_code1:
-
-
                         adapter = new PageWidgetAdapter(getActivity(), foodList);
                         page.setAdapter(adapter);
                         break;
@@ -83,7 +76,6 @@ public class Blank2Fragment extends Fragment {
         return view;
     }
     private void initView() {
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -130,12 +122,10 @@ public class Blank2Fragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);
             childFragmentManager.set(this, null);
-
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
