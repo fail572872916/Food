@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_order_price;            //  200
     TextView tv_order_sum_name;         //总计
     FoodOrderAdapter mAdapter_order; //l类型适配器
-
     //创建Socket通信
     static socket_client client=new socket_client();
     FrameLayout myContent;
@@ -137,19 +136,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                        case send_msg_code1:
                            Log.d("aaa", listRight.get(0).getName());
                            fragment1 = new BlankFragment();
-//                           Bundle bundle2=new Bundle();
-//                           bundle2.putString("foodName", listRight.get(0).getName());
 
-
-//                           fragment1.setArguments(bundle2);
-////                           如果transaction  commit（）过  那么我们要重新得到transaction
-//                           FragmentManager manager =getSupportFragmentManager();
-//                           FragmentTransaction             transaction = manager.beginTransaction();
-//
-//                           transaction.add(R.id.myContent, fragment1);
-//                           transaction.commitAllowingStateLoss();
                         String  name=listRight.get(0).getName();
-                           EventBus.getDefault().post(new DeskInfo(name,name));
+//                           EventBus.getDefault().post(new DeskInfo(name,name));
                            lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
                     lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -206,13 +195,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //注册事件
         EventBus.getDefault().register(this);
-
         initView();
         initData();
         new Thread(new MyThread()).start();
         initSokect();
-//        post();
+
     }
+
+    /**
+     * 初始化
+     */
     private void initSokect() {
         if(serverIP_str.isEmpty()&&desk_num_str.isEmpty()){
             System.out.println("主机信息为空，请补充后再试试");
@@ -236,6 +228,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }.start();
         }
     }
+
+    /**
+     * 初始化组件
+     */
     private void initView() {
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
@@ -262,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         fab.setClosedOnTouchOutside(true);
 
-
         fragment1 = new BlankFragment();
         FragmentManager   fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -271,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
         int a=dbManager.selectDeskCount();
-        Log.d("MainActivity", "a:" + a);
+
 
     }
     /**
@@ -286,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mHandler.sendEmptyMessage(send_msg_code1);
             }
         }).start();
-        Log.d("MainActivity", "listRight:" + listRight);
+
 
     }
     View.OnClickListener listerner = new View.OnClickListener() {
@@ -478,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
         hideFragments(transaction);
         int num=++index;
-        Log.d("MainActivity", "num:" + num);
+
         if(num%3==0){
             if (fragment3 == null) {
                 // 如果NewsFragment为空，则创建一个并添加到界面上
@@ -530,8 +525,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragment1.setArguments(bundle2);
                 transaction.add(R.id.myContent, fragment1);
             } else {
-                // 如果SettingFragment不为空，则直接将它显示出来
-                transaction.show(fragment1);
+                // 如果NewsFragment不为空，则直接将它显示出来
+                FragmentManager fgManager = getSupportFragmentManager();
+                //Activity用来管理它包含的Frament，通过getFramentManager()获取
+                FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
+//获取Framgent事务
+                Fragment fragment = fgManager.findFragmentById(R.id.myContent);
+//删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
+                fragmentTransaction.remove(fragment);
+//删除获取到的Fragment
+//指定动画，可以自己添加
+                String tag = null;
+                fragmentTransaction.addToBackStack(tag);
+//如果需要，添加到back栈中
+                fragmentTransaction.commit();
+                Log.d("MainActivity", tableName);
+
+                fragment1 = new BlankFragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("foodName",tableName);
+                fragment1.setArguments(bundle2);
+                transaction.add(R.id.myContent, fragment1);
             }
         }
         transaction.commit();
@@ -558,7 +572,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int index = 1;
     private int count = 1;
 
-
+    /**
+     *接收传过来的值
+     * @param info
+     */
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info ) {
 
@@ -571,7 +588,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         list_order.add(info);
         addList = new ArrayList<OrderInfo>();
-
         Iterator<OrderInfo> it = list_order.iterator();
         while (it.hasNext()) {
             OrderInfo d = it.next();

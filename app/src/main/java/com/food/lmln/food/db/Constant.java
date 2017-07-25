@@ -15,6 +15,9 @@ public class Constant {
     public static  final   String  USERNAME="root";
     public static  final   String  PASSWORD="lm123456";
 
+    //ip地址
+    public  static final  String    SERVER_IP="192.168.0.198";
+
     public static  final String  DESK_TEMP ="lm_food.desk_temp" ;//临时点菜
     public static  final String  CONSUMPTIONID ="consumptionID" ;//临时点菜
     public static  final String  ORDERTABLE ="fd_describe" ;//临时点菜

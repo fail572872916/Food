@@ -154,7 +154,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
 
                     switch (v.getId()){
                         case R.id.im_item01:
-                            if(foodList.get(position*4).getName().length()!=0){
+                            if(position*4<=foodList.size()){
 
                                 EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4).getName(),
                                         Double.valueOf( foodList.get(position*4).getPrice()), 0,true));
@@ -169,7 +169,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             public void onClick(View v) {
 
 
-                            if(foodList.get(position*4+1).getName().length()!=0){
+                            if((position*4+1)<=foodList.size()){
                                 EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+1).getName(),
                                         Double.valueOf( foodList.get(position*4+2).getPrice()), 0,true));
                     }
@@ -179,7 +179,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             @Override
             public void onClick(View v) {
 
-                            if(foodList.get(position*4+2).getName().length()!=0){
+                            if((position*4+2)<=foodList.size()){
                                 EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+2).getName(),
                                         Double.valueOf( foodList.get(position*4+2).getPrice()), 0,true));
                     }
@@ -190,7 +190,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
             public void onClick(View v) {
 
 
-                            if(foodList.get(position*4+3).getName().length()!=0){
+                            if(foodList.get(position*4+3).getName().length()==foodList.size()){
                                 EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+3).getName(),
                                         Double.valueOf( foodList.get(position*4+3).getPrice()), 0,true));
                     }

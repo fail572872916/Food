@@ -99,16 +99,13 @@ public class BlankFragment extends Fragment {
     private Connection conn; //Connection连接
     private  String   tableName;
 
-    OnArticleSelectedListener mListener;
-
-
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             foodList  = (List<FoodInfo>) bundle.getSerializable("lookList");
             Log.d("BlankFragment", "foodList:" + foodList);
-            adapter = new MyAdapter();
+            adapter = new MyAdapter(getActivity(),foodList);
             adapter.notifyDataSetChanged();
             viewPager.setOffscreenPageLimit(0);
             viewPager.setAdapter(adapter);
@@ -135,55 +132,53 @@ public class BlankFragment extends Fragment {
         }
 
 
-
+        getData();
         viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
         rl  = (LinearLayout) view.findViewById(R.id.f1);
         holdCart = (ImageView) getActivity().findViewById(R.id.main_holdCart);
         holdRootView = (RelativeLayout) getActivity().findViewById(R.id.container);
         helper=DbManger.getInstance(getActivity());
         db = helper.getWritableDatabase();
+
+
+        return view;
+    }
+    /**
+     * 获取数据
+     */
+    private void getData() {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 foodList1 = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
-                initFood();
+
+
+                pageCount = (int) Math.ceil(foodList1.size()/(double)pageSize);
+                pageNum = (int) Math.ceil(pageCount/(double)pageSize);
+
+                for (int i = 1;  i <pageNum+1; i++) {
+                    FoodInfo f =  new FoodInfo();
+                    f.setKey(i);
+                    personList = MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
+                    f.setList(personList);
+                    foodList.add(f);
+                }
+                Message msg = new Message();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("lookList", (Serializable) foodList);
+                msg.setData(bundle);
+                mHandler.sendMessage(msg);
+
             }
-        }).start();
-//        init();
-//        adapter = new MyAdapter();
-//            adapter.notifyDataSetChanged();
-//            viewPager.setOffscreenPageLimit(0);
-//            viewPager.setAdapter(adapter);
-        return view;
-    }
-    private void initFood() {
-        int pageCount;  //总页数
+        }).start();}
 
-        pageCount = (int) Math.ceil(foodList1.size()/(double)pageSize);
-        pageNum = (int) Math.ceil(pageCount/(double)pageSize);
 
-        for (int i = 1;  i <pageNum+1; i++) {
-            FoodInfo f =  new FoodInfo();
-            f.setKey(i);
-            personList = MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
-            f.setList(personList);
-            foodList.add(f);
-        }
-        Log.d("aaaa", "foodLisst:" + foodList);
-        Message msg = new Message();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("lookList", (Serializable) foodList);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-//        Log.d("BlankFragment", "foodList:" + foodList);
-//        foodList1=MysqlDb.ByPageIndex(conn,tableName,pageIndex,pageSize);
 
-    }
-    public interface OnArticleSelectedListener {
-        public void onArticleSelected(String articleUri);
-    }
+
     /**
      * 获得数据
      * 判断操作
@@ -210,6 +205,13 @@ public class BlankFragment extends Fragment {
         private String   smallPrice;
         private String bigPrice;
         private ViewPager pager;
+        Context mContext;
+        List<FoodInfo> foodList=new ArrayList<FoodInfo>();
+        public MyAdapter(Context mContext, List<FoodInfo> foodList) {
+            this.mContext = mContext;
+            this.foodList = foodList;
+        }
+
 
         //用于存储回收掉的View
         private List<WeakReference<LinearLayout>> viewList=new ArrayList<WeakReference<LinearLayout>>();  ;
@@ -229,7 +231,6 @@ public class BlankFragment extends Fragment {
         }
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-
             if (pager == null) {
                 pager = (ViewPager) container;
             }
@@ -247,12 +248,11 @@ public class BlankFragment extends Fragment {
             }
             gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
             simpleList = foodList.get(position).getList();
-            List<FoodinfoSmall> apdaterList = new ArrayList<FoodinfoSmall>();
+
 //        获取子列表
             List<FoodinfoSmall> bigList;
             MyBitmapUtil utils;
             utils = new MyBitmapUtil();
-            Log.d("MyAdapter", "simpleList:" + simpleList);
             if (simpleList.size() >= 1) {
                 bigList = simpleList.subList(0, 1);
                 bigName = bigList.get(0).getName();
@@ -502,26 +502,20 @@ public class BlankFragment extends Fragment {
             throw new RuntimeException(e);
         }
     }
-    @Override
-    public void onDestroyView() {
-// TODO Auto-generated method stub
-        super.onDestroyView();
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
 
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onMoonEvent(DeskInfo info ) {
-
         Log.d("BlankFragment", info.getLocal_ip()+"fdsaf");
+        tableName=info.getLocal_ip();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
+                foodList1 = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
+                getData();
+            }
+        }).start();
+
     }
 
     @Override
