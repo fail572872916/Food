@@ -1,9 +1,11 @@
 package com.food.lmln.food.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 
 import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodInfo;
@@ -21,7 +23,7 @@ import java.util.List;
 import static com.food.lmln.food.db.Constant.ASSETS_NAME;
 import static com.food.lmln.food.db.Constant.BUFFER_SIZE;
 import static com.food.lmln.food.db.Constant.DATABASE_NAME;
-import static com.food.lmln.food.db.Constant.DESKINFO;
+
 import static com.food.lmln.food.db.Constant.TABLE_NAME_DESCRIBE;
 import static com.food.lmln.food.db.Constant.TABLE_NAME_FOODINFO;
 
@@ -125,15 +127,15 @@ public class DbManger {
         return result;
     }
 
-    public   int selectDeskCount(){
-    int a=0;
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
-        Cursor cursor = db.rawQuery("select * from " + DESKINFO, null);
-        a=cursor.getCount();
-        cursor.close();
-        db.close();
-        return a;
-    }
+//    public   int selectDeskCount(){
+//        int a=0;
+//        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DATABASE_NAME, null);
+//        Cursor cursor = db.rawQuery("select * from " + DESKINFO, null);
+//        a=cursor.getCount();
+//        cursor.close();
+//        db.close();
+//        return a;
+//    }
 
 
     /**
@@ -176,6 +178,80 @@ public class DbManger {
     }
 
     /**
+     * 保存设置的ip和桌台号
+     * @param db
+     * @param ip  ip
+     * @param desk  desk
+     * @return
+     */
+    public static  void  insertIP(SQLiteDatabase db, String  ip, String  desk ,int update){
+        int count=0;
+        if(db != null) {
+            String sql;
+            if (update==0) {
+             sql  = "insert into " + Constant.DESK_INFO + " values(1,'" + ip + "','" + desk + "');";
+                db.execSQL(sql);
+            }else {
+                 sql = "update " + Constant.DESK_INFO + " set  local_ip ='" +ip + "',local_desk ='" + desk +"';";
+                Log.d("DbManger", sql);
+//                ContentValues updateCV=new ContentValues();
+//                updateCV.put("local_ip", ip);
+//                updateCV.put("local_desk", desk);
+//                //通过ContentValues 修改数据
+//                db.update("person", updateCV, null,null);
+            db.execSQL(sql);
+            }
+
+//执行SQL语句
+
+        }
+
+
+        db.close();
+    }
+
+//    /**
+//     * 查询Ip
+//     * @param
+//     */
+
+    public static List<DeskInfo> selectDeskInfo(SQLiteDatabase db,String  tabName) {
+        List<DeskInfo> result = new ArrayList<>();
+        if(db != null) {
+            Cursor cursor = db.rawQuery("select * from " + Constant.DESK_INFO, null);
+
+            DeskInfo foodInfo;
+            while (cursor.moveToNext()) {
+                String local_ip = cursor.getString(cursor.getColumnIndex(Constant.DESK_LOCAL_IP));
+                String local_desk = cursor.getString(cursor.getColumnIndex(Constant.DESK_LOCAL_DESK));
+
+                foodInfo = new DeskInfo(local_ip, local_desk);
+                result.add(foodInfo);
+            }
+
+        cursor.close();
+        }
+        db.close();
+        return result;
+    }
+
+
+//    public static List<DeskInfo> select_IP_Desk_info(SQLiteDatabase db,String  tabName  ){
+//
+//        if(db !=null) {
+//            Cursor cursor = db.rawQuery("select * from" +Constant.DESK_INFO+";", null);
+//            if (cursor != null && cursor.getCount() > 0) {
+//                while (cursor.moveToNext()) {
+//
+//                    serverIP_str = cursor.getString(1);
+//                    desk_num_str = cursor.getString(2);
+//                    DeskInfo info = new DeskInfo()
+//                }
+//            }
+//        }
+//        db.close();
+//    }
+    /**
      * @param db        数据库
      * @param tableName 表名
      * @return 返回的总数
@@ -185,8 +261,9 @@ public class DbManger {
         if (db != null) {
             Cursor cursor = db.rawQuery("select * from " + tableName, null);
             count = cursor.getCount();
+            cursor.close();
         }
-
+        db.close();
         return count;
     }
 }

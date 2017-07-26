@@ -118,7 +118,6 @@ public class Blank3Fragment extends Fragment {
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if(bundle!=null) {
             tableName = bundle.getString("foodName");
-
         }
         new Thread(new Runnable() {
             @Override

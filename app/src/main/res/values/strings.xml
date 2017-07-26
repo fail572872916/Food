@@ -16,6 +16,20 @@
     <string name="robot">机器人</string>
     <string name="tesk">桌台</string>
     <string name="ip">IP</string>
+    <string name="tip_ip">请输入IP</string>
+    <string name="tip_desk_no">请输入桌台号</string>
+    <string name="tip_set_ip">您还没有设置ip</string>
+    <string name="tip_not_order">你还没有点菜</string>
+    <string name="tip_check_ip">请检查你的Ip</string>
+    <string name="tip_open_desk">正在开台</string>
+    <string name="tip_fail_desk">开台失败</string>
+    <string name="tip_succeed_desk">开台成功</string>
+    <string name="tip_new_add1">新添加订单失败</string>
+    <string name="tip_new_add2">添加桌台失败</string>
+    <string name="tip_new_add3">临时订单出现异常</string>
+
+
+
 
     <string name="order_item_text">%1$s&#160;%2$d</string>
     <!-- TODO: Remove or change this placeholder text -->

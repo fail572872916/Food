@@ -164,7 +164,6 @@ public class BlankFragment extends Fragment {
                 bundle.putSerializable("lookList", (Serializable) foodList);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
-
             }
         }).start();}
     /**

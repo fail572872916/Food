@@ -13,8 +13,7 @@ import java.sql.Statement;
 import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
 import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
-import static com.food.lmln.food.db.Constant.ORDERID;
-import static com.food.lmln.food.db.Constant.ORDERINFO;
+
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
 
@@ -45,30 +44,30 @@ public class MYsqlHelper {
 
 
     //知道学生的学号得到他的密码
-    public static String selectPwd()
-    {
-        String result="";
-        try
-        {
-            Connection con=getConnection();
-            Statement st=con.createStatement();
-            String sql = "select "+ORDERID+" from "+ORDERINFO+" order by "+ORDERID+" desc limit 0,1;";
-            ResultSet rs=st.executeQuery(sql);
-            if(rs.next())
-            {
-                result=rs.getString("CONSUMPTIONID");
-
-            }
-            rs.close();
-            st.close();
-            con.close();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return result;
-    }
+//    public static String selectPwd()
+//    {
+//        String result="";
+//        try
+//        {
+//            Connection con=getConnection();
+//            Statement st=con.createStatement();
+//            String sql = "select "+ORDERID+" from "+ORDERINFO+" order by "+ORDERID+" desc limit 0,1;";
+//            ResultSet rs=st.executeQuery(sql);
+//            if(rs.next())
+//            {
+//                result=rs.getString("CONSUMPTIONID");
+//
+//            }
+//            rs.close();
+//            st.close();
+//            con.close();
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
     public static int selectClear()  {
         int num = 0;
       
