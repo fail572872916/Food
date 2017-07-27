@@ -3,6 +3,7 @@ package com.food.lmln.food.utils;
 		import java.io.IOException;
 		import java.io.InputStream;
 		import java.io.OutputStreamWriter;
+		import java.io.PrintWriter;
 		import java.net.Socket;
 		import java.util.ArrayList;
 		import java.util.List;
@@ -41,10 +42,9 @@ public class socket_client  extends Activity{
 		};
 		thr.setDaemon(true);
 		thr.start();
-
 	}
 
-	private void again_connect(final String ip)
+	public void again_connect(final String ip)
 	{	while (true) {
 		Thread thr  =new Thread(){
 			@Override
@@ -119,6 +119,20 @@ public class socket_client  extends Activity{
 
 
 	/**
+	 * 判断是否断开连接，断开返回true,没有返回false
+	 * @param
+	 * @return
+	 */
+	public Boolean isServerClose(){
+		try{
+			client.sendUrgentData(0xFF);//发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
+			return false;
+		}catch(Exception se){
+			return true;
+		}
+	}
+
+	/**
 	 * 发送打印信息
 	 * @param obj
 	 */
@@ -132,6 +146,23 @@ public class socket_client  extends Activity{
 		}
 	}
 
+
+	/**
+	 * 发送数据，发送失败返回false,发送成功返回true
+	 * @param
+	 * @param
+	 * @return
+	 */
+	public Boolean SendJson(JSONObject obj){
+		try{
+			PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+			out.println(obj);
+			return true;
+		}catch(Exception se){
+			se.printStackTrace();
+			return false;
+		}
+	}
 	private void ReceiveDate()
 	{
 		byte[] buffer = new byte[1024];

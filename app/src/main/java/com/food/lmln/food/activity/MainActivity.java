@@ -199,18 +199,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case send_msg_code5:
+                    if(founding !=null ){
                     if (founding == Constant.STATUS_RUN || founding.equals(Constant.STATUS_RUN)) {
                         startTemp();
                     } else {
                         //查询桌台与
                         selectIpDesk();
-
                         selectAndAdd();
+                    }}else {
+                        Toast.makeText(MainActivity.this, R.string.tip_check_desk, Toast.LENGTH_SHORT).show();
                     }
+
                     break;
                 case Constant.send_msg_code6:
                     if (startFouding == 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_succeed_desk, Toast.LENGTH_SHORT).show();
+                        startTemp();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.tip_fail_desk, Toast.LENGTH_SHORT).show();
                     }
@@ -232,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case Constant.send_msg_code9:
                     if (startDeskNo == 1) {
+                        Toast.makeText(MainActivity.this, R.string.tip_runing_order, Toast.LENGTH_SHORT).show();
                         startFounding();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.tip_new_add2, Toast.LENGTH_SHORT).show();
@@ -247,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
-
     /**
      * 临时下单
      */
@@ -269,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
                                 + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "20" + "','" + 1 + "','" + 0 + "');";
                         conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                        orderOk = MysqlDb.exuqueteUpdate(conn, sql);
+                        orderOk = MysqlDb.exuqueteUpdate(conn, sql1);
                     }
                 }
                 mHandler.sendEmptyMessage(Constant.send_msg_code10);
@@ -465,7 +469,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (set < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
                         new DialogTablde().showDialog(MainActivity.this);
-
                     } else if (addList == null||addList.size()<1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
                     } else {
@@ -526,12 +529,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 查询桌台与Ip
      */
     private void selectIpDesk(){
-
         db = helper.getWritableDatabase();
         List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
         deskNo = li.get(0).getLocal_desk();
         deskIp = li.get(0).getLocal_ip();
-
     }
     /**
      * 打印数据
@@ -553,30 +554,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        int a=  MainActivity.client.sendTest();
-        if(a==1) {
-        MainActivity.client.sendfood(jsonObj);
-            addList = null;
-            list_order.clear();
-            Message msg = new Message();
-            msg.what = send_msg_code3;
-            Bundle bundle = new Bundle();
-            bundle.putInt("upOrder", 0);
-            msg.setData(bundle);
-            stopCode=2;
-            mHandler.sendMessage(msg);
-        }else {
-            Message msg = new Message();
-            msg.what = send_msg_code3;
-            Bundle bundle = new Bundle();
-            bundle.putInt("upOrder", 0);
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-            MainActivity.client.runclient(deskIp);
-            Toast.makeText(MainActivity.this, "连接主机失败，正在连接，清稍后再试", Toast.LENGTH_SHORT).show();
+        int a=10;
 
-        }
+        if(testSocket(a)){
+        MainActivity.client.SendJson(jsonObj);
+        addList = null;
+        list_order.clear();
+        Message msg = new Message();
+        msg.what = send_msg_code3;
+        Bundle bundle = new Bundle();
+        bundle.putInt("upOrder", 0);
+        msg.setData(bundle);
+        stopCode=2;
+        mHandler.sendMessage(msg);
+    }else {
+        Message msg = new Message();
+        msg.what = send_msg_code3;
+        Bundle bundle = new Bundle();
+        bundle.putInt("upOrder", 0);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+        MainActivity.client.runclient(deskIp);
+        Toast.makeText(MainActivity.this, "打印失败", Toast.LENGTH_SHORT).show();
     }
+}
+
+    public   boolean testSocket( int a)  {
+        boolean  isConn =   MainActivity.client.isServerClose();//判断是否断开
+        if (isConn==true){
+            if(a>0){
+                MainActivity.client.runclient(deskIp);
+                a--;
+
+                testSocket(a);
+            }else {
+                return false;
+            }
+            return  false;
+        }
+        return true;
+        }
 
     /**
      * 进入选中的Fragment
@@ -693,13 +710,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @SuppressLint("NewApi")
     private void hideFragments(FragmentTransaction transaction) {
         if (fragment1 != null) {
-            transaction.remove(fragment1);
+            transaction.hide(fragment1);
         }
         if (fragment2 != null) {
-            transaction.remove(fragment2);
+            transaction.hide(fragment2);
         }
         if (fragment3 != null) {
-            transaction.remove(fragment3);
+            transaction.hide(fragment3);
         }
     }
 
