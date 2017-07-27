@@ -1,20 +1,19 @@
 package com.food.lmln.food.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -22,6 +21,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +38,12 @@ import com.food.lmln.food.db.SqlHelper;
 import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
+import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.utils.FileUtils;
 import com.food.lmln.food.utils.VeDate;
 import com.food.lmln.food.utils.socket_client;
 import com.food.lmln.food.view.DialogTablde;
+import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -57,10 +59,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -76,7 +74,6 @@ import static com.food.lmln.food.db.Constant.send_msg_code2;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.db.Constant.send_msg_code5;
-import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -404,12 +401,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
         bt_order_place.setOnClickListener(listerner);
         bt_order_add_water.setOnClickListener(listerner);
+        bt_order_add_settlement.setOnClickListener(listerner);
         fab_vending_machine = (FloatingActionButton) findViewById(R.id.fab_vending_machine);
         fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
         fab_robot.setOnClickListener(this);
         fab_setting.setOnClickListener(this);
         fab_vending_machine.setOnClickListener(this);
+
         myContent = (FrameLayout) findViewById(R.id.myContent);
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         fab.setClosedOnTouchOutside(true);
@@ -485,6 +484,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_water:
+                    break;
+                case R.id.bt_order_add_settlement:
+
+                    final MyPopWindow p= new MyPopWindow(MainActivity.this);
+                    p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    p.setOnItemClickListener(new MyPopWindow.OnItemClickListener() {
+                        @Override
+                        public void setOnItemClick(View v) {
+                            FragmentManager fm = getSupportFragmentManager();
+                            FragmentDialogPay editNameDialog = new FragmentDialogPay();
+                            Bundle bundle =new Bundle();
+                            switch (v.getId()){
+                                case R.id.im_pay_ali:
+
+                                    bundle.putString(Constant.PAY_TYPE,Constant.ALI);
+                                    editNameDialog.setArguments(bundle);
+                                    editNameDialog.show(fm, "ali");
+                                p.dismiss();
+                                    break;
+                                case R.id.im_pay_weixin:
+                                    bundle.putString(Constant.PAY_TYPE,Constant.WEIXIN);
+                                    editNameDialog.setArguments(bundle);
+                                    editNameDialog.show(fm, "wexin");
+                                    p.dismiss();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
                     break;
                 default:
                     break;

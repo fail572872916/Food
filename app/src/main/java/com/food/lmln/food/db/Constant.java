@@ -93,6 +93,14 @@ public class Constant {
 
     public static final int BUFFER_SIZE = 1024;
 
+
+    /**
+     * 结账
+     */
+    public static final String  PAY_TYPE="pay_type";
+    public static final String  ALI="ALI";
+    public static final String  WEIXIN="WEIXIN";
+
     /**
      * Handler执行码
      */
