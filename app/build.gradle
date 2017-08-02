@@ -16,6 +16,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -42,4 +43,7 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile files('libs/mysql-connector-java-5.0.8-bin.jar')
+    compile files('libs/alipay-sdk-java20170725114550.jar')
+    compile 'com.android.support:multidex:'
+
 }
