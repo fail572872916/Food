@@ -1,6 +1,10 @@
 package com.food.lmln.food.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
@@ -39,6 +43,8 @@ import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
 import com.food.lmln.food.fragment.FragmentDialogPay;
+import com.food.lmln.food.receiver.LocalBroadcastManager;
+import com.food.lmln.food.utils.ExampleUtil;
 import com.food.lmln.food.utils.FileUtils;
 import com.food.lmln.food.utils.VeDate;
 import com.food.lmln.food.utils.socket_client;
@@ -62,6 +68,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.ORDERTABLE;
@@ -138,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int startDeskNo;//临时台号是否成功
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
-
+    public static boolean isForeground = false;
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -355,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         new Thread(new MyThread()).start();
         initSokect();
+        registerMessageReceiver();
     }
     /**
      * 初始化
@@ -382,11 +391,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }.start();
         }
     }
+    //for receive customer msg from jpush server
+    private MessageReceiver mMessageReceiver;
+    public static final String MESSAGE_RECEIVED_ACTION = "com.food.lmln.food.MESSAGE_RECEIVED_ACTION";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_EXTRAS = "extras";
+    public void registerMessageReceiver() {
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        filter.addAction(MESSAGE_RECEIVED_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, filter);
+    }
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+                String messge = intent.getStringExtra(KEY_MESSAGE);
+                String extras = intent.getStringExtra(KEY_EXTRAS);
+                StringBuilder showMsg = new StringBuilder();
+                showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+                if (!ExampleUtil.isEmpty(extras)) {
+                    showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
+                }
+                setCostomMsg(showMsg.toString());
+
+                Toast.makeText(MainActivity.this, showMsg.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void setCostomMsg(String msg){
+        if (null != bt_order_add_rice) {
+            bt_order_add_rice.setText(msg);
+            bt_order_add_rice.setVisibility(android.view.View.VISIBLE);
+        }
+
+
+    }
 
     /**
      * 初始化组件
      */
     private void initView() {
+
+
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
         lv_main = (ListView) findViewById(R.id.lv_main);
@@ -484,7 +533,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_water:
+                    String rid = JPushInterface.getRegistrationID(getApplicationContext());
+                    if (!rid.isEmpty()) {
+                        Toast.makeText(MainActivity.this, rid, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Get registration fail, JPush init failed!", Toast.LENGTH_SHORT).show();
+                    }
+
+
                     break;
+
+                case  R.id.bt_order_add_rice:
+                    JPushInterface.init(getApplicationContext());
+
+                    break;
+
                 case R.id.bt_order_add_settlement:
 
                     final MyPopWindow p= new MyPopWindow(MainActivity.this);
@@ -802,8 +865,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     protected void onDestroy() {
-
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
+
         client.finish();
         //取消注册事件
         EventBus.getDefault().unregister(this);
@@ -832,13 +896,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     protected void onResume() {
+        registerMessageReceiver();
         /**
          * 设置为横屏
          */
         if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+        isForeground = true;
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        isForeground = false;
+        super.onPause();
     }
     /**
      * 判断停止线程
