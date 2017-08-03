@@ -33,6 +33,13 @@ public class SqlHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        db.execSQL("create table desk_info("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                + "local_ip  TEXT(60),"
+                + "local_desk  TEXT(60) );");
+
+
         Log.d("SqlHelper", "onCreate");
     }
     /**

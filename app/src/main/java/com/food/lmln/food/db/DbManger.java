@@ -218,7 +218,7 @@ public class DbManger {
     public static List<DeskInfo> selectDeskInfo(SQLiteDatabase db,String  tabName) {
         List<DeskInfo> result = new ArrayList<>();
         if(db != null) {
-            Cursor cursor = db.rawQuery("select * from " + Constant.DESK_INFO, null);
+            Cursor cursor = db.rawQuery("select * from " + tabName, null);
 
             DeskInfo foodInfo;
             while (cursor.moveToNext()) {

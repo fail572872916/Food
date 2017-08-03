@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String timeNow;//当前时间
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
-    private String deskNo; //当前桌台号
-    private String deskIp; //连接ip
+    private String deskNo=""; //当前桌台号
+    private String deskIp=""; //连接ip
     private int stopCode = 2;
     private Connection conn; //Connection连接
     /**
@@ -560,9 +560,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void selectIpDesk(){
         db = helper.getWritableDatabase();
         List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
-        deskNo = li.get(0).getLocal_desk();
-        deskIp = li.get(0).getLocal_ip();
-    }
+        if(li.size()>0) {
+            deskNo = li.get(0).getLocal_desk();
+            deskIp = li.get(0).getLocal_ip();
+        }}
     /**
      * 打印数据
      */

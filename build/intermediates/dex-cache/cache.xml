@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="E:\Food\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a6f6af715e29a7522e2b13c84c6be4b161cd7a2f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\Food\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="56e4c6976ba7c51a253a800b58f2a7d1eea0e57b">
+        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_7e35e9c725e6ea600c8d493baa5b986e6b528150\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\Food\app\libs\alipay-sdk-java20170725114550.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="8ac1f2eddc29358231398af50340793e143d9152">
+        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\alipay-sdk-java20170725114550_89b3990cb70671d1595341d3b243ee2906e1f653\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="7b9bfb6c4e4885660378a9c13330915c321f6cca">
+        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\mysql-connector-java-5.0.8-bin_f43d52e0116862e6d8d290c799f39c0e865af733\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Weili\.android\build-cache\f899ff23076da4322dba36ea5e6d3f9ab37f502a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0b380676ef7dda83bac6d3ffa8309e1e89320a13\classes.dex" />
+    </item>
+
+</items>
