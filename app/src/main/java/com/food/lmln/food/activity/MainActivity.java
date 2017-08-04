@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int startDeskNo;//临时台号是否成功
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
-    public static boolean isForeground = false;
+
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -363,14 +363,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         new Thread(new MyThread()).start();
         initSokect();
-        registerMessageReceiver();
     }
     /**
      * 初始化
      */
     private void initSokect() {
-        if (deskIp.isEmpty() && deskNo.isEmpty()) {
-            System.out.println("主机信息为空，请补充后再试试");
+        if (deskIp.isEmpty() && deskNo.isEmpty()) {System.out.println("主机信息为空，请补充后再试试");
         } else {
             // 连线 server
             client.runclient(deskIp);
@@ -391,51 +389,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }.start();
         }
     }
-    //for receive customer msg from jpush server
-    private MessageReceiver mMessageReceiver;
-    public static final String MESSAGE_RECEIVED_ACTION = "com.food.lmln.food.MESSAGE_RECEIVED_ACTION";
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_MESSAGE = "message";
-    public static final String KEY_EXTRAS = "extras";
-    public void registerMessageReceiver() {
-        mMessageReceiver = new MessageReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-        filter.addAction(MESSAGE_RECEIVED_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, filter);
-    }
-    public class MessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
-                String messge = intent.getStringExtra(KEY_MESSAGE);
-                String extras = intent.getStringExtra(KEY_EXTRAS);
-                StringBuilder showMsg = new StringBuilder();
-                showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
-                if (!ExampleUtil.isEmpty(extras)) {
-                    showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
-                }
-                setCostomMsg(showMsg.toString());
 
-                Toast.makeText(MainActivity.this, showMsg.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    private void setCostomMsg(String msg){
-        if (null != bt_order_add_rice) {
-            bt_order_add_rice.setText(msg);
-            bt_order_add_rice.setVisibility(android.view.View.VISIBLE);
-        }
-
-
-    }
 
     /**
      * 初始化组件
      */
     private void initView() {
-
-
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
         lv_main = (ListView) findViewById(R.id.lv_main);
@@ -486,7 +445,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -501,7 +459,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.fab_vending_machine:
                 Toast.makeText(this, "呼叫售卖机", Toast.LENGTH_SHORT).show();
                 break;
-
             default:
                 break;
         }
@@ -539,15 +496,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "Get registration fail, JPush init failed!", Toast.LENGTH_SHORT).show();
                     }
-
-
                     break;
-
                 case  R.id.bt_order_add_rice:
                     JPushInterface.init(getApplicationContext());
-
                     break;
-
                 case R.id.bt_order_add_settlement:
 
                     final MyPopWindow p= new MyPopWindow(MainActivity.this);
@@ -584,7 +536,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-
+    /**
+     * 定时运行
+     */
     public class MyThread implements Runnable {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -595,7 +549,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
-
         @Override
         public void run() {
             try {
@@ -671,7 +624,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(MainActivity.this, "打印失败", Toast.LENGTH_SHORT).show();
     }
 }
-
     public   boolean testSocket( int a)  {
         boolean  isConn =   MainActivity.client.isServerClose();//判断是否断开
         if (isConn==true){
@@ -823,7 +775,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info) {
-
         info = new OrderInfo(index, info.getName(), info.getPrice(), count, true);
         if (info.isFlag()) {
             stopCode = 1;
@@ -865,14 +816,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
         super.onDestroy();
 
         client.finish();
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
-
     /**
      * 设置横屏
      *
@@ -896,20 +846,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     protected void onResume() {
-        registerMessageReceiver();
+
         /**
          * 设置为横屏
          */
         if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-        isForeground = true;
+
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        isForeground = false;
+
         super.onPause();
     }
     /**
@@ -926,9 +876,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Thread th = new Thread(callable);
             th.interrupt();
             callable.stop();
-//            mHandler.removeCallbacks(runnable1);
             mHandler.removeCallbacks(new MyThread());
-//            new Thread(new MyThread()).interrupt();
         }
     }
     /**
@@ -953,9 +901,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-    //定义一个回调接
-
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

@@ -36,7 +36,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.food.lmln.food.db.Constant.send_msg_code1;
-import static com.food.lmln.food.utils.HttpUtils.Url;
+
 import static com.food.lmln.food.utils.ScreenUtils.getScreenHeight;
 
 

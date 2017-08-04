@@ -18,7 +18,6 @@ import com.food.lmln.food.utils.MyBitmapUtil;
 
 import java.util.List;
 
-import static com.food.lmln.food.utils.HttpUtils.Url;
 
 /**
  * Created by Weili on 2017/6/2.

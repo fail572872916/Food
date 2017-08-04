@@ -60,7 +60,7 @@ import static com.food.lmln.food.db.Constant.SQLURL;
 import static com.food.lmln.food.db.Constant.USERNAME;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
 
-import static com.food.lmln.food.utils.HttpUtils.Url;
+import static com.food.lmln.food.utils.HttpUtils.url;
 import static com.food.lmln.food.utils.ScreenUtils.getScreenHeight;
 //组件宽高
 public class Blank3Fragment extends Fragment {
@@ -207,7 +207,7 @@ public class Blank3Fragment extends Fragment {
             for (int i = 0; i < 6; i++) {
                 if(simpleList.size()>=1){
               imageUrl1 =simpleList.get(0).getIamge();
-                    loadUrl1= HttpUtils.Url+imageUrl1;
+                    loadUrl1= HttpUtils.url+imageUrl1;
 
                     utils.display(loadUrl1,viewHolder.im_big1);
                 }
@@ -228,11 +228,11 @@ public class Blank3Fragment extends Fragment {
                 }
 
 
-                loadUrl2= HttpUtils.Url+imageUrl2;
-                loadUrl3= HttpUtils.Url+imageUrl3;
-                loadUrl4= HttpUtils.Url+imageUrl4;
-                loadUrl5= HttpUtils.Url+imageUrl5;
-                loadUrl6= HttpUtils.Url+imageUrl6;
+                loadUrl2= HttpUtils.url+imageUrl2;
+                loadUrl3= HttpUtils.url+imageUrl3;
+                loadUrl4= HttpUtils.url+imageUrl4;
+                loadUrl5= HttpUtils.url+imageUrl5;
+                loadUrl6= HttpUtils.url+imageUrl6;
 
             }
 

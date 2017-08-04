@@ -45,6 +45,7 @@ import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.db.SqlHelper;
+import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MoveImageView;
 import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.view.ScrollGridView;
@@ -66,7 +67,7 @@ import static com.food.lmln.food.db.Constant.SQLURL;
 import static com.food.lmln.food.db.Constant.USERNAME;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
 import static com.food.lmln.food.db.Constant.send_msg_code3;
-import static com.food.lmln.food.utils.HttpUtils.Url;
+
 
 public class BlankFragment extends Fragment {
     private List<FoodinfoSmall> simpleList = new ArrayList<FoodinfoSmall>();
@@ -251,8 +252,8 @@ public class BlankFragment extends Fragment {
                      smallName= bigList.get(0).getName();
                     smallPrice = bigList.get(0).getPrice();
                 }
-                big_imageUrl = Url + String.valueOf(big_img);
-                small_imageUrl = Url + String.valueOf(small_img);
+                big_imageUrl = HttpUtils.url + String.valueOf(big_img);
+                small_imageUrl = HttpUtils.url  + String.valueOf(small_img);
                 utils.display(big_imageUrl, viewHolder.im_big);
                 utils.display(small_imageUrl, viewHolder.im_small);
                 viewHolder.tv_small_text.setText(smallName + "");

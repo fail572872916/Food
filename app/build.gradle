@@ -53,6 +53,9 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile files('libs/mysql-connector-java-5.0.8-bin.jar')
-    compile 'cn.jiguang.sdk:jpush:3.0.3'  // 此处以JPush 3.0.3 版本为例。
-    compile 'cn.jiguang.sdk:jcore:1.1.1'  // 此处以JCore 1.1.1 版本为例。
+    compile 'cn.jiguang.sdk:jpush:3.0.3'
+    // 此处以JPush 3.0.3 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.1'
+    // 此处以JCore 1.1.1 版本为例。
+    compile files('libs/core-3.2.1.jar')
 }

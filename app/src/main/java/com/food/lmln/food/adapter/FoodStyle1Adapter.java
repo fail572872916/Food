@@ -14,13 +14,13 @@ import com.food.lmln.food.R;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.OrderInfo;
 import com.food.lmln.food.callback.ClothAddCallback;
+import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.view.ScrollGridView;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
-import static com.food.lmln.food.utils.HttpUtils.Url;
 import static com.food.lmln.food.utils.ScreenUtils.getGridViewWeight;
 
 
@@ -81,7 +81,7 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         vieewHolder.tv_item_name.setText(list.get(position).getName());
         vieewHolder.tv_item_price.setText("￥"+list.get(position).getPrice()+"");
 
-        String url=Url+list.get(position).getIamge();
+        String url= HttpUtils.url+list.get(position).getIamge();
 
         MyBitmapUtil utils;   utils = new MyBitmapUtil();
         utils.display(url,vieewHolder.im_item_image);

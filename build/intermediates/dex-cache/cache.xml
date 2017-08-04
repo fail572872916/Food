@@ -30,6 +30,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="E:\Food\app\libs\core-3.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="2287494d4f5f9f3a9a2bb6980e3f32053721b315">
+        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\core-3.2.1_71eb5f392298c7115ca00df8bc79aadc784fa7b5\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="E:\Food\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
