@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -82,11 +83,9 @@ public class FragmentDialogPay extends DialogFragment {
     private String mParam1;
     private View view;
     private ImageView im_pay_show;
+    private LinearLayout lin_bg;
     public static boolean isForeground = false;
-
-      OkHttpClient mOkHttpClient;
-    private String finalUrl;
-
+    OkHttpClient mOkHttpClient;
     public static FragmentDialogPay newInstance() {
         Bundle args = new Bundle();
         FragmentDialogPay fragment = new FragmentDialogPay();
@@ -120,11 +119,7 @@ public class FragmentDialogPay extends DialogFragment {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String val = data.getString("value");
-
-                im_pay_show.setImageBitmap(generateBitmap(val,500,500));
-
-
-
+            im_pay_show.setImageBitmap(generateBitmap(val,500,500));
         }
     };
     @Nullable
@@ -134,6 +129,7 @@ public class FragmentDialogPay extends DialogFragment {
         getDialog().setCanceledOnTouchOutside(false);  //点击外部不消失
         view = inflater.inflate(R.layout.fragement_dialog,container,false);
         im_pay_show = (ImageView) view.findViewById(R.id.im_pay_show);
+        lin_bg = (LinearLayout) view.findViewById(R.id.lin_bg);
 
         registerMessageReceiver();
 
@@ -141,6 +137,10 @@ public class FragmentDialogPay extends DialogFragment {
         initView();
         return view;
     }
+
+    /**
+     * 初始化信息
+     */
     private void initView() {
 //        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
 //            @Override
@@ -151,20 +151,20 @@ public class FragmentDialogPay extends DialogFragment {
 //                return false;
 //            }
 //        });
+        registration_id_value= JPushInterface.getRegistrationID(getActivity());
+        product_id_value="1";
+        time_value=System.currentTimeMillis()+"";
+        String url= HttpUtils.POSTWX+"Pay1?";
         if(mParam1.equals(Constant.ALI)){
-            im_pay_show.setImageResource(R.mipmap.pay_ali_show);
+            im_pay_show.setImageResource(R.mipmap.pay_ali_bg);
+            postAsynHttp(product_id_value,registration_id_value,time_value,url);
         }else{
-            im_pay_show.setImageResource(R.mipmap.pay_wechat);
-            registration_id_value= JPushInterface.getRegistrationID(getActivity());
-            product_id_value="1";
-            time_value=System.currentTimeMillis()+"";
-            Log.d("FragmentDialogPay", time_value);
+            im_pay_show.setImageResource(R.mipmap.pay_wx_bg);
             if (registration_id_value.isEmpty()) {
             } else if(product_id_value.isEmpty()) {
             }else if(time_value.isEmpty()){
             }else {
-                postAsynHttp(product_id_value,registration_id_value,time_value);
-
+                postAsynHttp(product_id_value,registration_id_value,time_value,url);
 
             }
         }
@@ -172,11 +172,15 @@ public class FragmentDialogPay extends DialogFragment {
     }
 
     /**
-     * 进行网络请求
+     * 网络请求
+     * @param mId   订单信息
+     * @param Rid  本机极光id
+     * @param Rtime 时间
+     * @param url  访问地址
      */
-    private void postAsynHttp( String mId,String Rid,String Rtime) {
+    private void postAsynHttp( String mId,String Rid,String Rtime,String url) {
         mOkHttpClient=new OkHttpClient();
-        String url= HttpUtils.POSTWX+"Pay1?";
+
         Log.d("FragmentDialogPay", mId + registration_id_key);
         RequestBody formBody = new FormBody.Builder()
                 .add(product_id_key, mId)
@@ -187,12 +191,11 @@ public class FragmentDialogPay extends DialogFragment {
                 .url(url)
                 .post(formBody)
                 .build();
-
         Call call = mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -213,13 +216,57 @@ public class FragmentDialogPay extends DialogFragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
-
         });
     }
 
-     /* 加载动画
+
+     private void postAsynHttp() {
+        mOkHttpClient=new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(HttpUtils.POSTWX+"Ali_Food_Pay")
+                .get()
+                .build();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String str = response.body().string();
+                Log.i("wangshu", str);
+                String url = null;
+                JSONObject josn = null;
+                try {
+                    josn = new JSONObject(str);
+                    url = josn.getString("data");
+                    Log.d("FragmentDialogPay", url);
+                    Message msg = new Message();
+                    Bundle data = new Bundle();
+                    data.putString("value",url);
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Message msg = new Message();
+//                        Bundle data = new Bundle();
+//                        data.putString("value",url);
+//                        msg.setData(data);
+//                        handler.sendMessage(msg);
+//                    }
+//                });
+            }
+        });
+    }
+
+    /* 加载动画
      * @param view
      */
     public static void slideToUp(View view){
@@ -244,7 +291,13 @@ public class FragmentDialogPay extends DialogFragment {
         });
     }
 
-
+    /**
+     * 生成二维码
+     * @param content
+     * @param width 宽
+     * @param height 高
+     * @return bitmap
+     */
     private Bitmap generateBitmap(String content, int width, int height) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, String> hints = new HashMap<>();
@@ -268,6 +321,9 @@ public class FragmentDialogPay extends DialogFragment {
         return null;
     }
 
+    /**
+     * 注册信息（极光）
+     */
     public void registerMessageReceiver() {
         mMessageReceiver = new MessageReceiver();
         IntentFilter filter = new IntentFilter();
@@ -290,6 +346,11 @@ public class FragmentDialogPay extends DialogFragment {
             }
         }
     }
+
+    /**
+     * 收到信息打印
+     * @param msg
+     */
     private void setCostomMsg(String msg){
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         Log.d("FragmentDialogPay", msg);

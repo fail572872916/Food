@@ -10,4 +10,6 @@
     <color name="colorBlack">#000000</color>
     <!--<淡蓝色-->
     <color name="colorBlue">#18b4ed</color>
+    <!--白色-->
+    <color name="colorWhite">#ffffff</color>
 </resources>
