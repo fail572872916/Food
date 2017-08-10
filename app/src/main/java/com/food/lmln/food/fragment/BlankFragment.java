@@ -107,8 +107,10 @@ public class BlankFragment extends Fragment {
             foodList  = (List<FoodInfo>) bundle.getSerializable("lookList");
             adapter = new MyAdapter(getActivity(),foodList);
             adapter.notifyDataSetChanged();
-            viewPager.setOffscreenPageLimit(0);
+            adapter.notifyDataSetChanged();
+
             viewPager.setAdapter(adapter);
+
         }
     };
     @Override
@@ -126,14 +128,14 @@ public class BlankFragment extends Fragment {
 
         }
 
-
-        getData();
-        viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
         rl  = (LinearLayout) view.findViewById(R.id.f1);
         holdCart = (ImageView) getActivity().findViewById(R.id.main_holdCart);
         holdRootView = (RelativeLayout) getActivity().findViewById(R.id.container);
         helper=DbManger.getInstance(getActivity());
         db = helper.getWritableDatabase();
+        viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
+        getData();
+
 
 
         return view;
@@ -148,7 +150,6 @@ public class BlankFragment extends Fragment {
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 foodList1 = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
-
 
                 pageCount = (int) Math.ceil(foodList1.size()/(double)pageSize);
                 pageNum = (int) Math.ceil(pageCount/(double)pageSize);

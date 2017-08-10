@@ -52,6 +52,7 @@ import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.kale.lib.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BlankFragment fragment1;
     private Blank2Fragment fragment2;
     private Blank3Fragment fragment3;
+    FragmentDialogPay editNameDialog;
     private DbManger dbManager;
     private List<OrderInfo> newList = new ArrayList<>();
     private List<OrderInfo> addList = new ArrayList<>();
@@ -131,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String timeNow;//当前时间
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
-    private String deskNo=""; //当前桌台号
-    private String deskIp=""; //连接ip
+    private String deskNo = ""; //当前桌台号
+    private String deskIp = ""; //连接ip
     private int stopCode = 2;
     private Connection conn; //Connection连接
     /**
@@ -160,16 +162,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bt_order_place.setText(R.string.order_place);
             switch (msg.what) {
                 case send_msg_code1:
+                    Bundle bundle2 = msg.getData();
+                    listRight= (List<MenuButton>) bundle2.getSerializable("listRight");
                     fragment1 = new BlankFragment();
-                    String name = listRight.get(0).getName();
-                    EventBus.getDefault().post(new DeskInfo(name, name));
-                    lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
-                    lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            setTabSelection(position, String.valueOf(listRight.get(position).getName()));
-                        }
-                    });
+                    if(listRight.size()>0) {
+                        String name = listRight.get(0).getName();
+                        EventBus.getDefault().post(new DeskInfo(name, name));
+                        lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
+                        lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                setTabSelection(position, String.valueOf(listRight.get(position).getName()));
+                            }
+                        });
+                    }
                     break;
                 case send_msg_code2:
                     double money = 0.0;
@@ -192,10 +198,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     int num1 = bundle1.getInt("Select");
                     newList = (List<OrderInfo>) bundle1.getSerializable("List");
                     if (stopCode == 2) {
-                        if (num1 > 1 || newList.size() > 0) {
+                        if (num1 > 1 && newList.size() >= 1) {
                             mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
-                            lv_main_order.setAdapter(mAdapter_order);
                             mAdapter_order.notifyDataSetChanged();
+                            lv_main_order.setAdapter(mAdapter_order);
+
                             bt_order_place.setEnabled(true);
                             break;
                         }
@@ -204,14 +211,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case send_msg_code5:
-                    if(founding !=null ){
-                    if (founding == Constant.STATUS_RUN || founding.equals(Constant.STATUS_RUN)) {
-                        startTemp();
+                    if (founding != null) {
+                        if (founding == Constant.STATUS_RUN || founding.equals(Constant.STATUS_RUN)) {
+                            startTemp();
+                        } else {
+                            //查询桌台与
+                            selectIpDesk();
+                            selectAndAdd();
+                        }
                     } else {
-                        //查询桌台与
-                        selectIpDesk();
-                        selectAndAdd();
-                    }}else {
                         Toast.makeText(MainActivity.this, R.string.tip_check_desk, Toast.LENGTH_SHORT).show();
                     }
 
@@ -228,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (!finallyOrder.equals("") || finallyOrder != null) {
                         FileUtils.rewriteOrdera(finallyOrder);
                         updateDeskTemp();
-                    }else {
+                    } else {
                         break;
                     }
                     break;
@@ -252,11 +260,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         sendPrint();
                     }
                     break;
-                case Constant.send_msg_code11:
-                    break;
+
             }
         }
     };
+
     /**
      * 临时下单
      */
@@ -285,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     /**
      * 新开的临时台
      */
@@ -298,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     /*
          * 更新奔条目i
          */
@@ -364,11 +374,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new Thread(new MyThread()).start();
         initSokect();
     }
+
     /**
      * 初始化
      */
     private void initSokect() {
-        if (deskIp.isEmpty() && deskNo.isEmpty()) {System.out.println("主机信息为空，请补充后再试试");
+        if (deskIp.isEmpty() && deskNo.isEmpty()) {
+            System.out.println("主机信息为空，请补充后再试试");
         } else {
             // 连线 server
             client.runclient(deskIp);
@@ -389,7 +401,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }.start();
         }
     }
-
 
     /**
      * 初始化组件
@@ -421,6 +432,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         fab.setClosedOnTouchOutside(true);
         fragment1 = new BlankFragment();
+         editNameDialog = new FragmentDialogPay();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.myContent, fragment1);
@@ -430,6 +443,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
         selectIpDesk();
+        editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
+            @Override
+            public void onDialogClick(String person) {
+                try {
+
+                    JSONObject  jsonObject = new JSONObject(person);
+                    if(jsonObject.getString("msgKey").equals("success"))
+                  print();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void print() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("orderInstruct", PRINTIN);//再将这个json格式的的数组放到最终的json对象中。
+            jsonObject.put("desk_num_str", deskNo);//再将这个json格式的的数组放到最终的json对象中。
+            jsonObject.put("command", Constant.CLEAR_DESK);//再将这个json格式的的数组放到最终的json对象中。
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d("print", "jsonObject:" + jsonObject);
+
+//        int a =5;
+//        if (testSocket(a))
+//            MainActivity.client.SendJson(jsonObject);
+//        else
+//            MainActivity.client.runclient(deskIp);
+
     }
 
     /**
@@ -441,10 +487,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 listRight = MysqlDb.selectCuisine(conn, "select  * from  " + ORDERTABLE + "");
-                mHandler.sendEmptyMessage(send_msg_code1);
+
+                Message msg = new Message();
+                msg.what = send_msg_code1;
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("listRight", (Serializable) listRight);
+                msg.setData(bundle);
+                mHandler.sendMessage(msg);
+
             }
         }).start();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -474,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (set < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
                         new DialogTablde().showDialog(MainActivity.this);
-                    } else if (addList == null||addList.size()<1) {
+                    } else if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
                     } else {
                         mHandlerFlag = false;
@@ -497,29 +551,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "Get registration fail, JPush init failed!", Toast.LENGTH_SHORT).show();
                     }
                     break;
-                case  R.id.bt_order_add_rice:
+                case R.id.bt_order_add_rice:
                     JPushInterface.init(getApplicationContext());
                     break;
                 case R.id.bt_order_add_settlement:
 
-                    final MyPopWindow p= new MyPopWindow(MainActivity.this);
-                    p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    final MyPopWindow p = new MyPopWindow(MainActivity.this);
+                    p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
                     p.setOnItemClickListener(new MyPopWindow.OnItemClickListener() {
                         @Override
                         public void setOnItemClick(View v) {
                             FragmentManager fm = getSupportFragmentManager();
-                            FragmentDialogPay editNameDialog = new FragmentDialogPay();
-                            Bundle bundle =new Bundle();
-                            switch (v.getId()){
+
+                            Bundle bundle = new Bundle();
+                            switch (v.getId()) {
                                 case R.id.im_pay_ali:
 
-                                    bundle.putString(Constant.PAY_TYPE,Constant.ALI);
+                                    bundle.putString(Constant.PAY_TYPE, Constant.ALI);
                                     editNameDialog.setArguments(bundle);
                                     editNameDialog.show(fm, "ali");
-                                p.dismiss();
+                                    p.dismiss();
                                     break;
                                 case R.id.im_pay_weixin:
-                                    bundle.putString(Constant.PAY_TYPE,Constant.WEIXIN);
+                                    bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN);
                                     editNameDialog.setArguments(bundle);
                                     editNameDialog.show(fm, "wexin");
                                     p.dismiss();
@@ -549,13 +603,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+
         @Override
         public void run() {
             try {
                 while (mHandlerFlag) {
                     Thread.sleep(3000);// 线程暂停10秒，单位毫秒
                     conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
-                    newList = MysqlDb.selectRiht(conn, "select  * from   desk_temp where desk_no='" +deskNo+"'");
+                    newList = MysqlDb.selectRiht(conn, "select  * from   desk_temp where desk_no='" + deskNo + "'");
                     Message message = new Message();
                     message.what = send_msg_code4;
                     Bundle bundle = new Bundle();
@@ -573,13 +628,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 查询桌台与Ip
      */
-    private void selectIpDesk(){
+    private void selectIpDesk() {
         db = helper.getWritableDatabase();
         List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
-        if(li.size()>0) {
+        if (li.size() > 0) {
             deskNo = li.get(0).getLocal_desk();
             deskIp = li.get(0).getLocal_ip();
-        }}
+        }
+    }
+
     /**
      * 打印数据
      */
@@ -600,45 +657,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        int a=10;
-
-        if(testSocket(a)){
-        MainActivity.client.SendJson(jsonObj);
-        addList = null;
-        list_order.clear();
-        Message msg = new Message();
-        msg.what = send_msg_code3;
-        Bundle bundle = new Bundle();
-        bundle.putInt("upOrder", 0);
-        msg.setData(bundle);
-        stopCode=2;
-        mHandler.sendMessage(msg);
-    }else {
-        Message msg = new Message();
-        msg.what = send_msg_code3;
-        Bundle bundle = new Bundle();
-        bundle.putInt("upOrder", 0);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-        MainActivity.client.runclient(deskIp);
-        Toast.makeText(MainActivity.this, "打印失败", Toast.LENGTH_SHORT).show();
+        int a = 10;
+        if (testSocket(a)) {
+            MainActivity.client.SendJson(jsonObj);
+            addList = null;
+            list_order.clear();
+            Message msg = new Message();
+            msg.what = send_msg_code3;
+            Bundle bundle = new Bundle();
+            bundle.putInt("upOrder", 0);
+            msg.setData(bundle);
+            stopCode = 2;
+            mHandler.sendMessage(msg);
+        } else {
+            Message msg = new Message();
+            msg.what = send_msg_code3;
+            Bundle bundle = new Bundle();
+            bundle.putInt("upOrder", 0);
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+            MainActivity.client.runclient(deskIp);
+            Toast.makeText(MainActivity.this, "打印失败", Toast.LENGTH_SHORT).show();
+        }
     }
-}
-    public   boolean testSocket( int a)  {
-        boolean  isConn =   MainActivity.client.isServerClose();//判断是否断开
-        if (isConn==true){
-            if(a>0){
+    public boolean testSocket(int a) {
+        boolean isConn = MainActivity.client.isServerClose();//判断是否断开
+        if (isConn == true) {
+            if (a > 0) {
                 MainActivity.client.runclient(deskIp);
                 a--;
-
                 testSocket(a);
-            }else {
+            } else {
                 return false;
             }
-            return  false;
+            return false;
         }
         return true;
-        }
+    }
 
     /**
      * 进入选中的Fragment
@@ -747,6 +802,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         transaction.commit();
     }
+
     /**
      * 将所有的Fragment都置为隐藏状态。
      *
@@ -823,6 +879,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
+
     /**
      * 设置横屏
      *
@@ -844,6 +901,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception ex) {
         }
     }
+
     @Override
     protected void onResume() {
 
@@ -858,10 +916,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onPause() {
+    protected void onPostResume() {
+        Log.d("MainActivity", "onPostResume");
+        stopCode=2;
+        isFlag(false);
+        super.onPostResume();
+    }
 
+    @Override
+    protected void onPause() {
+        Log.d("MainActivity", "onPause");
+        stopCode=1;
+        isFlag(true);
         super.onPause();
     }
+
     /**
      * 判断停止线程
      *
@@ -879,6 +948,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mHandler.removeCallbacks(new MyThread());
         }
     }
+
     /**
      * 隐藏状态栏
      */
@@ -901,6 +971,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("MainActivity", "in");
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

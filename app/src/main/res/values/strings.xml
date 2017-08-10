@@ -30,6 +30,8 @@
     <string name="tip_new_add1">新添加订单失败</string>
     <string name="tip_new_add2">添加桌台失败</string>
     <string name="tip_new_add3">临时订单出现异常</string>
+    <string name="text_surplus_time">剩余%1$s秒</string>
+    <string name="error_htp">请求失败</string>
 
 
 

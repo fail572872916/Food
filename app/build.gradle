@@ -35,7 +35,11 @@ android {
         }
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs' //this way we can find the .aar file in libs folder
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -58,4 +62,6 @@ dependencies {
     compile 'cn.jiguang.sdk:jcore:1.1.1'
     // 此处以JCore 1.1.1 版本为例。
     compile files('libs/core-3.2.1.jar')
+    compile(name:'kalelibrary', ext:'aar')
+
 }

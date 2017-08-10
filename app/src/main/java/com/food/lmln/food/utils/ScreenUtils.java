@@ -119,9 +119,28 @@ public class ScreenUtils {
         return bp;
 
     }
+
     public static LinearLayout.LayoutParams getGridViewWeight(Context context, List list) {
         int height = getScreenHeight(context);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, height/((list.size()/2)+1));
-         return  layoutParams;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, height / ((list.size() / 2) + 1));
+        return layoutParams;
     }
+
+    /**
+     * 动态改版控件的Margin
+     * @param v 控件
+     * @param l 左边
+     * @param t 上边
+     * @param r 右边
+     * @param b 底边
+     */
+    public static void setMargins(View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
+    }
+
+
 }

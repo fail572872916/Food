@@ -51,6 +51,7 @@ public final class LocalBroadcastManager {
                         break;
                     default:
                         super.handleMessage(msg);
+                        break;
                 }
 
             }

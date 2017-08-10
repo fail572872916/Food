@@ -6,6 +6,8 @@
     <color name="colorAccen1t">#FF4081</color>
     <!--透明-->
     <color name="transparent">#30000000</color>
+    <!--完全透明-->
+    <color name="transparent0">#00000000</color>
     <!--黑色-->
     <color name="colorBlack">#000000</color>
     <!--<淡蓝色-->
