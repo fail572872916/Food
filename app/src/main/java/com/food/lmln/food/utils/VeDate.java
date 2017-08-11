@@ -30,6 +30,19 @@ public class VeDate {
     }
 
     /**
+     * 返回系统当前时间(精确到毫秒),作为一个唯一的订单编号
+     *
+     * @return 以yyyyMMddHHmmss为格式的当前系统时间
+     */
+    /** 年月日时分秒(无下划线) yyyyMMddHHmmss */
+    public static final String dtLong = "yyyyMMddHHmmss";
+    public static String getOrderNum() {
+        Date date = new Date();
+        DateFormat df = new SimpleDateFormat(dtLong);
+        return df.format(date);
+    }
+
+    /**
      * 获取现在时间
      *
      * @return返回短时间格式 yyyy-MM-dd
@@ -108,7 +121,7 @@ public class VeDate {
      * 将短时间格式时间转换为字符串 yyyy-MM-dd
      *
      * @param dateDate
-     * @param k
+     * @param
      * @return
      */
     public static String dateToStr(java.util.Date dateDate) {

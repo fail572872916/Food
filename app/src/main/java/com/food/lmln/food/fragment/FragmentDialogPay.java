@@ -84,6 +84,7 @@ public class FragmentDialogPay extends DialogFragment {
     public String product_id_key = "product_id_key";
     public String product_id_value = "";
     public String time_key = "time_key";
+    public String order_key = "order_key";
     public String time_value = "";
 
     private String mParam1;
@@ -108,6 +109,7 @@ public class FragmentDialogPay extends DialogFragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(Constant.PAY_TYPE);
         }
+
     }
 
     @Override
@@ -129,9 +131,11 @@ public class FragmentDialogPay extends DialogFragment {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String val = data.getString("value");
-            if (val.equals("error"))
+            if (val.equals("error")) {
+
+                startCustomCountDownTime(3);
                 Toast.makeText(getActivity(), R.string.error_htp, Toast.LENGTH_SHORT).show();
-            else {
+            }else {
                 startCustomCountDownTime(90);
                 im_pay_show.setImageBitmap(generateBitmap(val, 500, 500));
             }
@@ -180,11 +184,21 @@ public class FragmentDialogPay extends DialogFragment {
         registration_id_value = JPushInterface.getRegistrationID(getActivity());
         product_id_value = "1";
         time_value = System.currentTimeMillis() + "";
+
         ScreenUtils.setMargins(im_pay_show, 50, 150, 50, 50);
-        if (mParam1.equals(Constant.ALI)) {
+        String type = null;
+        String ordrNo=null;
+        if(mParam1!=null){
+        String temp[]=mParam1.split("####");
+             type= temp[0];
+             ordrNo= temp[1];
+        }
+
+
+        if (type.equals(Constant.ALI)) {
             String url = HttpUtils.POSTWX + "Ali_Food_Pay?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
-            postAsynHttp(product_id_value, registration_id_value, time_value, url);
+            postAsynHttp(product_id_value, registration_id_value, time_value,ordrNo, url);
         } else {
             String url = HttpUtils.POSTWX + "Pay1?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
@@ -192,7 +206,7 @@ public class FragmentDialogPay extends DialogFragment {
             } else if (product_id_value.isEmpty()) {
             } else if (time_value.isEmpty()) {
             } else {
-                postAsynHttp(product_id_value, registration_id_value, time_value, url);
+                postAsynHttp(product_id_value, registration_id_value, time_value,ordrNo, url);
             }
         }
     }
@@ -205,12 +219,13 @@ public class FragmentDialogPay extends DialogFragment {
      * @param Rtime 时间
      * @param url   访问地址
      */
-    private void postAsynHttp(String mId, String Rid, String Rtime, String url) {
+    private void postAsynHttp(String mId, String Rid, String Rtime,String order, String url) {
         mOkHttpClient = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
                 .add(product_id_key, mId)
                 .add(registration_id_key, Rid)
                 .add(time_key, Rtime)
+                .add(order_key, order)
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -296,17 +311,12 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 getDialog().cancel();
-
-
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
-
-
     }
 
     /**
@@ -362,8 +372,8 @@ public class FragmentDialogPay extends DialogFragment {
                 if (!ExampleUtil.isEmpty(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
                 }
-                Log.d("FragmentDialogPay", messge
-                );
+
+
                 setCostomMsg(extras);
             }
         }
@@ -420,9 +430,7 @@ public class FragmentDialogPay extends DialogFragment {
                     }
                     tv_pay_time.setText(sFinalAge);
                 }
-
             }
-
             @Override
             public void onFinish() {
                 closeScale(lin_bg);

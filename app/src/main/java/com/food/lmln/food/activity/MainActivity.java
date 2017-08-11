@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int startDeskNo;//临时台号是否成功
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
-    private String orderNo=null; //查询当前桌台订单号
+    private String orderNo = null; //查询当前桌台订单号
 
     Handler mHandler = new Handler() {
         @Override
@@ -268,10 +268,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case Constant.send_msg_code11:
-                    if (orderNo!=null&&orderNo!="")
-                        inFragment();
+                    if (orderNo != null && orderNo != "")
+                        inFragment(orderNo);
                     else
-                        Toast.makeText(MainActivity.this,R.string.tip_is_start, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.tip_is_start, Toast.LENGTH_SHORT).show();
                     break;
 
                 default:
@@ -461,23 +461,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
-                Log.d("MainActivity", person);
+                Log.d("person", person);
+                JSONObject json = new JSONObject();
                 try {
-                    JSONObject jsonObject = new JSONObject(person);
-                    if (jsonObject.getString("msgKey").equals("success")) {
-                        JSONObject json = new JSONObject();
-                        try {
-                            json.put("orderInstruct", Constant.PRINTIN_CLEAR);
-                            json.put("desk_num_str", deskNo);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        sendPrint(jsonObject);
-                    }
+                    JSONObject js = new JSONObject(person);
+                    String msgKey = js.getString("msgKey");
+                    JSONObject js1 = new JSONObject(msgKey);
+                    String stasut = js1.getString("status");
+                    String type = js1.getString("pay_type");
+                    String money = js1.getString("money");
+                    String order = js1.getString("order");
+                    json.put("orderInstruct", Constant.PRINTIN_CLEAR);
+                    json.put("desk_num_str", deskNo);
+                    json.put("pey_type", type);
+                    json.put("money", money);
+                    json.put("order", order);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sendPrint(json);
+                Log.d("MainActivity", "json:" + json);
+
+
             }
         });
     }
@@ -529,7 +534,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (v.getId()) {
                 case R.id.bt_order_place:
                     selectIpDesk();
-                     if (addList == null || addList.size() < 1) {
+                    if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
                     } else {
                         mHandlerFlag = false;
@@ -556,17 +561,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     JPushInterface.init(getApplicationContext());
                     break;
                 case R.id.bt_order_add_settlement:
-                    if(deskNo.isEmpty())
-                    selectIpDesk();
-                    else
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                            orderNo = MysqlDb.selectDeskNO(conn, "select  " + Constant.CONSUMPTIONID + " from  " + Constant.DESK_CONSUMPTIONID + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
-                            mHandler.sendEmptyMessage(Constant.send_msg_code11);
-                        }
-                    }).start();
+                    inFragment(VeDate.getOrderNum());
+//                    if(deskNo.isEmpty())
+//                    selectIpDesk();
+//                    else
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
+//                            orderNo = MysqlDb.selectDeskNO(conn, "select  " + Constant.CONSUMPTIONID + " from  " + Constant.DESK_CONSUMPTIONID + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
+//                            mHandler.sendEmptyMessage(Constant.send_msg_code11);
+//                        }
+//                    }).start();
                     break;
                 default:
                     break;
@@ -587,6 +593,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+
         @Override
         public void run() {
             try {
@@ -619,15 +626,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
 
             new DialogTablde().showDialog(MainActivity.this);
-        }
-
-        else{
+        } else {
             db = helper.getWritableDatabase();
             List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
-        if (li.size() > 0) {
-            deskNo = li.get(0).getLocal_desk();
-            deskIp = li.get(0).getLocal_ip();
-        }
+            if (li.size() > 0) {
+                deskNo = li.get(0).getLocal_desk();
+                deskIp = li.get(0).getLocal_ip();
+            }
         }
     }
 
@@ -655,7 +660,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             msg.setData(bundle);
             mHandler.sendMessage(msg);
             MainActivity.client.runclient(deskIp);
-            Toast.makeText(MainActivity.this, "打印失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "连接失败...", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -848,6 +853,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mHandler.sendEmptyMessage(send_msg_code2);
     }
+
     /**
      * \
      * 销毁方法
@@ -860,6 +866,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
+
     /**
      * 设置横屏
      *
@@ -881,6 +888,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception ex) {
         }
     }
+
     @Override
     protected void onResume() {
         /**
@@ -891,6 +899,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         super.onResume();
     }
+
     @Override
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
@@ -951,8 +960,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 进入Fragment
      */
-    private void inFragment() {
+    private void inFragment(final String order_no) {
 
+        final String orderNo = order_no;
         final MyPopWindow p = new MyPopWindow(MainActivity.this);
         p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
         p.setOnItemClickListener(new MyPopWindow.OnItemClickListener() {
@@ -964,15 +974,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
 
-                        bundle.putString(Constant.PAY_TYPE, Constant.ALI);
+                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo);
                         editNameDialog.setArguments(bundle);
-                        editNameDialog.show(fm, "ali");
+                        editNameDialog.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
-                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN);
+                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + order_no);
                         editNameDialog.setArguments(bundle);
-                        editNameDialog.show(fm, "wexin");
+                        editNameDialog.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     default:
