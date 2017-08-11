@@ -26,8 +26,6 @@ public class socket_client  extends Activity{
 			public void run() {
 				try {
 					client = new Socket(ip,30000);
-					//	client = new Socket("192.168.1.107",30000);
-					//InputStream dataStream = client.getInputStream();
 					if(writer==null){
 						writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(),"UTF8"));
 					}
@@ -89,10 +87,6 @@ public class socket_client  extends Activity{
 	}
 
 	public void send(String desk_num,String people_num){
-//				if(writer==null){
-//					  Log.d("socket", "foodList1:" );
-//
-//				}
 		try {
 			writer.write("8906063210##"+desk_num+"#"+people_num+"\n");   //开台
 			writer.flush();  //强制发送
@@ -104,18 +98,18 @@ public class socket_client  extends Activity{
 	}
 
 	/**
-	 * 判断连接
-	 * @return
-	 */
-	public  int  sendTest(){
-		int a=0;
-		if(writer != null){
-			a=1;
-		}else{
-			a=0;
-		}
-		return a;
-	}
+     * 判断连接
+     * @return
+     */
+    public  int  sendTest(){
+        int a=0;
+        if(writer != null){
+            a=1;
+        }else{
+            a=0;
+        }
+        return a;
+    }
 
 
 	/**

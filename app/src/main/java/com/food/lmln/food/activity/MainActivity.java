@@ -1,16 +1,14 @@
 package com.food.lmln.food.activity;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +23,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,12 +36,10 @@ import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.db.SqlHelper;
-import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
+import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.FragmentDialogPay;
-import com.food.lmln.food.receiver.LocalBroadcastManager;
-import com.food.lmln.food.utils.ExampleUtil;
 import com.food.lmln.food.utils.FileUtils;
 import com.food.lmln.food.utils.VeDate;
 import com.food.lmln.food.utils.socket_client;
@@ -52,7 +47,6 @@ import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.kale.lib.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -148,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int startDeskNo;//临时台号是否成功
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
+    private String orderNO; //查询当前桌台订单号
 
     Handler mHandler = new Handler() {
         @Override
@@ -163,9 +158,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 case send_msg_code1:
                     Bundle bundle2 = msg.getData();
-                    listRight= (List<MenuButton>) bundle2.getSerializable("listRight");
+                    listRight = (List<MenuButton>) bundle2.getSerializable("listRight");
                     fragment1 = new BlankFragment();
-                    if(listRight.size()>0) {
+                    if (listRight.size() > 0) {
                         String name = listRight.get(0).getName();
                         EventBus.getDefault().post(new DeskInfo(name, name));
                         lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
@@ -189,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
                     int num = bundle.getInt("upOrder");
-
                     bt_order_place.setEnabled(num >= 1 ? false : true);
                     isFlag(true);
                     break;
@@ -222,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, R.string.tip_check_desk, Toast.LENGTH_SHORT).show();
                     }
-
                     break;
                 case Constant.send_msg_code6:
                     if (startFouding == 1) {
@@ -257,10 +250,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case Constant.send_msg_code10:
                     if (orderOk == 1) {
-                        sendPrint();
+                        JSONObject jsonObj = new JSONObject();//创建json格式的数据
+                        JSONArray jsonArr = new JSONArray();//json格式的数组
+                        try {
+                            for (OrderInfo orderInfo : list_order) {
+                                JSONObject jsonObjArr = new JSONObject();
+                                jsonObjArr.put("name", orderInfo.getName());
+                                jsonObjArr.put("price", String.valueOf(orderInfo.getPrice()));
+                                jsonObjArr.put("count", 1);
+                                jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
+                            }
+                            jsonObj.put("orderInstruct", PRINTIN);//再将这个json格式的的数组放到最终的json对象中。
+                            jsonObj.put("desk_num_str", deskNo);//再将这个json格式的的数组放到最终的json对象中。
+                            jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        sendPrint(jsonObj);
                     }
                     break;
-
+                case Constant.send_msg_code11:
+                    if (orderNO.isEmpty())
+                        inFragment();
+                    else
+                        Toast.makeText(MainActivity.this, "R.string.tip_is_start:" + R.string.tip_is_start, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -432,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         fab.setClosedOnTouchOutside(true);
         fragment1 = new BlankFragment();
-         editNameDialog = new FragmentDialogPay();
+        editNameDialog = new FragmentDialogPay();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -446,12 +459,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
+                Log.d("MainActivity", person);
                 try {
+                    JSONObject jsonObject = new JSONObject(person);
+                    if (jsonObject.getString("msgKey").equals("success")) {
+                        JSONObject json = new JSONObject();
+                        try {
+                            json.put("orderInstruct", Constant.PRINTIN_CLEAR);
+                            json.put("desk_num_str", deskNo);
 
-                    JSONObject  jsonObject = new JSONObject(person);
-                    if(jsonObject.getString("msgKey").equals("success"))
-                  print();
-
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        sendPrint(jsonObject);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -459,24 +480,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void print() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("orderInstruct", PRINTIN);//再将这个json格式的的数组放到最终的json对象中。
-            jsonObject.put("desk_num_str", deskNo);//再将这个json格式的的数组放到最终的json对象中。
-            jsonObject.put("command", Constant.CLEAR_DESK);//再将这个json格式的的数组放到最终的json对象中。
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.d("print", "jsonObject:" + jsonObject);
-
-//        int a =5;
-//        if (testSocket(a))
-//            MainActivity.client.SendJson(jsonObject);
-//        else
-//            MainActivity.client.runclient(deskIp);
-
-    }
 
     /**
      * 查询菜单
@@ -487,7 +490,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 listRight = MysqlDb.selectCuisine(conn, "select  * from  " + ORDERTABLE + "");
-
                 Message msg = new Message();
                 msg.what = send_msg_code1;
                 Bundle bundle = new Bundle();
@@ -518,17 +520,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         fab.toggle(false);
     }
+
     View.OnClickListener listerner = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.bt_order_place:
-                    db = helper.getWritableDatabase();
-                    int set = DbManger.getCountPerson(db, Constant.DESK_INFO);
-                    if (set < 1) {
-                        Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
-                        new DialogTablde().showDialog(MainActivity.this);
-                    } else if (addList == null || addList.size() < 1) {
+                    selectIpDesk();
+                     if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
                     } else {
                         mHandlerFlag = false;
@@ -555,34 +554,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     JPushInterface.init(getApplicationContext());
                     break;
                 case R.id.bt_order_add_settlement:
-
-                    final MyPopWindow p = new MyPopWindow(MainActivity.this);
-                    p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
-                    p.setOnItemClickListener(new MyPopWindow.OnItemClickListener() {
+                    if(deskNo.isEmpty())
+                    selectIpDesk();
+                    else
+                    new Thread(new Runnable() {
                         @Override
-                        public void setOnItemClick(View v) {
-                            FragmentManager fm = getSupportFragmentManager();
+                        public void run() {
 
-                            Bundle bundle = new Bundle();
-                            switch (v.getId()) {
-                                case R.id.im_pay_ali:
-
-                                    bundle.putString(Constant.PAY_TYPE, Constant.ALI);
-                                    editNameDialog.setArguments(bundle);
-                                    editNameDialog.show(fm, "ali");
-                                    p.dismiss();
-                                    break;
-                                case R.id.im_pay_weixin:
-                                    bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN);
-                                    editNameDialog.setArguments(bundle);
-                                    editNameDialog.show(fm, "wexin");
-                                    p.dismiss();
-                                    break;
-                                default:
-                                    break;
-                            }
+                            conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
+                            orderNO = MysqlDb.selectDeskNO(conn, "select  " + Constant.CONSUMPTIONID + " from  " + Constant.DESK_CONSUMPTIONID + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
+                            mHandler.sendEmptyMessage(Constant.send_msg_code11);
                         }
-                    });
+                    }).start();
                     break;
                 default:
                     break;
@@ -603,7 +586,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
-
         @Override
         public void run() {
             try {
@@ -630,33 +612,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void selectIpDesk() {
         db = helper.getWritableDatabase();
-        List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
+        int set = DbManger.getCountPerson(db, Constant.DESK_INFO);
+        if (set < 1) {
+
+            Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
+
+            new DialogTablde().showDialog(MainActivity.this);
+        }else{ List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
         if (li.size() > 0) {
             deskNo = li.get(0).getLocal_desk();
             deskIp = li.get(0).getLocal_ip();
         }
+        }
+
     }
 
     /**
      * 打印数据
      */
-    private void sendPrint() {
-        JSONObject jsonObj = new JSONObject();//创建json格式的数据
-        JSONArray jsonArr = new JSONArray();//json格式的数组
-        try {
-            for (OrderInfo orderInfo : list_order) {
-                JSONObject jsonObjArr = new JSONObject();
-                jsonObjArr.put("name", orderInfo.getName());
-                jsonObjArr.put("price", String.valueOf(orderInfo.getPrice()));
-                jsonObjArr.put("count", 1);
-                jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
-            }
-            jsonObj.put("orderInstruct", PRINTIN);//再将这个json格式的的数组放到最终的json对象中。
-            jsonObj.put("desk_num_str", deskNo);//再将这个json格式的的数组放到最终的json对象中。
-            jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void sendPrint(JSONObject jsonObj) {
         int a = 10;
         if (testSocket(a)) {
             MainActivity.client.SendJson(jsonObj);
@@ -680,6 +654,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, "打印失败", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * 判断是否断开
+     *
+     * @param a
+     * @return
+     */
     public boolean testSocket(int a) {
         boolean isConn = MainActivity.client.isServerClose();//判断是否断开
         if (isConn == true) {
@@ -722,15 +703,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentManager fgManager = getSupportFragmentManager();
                 //Activity用来管理它包含的Frament，通过getFramentManager()获取
                 FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
-//获取Framgent事务
+                //获取Framgent事务
                 Fragment fragment = fgManager.findFragmentById(R.id.myContent);
-//删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
+                //删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
                 fragmentTransaction.remove(fragment);
-//删除获取到的Fragment
-//指定动画，可以自己添加
+                //删除获取到的Fragment
+                //指定动画，可以自己添加
                 String tag = null;
                 fragmentTransaction.addToBackStack(tag);
-//如果需要，添加到back栈中
+                //如果需要，添加到back栈中
                 fragmentTransaction.commit();
                 fragment3 = new Blank3Fragment();
                 Bundle bundle2 = new Bundle();
@@ -751,15 +732,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentManager fgManager = getSupportFragmentManager();
                 //Activity用来管理它包含的Frament，通过getFramentManager()获取
                 FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
-//获取Framgent事务
+                //获取Framgent事务
                 Fragment fragment = fgManager.findFragmentById(R.id.myContent);
-//删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
+                //删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
                 fragmentTransaction.remove(fragment);
-//删除获取到的Fragment
-//指定动画，可以自己添加
+                //删除获取到的Fragment
+                //指定动画，可以自己添加
                 String tag = null;
                 fragmentTransaction.addToBackStack(tag);
-//如果需要，添加到back栈中
+                //如果需要，添加到back栈中
                 fragmentTransaction.commit();
 
                 fragment2 = new Blank2Fragment();
@@ -781,15 +762,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentManager fgManager = getSupportFragmentManager();
                 //Activity用来管理它包含的Frament，通过getFramentManager()获取
                 FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
-//获取Framgent事务
+                //获取Framgent事务
                 Fragment fragment = fgManager.findFragmentById(R.id.myContent);
-//删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
+                //删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
                 fragmentTransaction.remove(fragment);
-//删除获取到的Fragment
-//指定动画，可以自己添加
+                //删除获取到的Fragment
+                //指定动画，可以自己添加
                 String tag = null;
                 fragmentTransaction.addToBackStack(tag);
-//如果需要，添加到back栈中
+                //如果需要，添加到back栈中
                 fragmentTransaction.commit();
                 Log.d("MainActivity", tableName);
 
@@ -837,7 +818,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isFlag(false);
         }
 //        new Thread(new MyThread()).interrupt();
-
         list_order.add(info);
         addList = new ArrayList<OrderInfo>();
         Iterator<OrderInfo> it = list_order.iterator();
@@ -872,9 +852,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
-
         client.finish();
         //取消注册事件
         EventBus.getDefault().unregister(this);
@@ -904,21 +882,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onResume() {
-
         /**
          * 设置为横屏
          */
         if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-
         super.onResume();
     }
 
     @Override
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
-        stopCode=2;
+        stopCode = 2;
         isFlag(false);
         super.onPostResume();
     }
@@ -926,7 +902,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         Log.d("MainActivity", "onPause");
-        stopCode=1;
+        stopCode = 1;
         isFlag(true);
         super.onPause();
     }
@@ -967,6 +943,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onSystemUiVisibilityChange(int visibility) {
                 if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                     decorView.setSystemUiVisibility(flags);
+                }
+            }
+        });
+    }
+
+    /**
+     * 进入Fragment
+     */
+    private void inFragment() {
+
+        final MyPopWindow p = new MyPopWindow(MainActivity.this);
+        p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
+        p.setOnItemClickListener(new MyPopWindow.OnItemClickListener() {
+            @Override
+            public void setOnItemClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+
+                Bundle bundle = new Bundle();
+                switch (v.getId()) {
+                    case R.id.im_pay_ali:
+
+                        bundle.putString(Constant.PAY_TYPE, Constant.ALI);
+                        editNameDialog.setArguments(bundle);
+                        editNameDialog.show(fm, "ali");
+                        p.dismiss();
+                        break;
+                    case R.id.im_pay_weixin:
+                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN);
+                        editNameDialog.setArguments(bundle);
+                        editNameDialog.show(fm, "wexin");
+                        p.dismiss();
+                        break;
+                    default:
+                        break;
                 }
             }
         });

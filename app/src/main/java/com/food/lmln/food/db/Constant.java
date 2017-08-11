@@ -90,6 +90,7 @@ public class Constant {
      * 打印命令
      */
     public static final String PRINTIN = "8906063211##";//命令
+    public static final String PRINTIN_CLEAR = "8906063212##";//清台
     public static final String CLEAR_DESK = "clear";//命令
     public static final int BUFFER_SIZE = 1024;
 

@@ -180,7 +180,6 @@ public class MysqlDb {
                     statement.close();
                     statement = null;
                 }
-
             } catch (SQLException sqle) {
                 sqle.printStackTrace();
             }
@@ -197,8 +196,7 @@ public class MysqlDb {
     public  static int  selectEndOrder(Connection conn, String  tableName ,String orderInfo ,String orderId){
 //        String  sql   ="select * from  "+tableName+" limit 0,1";
         String sql = "select "+tableName+" from "+orderInfo+" order by "+orderId+" desc limit 0,1;";
-     int  num =0;
-
+         int  num =0;
         if (conn == null) {
             return Integer.parseInt(null);
         }
@@ -281,6 +279,52 @@ public class MysqlDb {
     }
 
 
+    /**
+     * 查当前桌台的订单号
+     * @param conn
+     * @param sql
+     * @return
+     */
+    public static  String  selectByNo(Connection conn, String sql) {
+        String  status =null;
+        if (conn == null) {
+            return (String) null;
+        }
+        Statement statement = null;
+        ResultSet result = null;
+//        list=null;
+        try {
+            statement = conn.createStatement();
+            result = statement.executeQuery(sql);
+            if (result.next()) {
+                //存在记录 rs就要向上移一条记录 因为rs.next会滚动一条记录了
+                result.previous();
+                //在执行while 循环
+                while(result.next()){
+                    status=result.getString(Constant.CONSUMPTIONID);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                    result = null;
+                }
+                if (statement != null) {
+                    statement.close();
+                    statement = null;
+                }
+
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            }
+        }
+        return   status;
+    }
+
+
 
 
 
@@ -309,7 +353,6 @@ public class MysqlDb {
                     status=result.getString(Constant.ORDER_ID);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -414,7 +457,6 @@ public class MysqlDb {
                 sqle.printStackTrace();
             }
         }
-
         return   list;
     }
 
@@ -426,7 +468,6 @@ public class MysqlDb {
      */
     public static  List<OrderInfo>   selectRiht(Connection conn, String sql) {
         List<OrderInfo> newList=new ArrayList<OrderInfo>(); ;
-
         int count=1;
         if (conn == null) {
             return null;

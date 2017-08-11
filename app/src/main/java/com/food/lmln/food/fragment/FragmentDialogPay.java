@@ -403,6 +403,10 @@ public class FragmentDialogPay extends DialogFragment {
         super.onDestroy();
     }
 
+    /**
+     * 开始计时 传入参数 time ，单位秒
+     * @param time
+     */
     private void startCustomCountDownTime(long time) {
         countdownTimer = new AdvancedCountdownTimer(time * 1000, 1000) {
             @Override
@@ -412,8 +416,6 @@ public class FragmentDialogPay extends DialogFragment {
                 String sAgeFormat = getResources().getString(R.string.text_surplus_time);
                 String sFinalAge = String.format(sAgeFormat, time + "");
                 if (time < 30) {
-
-
                         tv_pay_time.setTextColor(getResources().getColor(R.color.colorAccen1t));
                     }
                     tv_pay_time.setText(sFinalAge);
@@ -428,8 +430,12 @@ public class FragmentDialogPay extends DialogFragment {
         };
         countdownTimer.start();
     }
-    OnDialogListener  mlistener;
 
+
+    /**
+     * 定义一个接口，提供Activity使用
+     */
+    OnDialogListener  mlistener;
     public interface OnDialogListener {
         void onDialogClick(String person);
     }
