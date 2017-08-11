@@ -362,6 +362,8 @@ public class FragmentDialogPay extends DialogFragment {
                 if (!ExampleUtil.isEmpty(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
                 }
+                Log.d("FragmentDialogPay", messge
+                );
                 setCostomMsg(extras);
             }
         }
@@ -378,8 +380,6 @@ public class FragmentDialogPay extends DialogFragment {
         mlistener.onDialogClick(msg);
         closeScale(lin_bg);
     }
-
-
     @Override
     public void onResume() {
         isForeground = true;

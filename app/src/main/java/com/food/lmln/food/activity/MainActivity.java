@@ -116,9 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<OrderInfo> addList = new ArrayList<>();
     private List<OrderInfo> list_order = new ArrayList<>();
     private List<MenuButton> listRight = new ArrayList<MenuButton>();
-
     private List<DeskInfo> listDesk = new ArrayList<DeskInfo>();
-
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int startDeskNo;//临时台号是否成功
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
-    private String orderNO; //查询当前桌台订单号
+    private String orderNo=null; //查询当前桌台订单号
 
     Handler mHandler = new Handler() {
         @Override
@@ -270,10 +268,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case Constant.send_msg_code11:
-                    if (orderNO.isEmpty())
+                    if (orderNo!=null&&orderNo!="")
                         inFragment();
                     else
-                        Toast.makeText(MainActivity.this, "R.string.tip_is_start:" + R.string.tip_is_start, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,R.string.tip_is_start, Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
+                    break;
             }
         }
     };
@@ -560,9 +562,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
                             conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                            orderNO = MysqlDb.selectDeskNO(conn, "select  " + Constant.CONSUMPTIONID + " from  " + Constant.DESK_CONSUMPTIONID + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
+                            orderNo = MysqlDb.selectDeskNO(conn, "select  " + Constant.CONSUMPTIONID + " from  " + Constant.DESK_CONSUMPTIONID + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
                             mHandler.sendEmptyMessage(Constant.send_msg_code11);
                         }
                     }).start();
@@ -618,13 +619,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
 
             new DialogTablde().showDialog(MainActivity.this);
-        }else{ List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
+        }
+
+        else{
+            db = helper.getWritableDatabase();
+            List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
         if (li.size() > 0) {
             deskNo = li.get(0).getLocal_desk();
             deskIp = li.get(0).getLocal_ip();
         }
         }
-
     }
 
     /**
@@ -844,7 +848,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mHandler.sendEmptyMessage(send_msg_code2);
     }
-
     /**
      * \
      * 销毁方法
@@ -857,7 +860,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
-
     /**
      * 设置横屏
      *
@@ -879,7 +881,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception ex) {
         }
     }
-
     @Override
     protected void onResume() {
         /**
@@ -890,7 +891,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         super.onResume();
     }
-
     @Override
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");

@@ -2,15 +2,6 @@
 <items version="2" >
 
     <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\7455646f2328060ecb8482ecc8d04b63e634b3b8\output\jars\libs\jcore-android_v1.1.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="0149c38b9688b28e80fab18616d4e80c1906d573">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\jcore-android_v1.1.1_9c9d8ecbdb81da103cb1759be14e41c081584811\classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="E:\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
         jumboMode="false"
@@ -20,247 +11,211 @@
         <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\mysql-connector-java-5.0.8-bin_f43d52e0116862e6d8d290c799f39c0e865af733.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="E:\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="7b9bfb6c4e4885660378a9c13330915c321f6cca">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\mysql-connector-java-5.0.8-bin_f43d52e0116862e6d8d290c799f39c0e865af733\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\d7933da4e1d60d15d81b3908337a1fabce691471\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_6ca57c58671468c1ab26cea3358f8c8604154cb1\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\efd6fcd3b48982bf466a55741cf4eec14b29cd6d\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_38ddfea54733c4f6867477e7a5f40ce5feca7b7d\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\dc331778a347347f2480aafade7593e37d39f730\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_00e3ba63439ff5b66686c6a2b794763f0273e4f0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\342565211b9417424c4a91bc13980872c972a2c8\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0cd7c8822b7af0d525eeff2ca87bc1e58fb58484\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\d1d794eeb2baffa6b888bc2a2c0ace0a63b02c12\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="ee566b544866a0802109d1571ed699cd3839ec01">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_04df2d9bd4dca4caf0523405f9b7de3702fa67b4\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\1163f70ea029bf9432888825a8293c5324ff7e8f\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="38789e20ace9ab7dbd00554bd2673ab424478d3b">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ad6d650d8df7475e49312d0d22423388b18c3238\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\1b3bf3d534417d9878c672f3de965f133c17cf3b\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_04fb3d262eac58d6909205d51601c4fc2c7a6e2a\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\7d414c49656fa03d3cdbc38d1ec8ed95f647ba96\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="d4cf6227dd6a2ceff0f7dcf0c324380b7abf2c28">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_07ac8e9c0af4923cbf5d37f695d5e39a295aaf47\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\187be059dd556a7cabc6b1bc5944c32861a56136\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_b09b52c7f60634fa50add7944ffeadf9bf2218c0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="D:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.3.1_4587515df70b11ae990e217c69c9b3a61733a049\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\7455646f2328060ecb8482ecc8d04b63e634b3b8\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="7880825917f7ad26d7fdfaa421cd1e1827d13c10">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_481bd5259b40bae0e1f5b62d5a1af8cb5b2db8c1\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\a320a4c0b03df75c91fca12154d3658577f21f88\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="df451c6f391e3e32022fc964ed87bd57a5869128">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9383a441783599606905a8e08b500edf54d5bd14\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\2fa56534f8ca00686bc8bf3af78dbfd631936c9b\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f1f7e951119ea2caf4445b5758a1f44a19e28f83\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\glide-3.7.0_a6f496a83b66ceb20f95318f6702d2905c7688c9\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\783866941910a67271353d97a82396198f315f86\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_b88c20f2dfab7da72dd80f3b75fb25da17cb6e6c\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
+        is-multidex="false"
         jar="C:\Users\Weili\.android\build-cache\f40d5eb56850be2b483cc608cae9a6b640f3fd21\output\jars\classes.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="637572952be0db98c9288fb9f9fb923a71401be1">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_171cf94ab7475c04db26818da3a8b9ec479fd760\classes.dex" />
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_171cf94ab7475c04db26818da3a8b9ec479fd760.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\920895d97fed5c6c0e1dc1987f7bbc08f34223a6\output\jars\classes.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\d1d794eeb2baffa6b888bc2a2c0ace0a63b02c12\output\jars\classes.jar"
+        jumboMode="false"
         optimize="true"
         revision="25.0.3"
-        sha1="95519720620b553f63afc789beba9ad582807f7c">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1b2fb9a6cd73e837262e50af6582560700efda46\classes.dex" />
+        sha1="ee566b544866a0802109d1571ed699cd3839ec01">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_04df2d9bd4dca4caf0523405f9b7de3702fa67b4.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="D:\Android\.gradle\caches\modules-2\files-2.1\org.greenrobot\eventbus\3.0.0\ddd99896e9569eaababbe81b35d80e1b91c4ad85\eventbus-3.0.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="ddd99896e9569eaababbe81b35d80e1b91c4ad85">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\eventbus-3.0.0_c639e9eb50268b802b832cec6314b936205f4bfd\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\b875469cfbe8afa9074f49dcd6ffb9bf5e87e01a\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9d21b8c914909f762c062b54f57d3eff734ed620\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Weili\.android\build-cache\f40d5eb56850be2b483cc608cae9a6b640f3fd21\output\jars\libs\jpush-android_v3.0.3.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="7da1fe9424ad39b3e138685e798569b7e404e8df">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\jpush-android_v3.0.3_67df159322990cace42e1d53f16d9652218c44e4\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.7.0\1dc44f4cec20a64cebb68b90b4218f82ac7948b1\okio-1.7.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="1dc44f4cec20a64cebb68b90b4218f82ac7948b1">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.7.0_d60dfea1e38531506aa48eeb5c9a72e3ff9ed1fb\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="E:\Food\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a6f6af715e29a7522e2b13c84c6be4b161cd7a2f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="E:\Food\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="eedcb659ede7a3a42cd2f4b5f92ec695e13c85c6">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_7e35e9c725e6ea600c8d493baa5b986e6b528150\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
+        is-multidex="false"
         jar="C:\Users\Weili\.android\build-cache\f75a76f42c5cb8681a00732601ab0eae97849947\output\jars\classes.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="1c3b9743fe8bb166a90a7e98b9b9f1f8021d80cd">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a6dffebcd8f21ccc25093305ea124eb6ce5c1ed2\classes.dex" />
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_a6dffebcd8f21ccc25093305ea124eb6ce5c1ed2.jar" />
     </item>
     <item
-        is-multidex="true"
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\1b3bf3d534417d9878c672f3de965f133c17cf3b\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_04fb3d262eac58d6909205d51601c4fc2c7a6e2a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\7455646f2328060ecb8482ecc8d04b63e634b3b8\output\jars\libs\jcore-android_v1.1.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="0149c38b9688b28e80fab18616d4e80c1906d573">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\jcore-android_v1.1.1_9c9d8ecbdb81da103cb1759be14e41c081584811.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\1163f70ea029bf9432888825a8293c5324ff7e8f\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="38789e20ace9ab7dbd00554bd2673ab424478d3b">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_ad6d650d8df7475e49312d0d22423388b18c3238.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\support-annotations-25.3.1_4587515df70b11ae990e217c69c9b3a61733a049.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.7.0\1dc44f4cec20a64cebb68b90b4218f82ac7948b1\okio-1.7.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="1dc44f4cec20a64cebb68b90b4218f82ac7948b1">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\okio-1.7.0_d60dfea1e38531506aa48eeb5c9a72e3ff9ed1fb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\187be059dd556a7cabc6b1bc5944c32861a56136\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_b09b52c7f60634fa50add7944ffeadf9bf2218c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\2fa56534f8ca00686bc8bf3af78dbfd631936c9b\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_f1f7e951119ea2caf4445b5758a1f44a19e28f83.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\glide-3.7.0_a6f496a83b66ceb20f95318f6702d2905c7688c9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\a320a4c0b03df75c91fca12154d3658577f21f88\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="df451c6f391e3e32022fc964ed87bd57a5869128">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_9383a441783599606905a8e08b500edf54d5bd14.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\7455646f2328060ecb8482ecc8d04b63e634b3b8\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="7880825917f7ad26d7fdfaa421cd1e1827d13c10">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_481bd5259b40bae0e1f5b62d5a1af8cb5b2db8c1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\f40d5eb56850be2b483cc608cae9a6b640f3fd21\output\jars\libs\jpush-android_v3.0.3.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="7da1fe9424ad39b3e138685e798569b7e404e8df">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\jpush-android_v3.0.3_67df159322990cace42e1d53f16d9652218c44e4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\b875469cfbe8afa9074f49dcd6ffb9bf5e87e01a\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_9d21b8c914909f762c062b54f57d3eff734ed620.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.2.0\f7873a2ebde246a45c2a8d6f3247108b4c88a879\okhttp-3.2.0.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="f7873a2ebde246a45c2a8d6f3247108b4c88a879">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\okhttp-3.2.0_f532ef64834980a79500624e1302c5cba18c3d01\classes.dex" />
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\okhttp-3.2.0_f532ef64834980a79500624e1302c5cba18c3d01.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="E:\Food\app\libs\core-3.2.1.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.8.1\2a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0\gson-2.8.1.jar"
+        jumboMode="false"
         optimize="true"
         revision="25.0.3"
-        sha1="2287494d4f5f9f3a9a2bb6980e3f32053721b315">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\core-3.2.1_71eb5f392298c7115ca00df8bc79aadc784fa7b5\classes.dex" />
+        sha1="02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\gson-2.8.1_07a393a7bb7914fbc45c6727b1e953dcaaac0c0d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\efd6fcd3b48982bf466a55741cf4eec14b29cd6d\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_38ddfea54733c4f6867477e7a5f40ce5feca7b7d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\d7933da4e1d60d15d81b3908337a1fabce691471\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_6ca57c58671468c1ab26cea3358f8c8604154cb1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\7d414c49656fa03d3cdbc38d1ec8ed95f647ba96\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="d4cf6227dd6a2ceff0f7dcf0c324380b7abf2c28">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_07ac8e9c0af4923cbf5d37f695d5e39a295aaf47.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\dc331778a347347f2480aafade7593e37d39f730\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_00e3ba63439ff5b66686c6a2b794763f0273e4f0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\920895d97fed5c6c0e1dc1987f7bbc08f34223a6\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_1b2fb9a6cd73e837262e50af6582560700efda46.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\783866941910a67271353d97a82396198f315f86\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_b88c20f2dfab7da72dd80f3b75fb25da17cb6e6c.jar" />
     </item>
     <item
         is-multidex="false"
@@ -272,13 +227,22 @@
         <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\core-3.2.1_71eb5f392298c7115ca00df8bc79aadc784fa7b5.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.8.1\2a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0\gson-2.8.1.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="C:\Users\Weili\.android\build-cache\342565211b9417424c4a91bc13980872c972a2c8\output\jars\classes.jar"
+        jumboMode="false"
         optimize="true"
         revision="25.0.3"
-        sha1="02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0">
-        <dex dex="E:\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\gson-2.8.1_07a393a7bb7914fbc45c6727b1e953dcaaac0c0d\classes.dex" />
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\classes_0cd7c8822b7af0d525eeff2ca87bc1e58fb58484.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\org.greenrobot\eventbus\3.0.0\ddd99896e9569eaababbe81b35d80e1b91c4ad85\eventbus-3.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="ddd99896e9569eaababbe81b35d80e1b91c4ad85">
+        <dex dex="E:\Food\app\build\intermediates\pre-dexed\debug\eventbus-3.0.0_c639e9eb50268b802b832cec6314b936205f4bfd.jar" />
     </item>
 
 </items>
