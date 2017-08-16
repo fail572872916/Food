@@ -40,6 +40,7 @@ import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.receiver.LocalBroadcastManager;
 import com.food.lmln.food.utils.ExampleUtil;
 import com.food.lmln.food.utils.HttpUtils;
+import com.food.lmln.food.utils.JsonUtils;
 import com.food.lmln.food.utils.ScreenUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -47,6 +48,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.kale.lib.time.AdvancedCountdownTimer;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,6 +94,8 @@ public class FragmentDialogPay extends DialogFragment {
     private FrameLayout view_pay_bg;
     private ImageView im_pay_show;
     private LinearLayout lin_bg;
+    private com.wang.avi.AVLoadingIndicatorView avloadingIndicatorView_BallClipRotatePulse;
+
     private TextView tv_pay_time; //倒计时
     public static boolean isForeground = false;
     OkHttpClient mOkHttpClient;
@@ -103,6 +107,7 @@ public class FragmentDialogPay extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +133,7 @@ public class FragmentDialogPay extends DialogFragment {
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            avloadingIndicatorView_BallClipRotatePulse.setVisibility(View.GONE);
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String val = data.getString("value");
@@ -135,7 +141,7 @@ public class FragmentDialogPay extends DialogFragment {
 
                 startCustomCountDownTime(3);
                 Toast.makeText(getActivity(), R.string.error_htp, Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 startCustomCountDownTime(90);
                 im_pay_show.setImageBitmap(generateBitmap(val, 500, 500));
             }
@@ -160,6 +166,7 @@ public class FragmentDialogPay extends DialogFragment {
      */
     private void initView() {
         im_pay_show = (ImageView) view.findViewById(R.id.im_pay_show);
+        avloadingIndicatorView_BallClipRotatePulse = (AVLoadingIndicatorView) view.findViewById(R.id.avloadingIndicatorView_BallClipRotatePulse);
         lin_bg = (LinearLayout) view.findViewById(R.id.lin_bg);
         view_pay_bg = (FrameLayout) view.findViewById(R.id.view_pay_bg);
         tv_pay_time = (TextView) view.findViewById(R.id.tv_pay_time);
@@ -187,18 +194,16 @@ public class FragmentDialogPay extends DialogFragment {
 
         ScreenUtils.setMargins(im_pay_show, 50, 150, 50, 50);
         String type = null;
-        String ordrNo=null;
-        if(mParam1!=null){
-        String temp[]=mParam1.split("####");
-             type= temp[0];
-             ordrNo= temp[1];
+        String ordrNo = null;
+        if (mParam1 != null) {
+            String temp[] = mParam1.split("####");
+            type = temp[0];
+            ordrNo = temp[1];
         }
-
-
         if (type.equals(Constant.ALI)) {
             String url = HttpUtils.POSTWX + "Ali_Food_Pay?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
-            postAsynHttp(product_id_value, registration_id_value, time_value,ordrNo, url);
+            postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url);
         } else {
             String url = HttpUtils.POSTWX + "Pay1?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
@@ -206,7 +211,7 @@ public class FragmentDialogPay extends DialogFragment {
             } else if (product_id_value.isEmpty()) {
             } else if (time_value.isEmpty()) {
             } else {
-                postAsynHttp(product_id_value, registration_id_value, time_value,ordrNo, url);
+                postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url);
             }
         }
     }
@@ -219,7 +224,8 @@ public class FragmentDialogPay extends DialogFragment {
      * @param Rtime 时间
      * @param url   访问地址
      */
-    private void postAsynHttp(String mId, String Rid, String Rtime,String order, String url) {
+    private void postAsynHttp(String mId, String Rid, String Rtime, String order, String url) {
+        avloadingIndicatorView_BallClipRotatePulse.setVisibility(View.VISIBLE);
         mOkHttpClient = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
                 .add(product_id_key, mId)
@@ -235,6 +241,8 @@ public class FragmentDialogPay extends DialogFragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+
+                Log.d("FragmentDialogPay", e.getMessage());
 //                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
                 Message msg = new Message();
                 Bundle data = new Bundle();
@@ -251,7 +259,11 @@ public class FragmentDialogPay extends DialogFragment {
                 JSONObject josn = null;
                 try {
                     josn = new JSONObject(str);
-                    url = josn.getString("data");
+                    boolean flag = josn.getBoolean("result");
+                    if (flag)
+                        url = josn.getString("payUrl");
+                    else
+                        url = "error";
                     Message msg = new Message();
                     Bundle data = new Bundle();
                     data.putString("value", url);
@@ -263,7 +275,6 @@ public class FragmentDialogPay extends DialogFragment {
             }
         });
     }
-
     /* 加载动画
      * @param view
      */
@@ -290,7 +301,6 @@ public class FragmentDialogPay extends DialogFragment {
             }
         });
     }
-
     /* 付款成功退出Dialog动画
  * @param view
  */
@@ -307,7 +317,6 @@ public class FragmentDialogPay extends DialogFragment {
             public void onAnimationStart(Animation animation) {
 
             }
-
             @Override
             public void onAnimationEnd(Animation animation) {
                 getDialog().cancel();
@@ -360,7 +369,6 @@ public class FragmentDialogPay extends DialogFragment {
         filter.addAction(MESSAGE_RECEIVED_ACTION);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, filter);
     }
-
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -372,13 +380,10 @@ public class FragmentDialogPay extends DialogFragment {
                 if (!ExampleUtil.isEmpty(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
                 }
-
-
                 setCostomMsg(extras);
             }
         }
     }
-
     /**
      * 收到信息打印
      *
@@ -387,8 +392,11 @@ public class FragmentDialogPay extends DialogFragment {
     private void setCostomMsg(String msg) {
 //        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         Log.d("FragmentDialogPay", msg);
-        mlistener.onDialogClick(msg);
-        closeScale(lin_bg);
+        String  json =JsonUtils.useJpushJosn(msg);
+        if(json!=null) {
+            mlistener.onDialogClick(json);
+            closeScale(lin_bg);
+        }
     }
     @Override
     public void onResume() {
@@ -408,6 +416,7 @@ public class FragmentDialogPay extends DialogFragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        if(null != countdownTimer)
         countdownTimer.cancel();
         Log.d(TAG, "exit");
         super.onDestroy();
@@ -415,6 +424,7 @@ public class FragmentDialogPay extends DialogFragment {
 
     /**
      * 开始计时 传入参数 time ，单位秒
+     *
      * @param time
      */
     private void startCustomCountDownTime(long time) {
@@ -422,15 +432,16 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onTick(long millisUntilFinished, int percent) {
                 int time = Integer.parseInt(String.valueOf(millisUntilFinished / 1000));
-                if(isAdded()){
-                String sAgeFormat = getResources().getString(R.string.text_surplus_time);
-                String sFinalAge = String.format(sAgeFormat, time + "");
-                if (time < 30) {
+                if (isAdded()) {
+                    String sAgeFormat = getResources().getString(R.string.text_surplus_time);
+                    String sFinalAge = String.format(sAgeFormat, time + "");
+                    if (time < 30) {
                         tv_pay_time.setTextColor(getResources().getColor(R.color.colorAccen1t));
                     }
                     tv_pay_time.setText(sFinalAge);
                 }
             }
+
             @Override
             public void onFinish() {
                 closeScale(lin_bg);
@@ -443,11 +454,13 @@ public class FragmentDialogPay extends DialogFragment {
     /**
      * 定义一个接口，提供Activity使用
      */
-    OnDialogListener  mlistener;
+    OnDialogListener mlistener;
+
     public interface OnDialogListener {
         void onDialogClick(String person);
     }
-    public void setOnDialogListener(OnDialogListener dialogListener){
+
+    public void setOnDialogListener(OnDialogListener dialogListener) {
         this.mlistener = dialogListener;
     }
 }

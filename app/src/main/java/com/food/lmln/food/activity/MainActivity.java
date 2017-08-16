@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
@@ -41,20 +39,19 @@ import com.food.lmln.food.fragment.Blank3Fragment;
 import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.utils.FileUtils;
+import com.food.lmln.food.utils.JsonUtils;
 import com.food.lmln.food.utils.VeDate;
 import com.food.lmln.food.utils.socket_client;
 import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -63,13 +60,10 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import cn.jpush.android.api.JPushInterface;
-
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.ORDERTABLE;
 import static com.food.lmln.food.db.Constant.PASSWORD;
-import static com.food.lmln.food.db.Constant.PRINTIN;
 import static com.food.lmln.food.db.Constant.SQLURL;
 import static com.food.lmln.food.db.Constant.USERNAME;
 import static com.food.lmln.food.db.Constant.send_msg_code1;
@@ -106,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 用于对Fragment进行管理
      */
-    private int result_order;  //查选最后一张表的返回值
     private BlankFragment fragment1;
     private Blank2Fragment fragment2;
     private Blank3Fragment fragment3;
@@ -116,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<OrderInfo> addList = new ArrayList<>();
     private List<OrderInfo> list_order = new ArrayList<>();
     private List<MenuButton> listRight = new ArrayList<MenuButton>();
-    private List<DeskInfo> listDesk = new ArrayList<DeskInfo>();
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -141,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
     private String orderNo = null; //查询当前桌台订单号
-
+    DialogTablde mDialog ; //设置的Dialog
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -218,6 +210,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case Constant.send_msg_code6:
                     if (startFouding == 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_succeed_desk, Toast.LENGTH_SHORT).show();
+//                    JSONObject jsonObject   = new JSONObject();
+//                        try {
+//                            jsonObject.put("desk_num_str",deskNo);
+//                            jsonObject.put("desk_ip_str",deskIp);
+//                            jsonObject.put("desk_status","open");
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObject);
+//                        sendPrint(json);
                         startTemp();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.tip_fail_desk, Toast.LENGTH_SHORT).show();
@@ -258,13 +260,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 jsonObjArr.put("count", 1);
                                 jsonArr.put(jsonObjArr);//将json格式的数据放到json格式的数组里
                             }
-                            jsonObj.put("orderInstruct", PRINTIN);//再将这个json格式的的数组放到最终的json对象中。
-                            jsonObj.put("desk_num_str", deskNo);//再将这个json格式的的数组放到最终的json对象中。
-                            jsonObj.put("print", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
+                            jsonObj.put("desk_num_str", deskNo);
+                            jsonObj.put("people_num", 0);
+                            jsonObj.put("detail_food", jsonArr);//再将这个json格式的的数组放到最终的json对象中。
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        sendPrint(jsonObj);
+                     String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj);
+                        Log.d("json1", "jsonObj:" + json);
+                        sendPrint(json);
                     }
                     break;
                 case Constant.send_msg_code11:
@@ -273,7 +277,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     else
                         Toast.makeText(MainActivity.this, R.string.tip_is_start, Toast.LENGTH_SHORT).show();
                     break;
-
                 default:
                     break;
             }
@@ -356,7 +359,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-
     /**
      * 进行开台
      */
@@ -442,13 +444,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_robot.setOnClickListener(this);
         fab_setting.setOnClickListener(this);
         fab_vending_machine.setOnClickListener(this);
-
         myContent = (FrameLayout) findViewById(R.id.myContent);
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         fab.setClosedOnTouchOutside(true);
         fragment1 = new BlankFragment();
         editNameDialog = new FragmentDialogPay();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.myContent, fragment1);
@@ -462,36 +462,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDialogClick(String person) {
                 Log.d("person", person);
-                JSONObject json = new JSONObject();
+                JSONObject js =null;
                 try {
-                    JSONObject js = new JSONObject(person);
-                    String msgKey = js.getString("msgKey");
-                    JSONObject js1 = new JSONObject(msgKey);
-                    String stasut = js1.getString("status");
-                    String type = js1.getString("pay_type");
-                    String money = js1.getString("money");
-                    String order = js1.getString("order");
-                    json.put("orderInstruct", Constant.PRINTIN_CLEAR);
-                    json.put("desk_num_str", deskNo);
-                    json.put("pey_type", type);
-                    json.put("money", money);
-                    json.put("order", order);
+                     js = new JSONObject(person);
+                    if(js!= null){
+                  String js1=      JsonUtils.useJosn(true,Constant.CMD_CLEAR,js);
+                        sendPrint(js1);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                sendPrint(json);
-                Log.d("MainActivity", "json:" + json);
-
-
             }
         });
     }
-
-
     /**
      * 查询菜单
      */
     private void initData() {
+
+        mDialog =  new DialogTablde();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -507,7 +496,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -585,7 +573,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public class MyThread implements Runnable {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
         public void stop() {
             try {
                 reader.close();
@@ -593,7 +580,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
-
         @Override
         public void run() {
             try {
@@ -614,7 +600,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
     /**
      * 查询桌台与Ip
      */
@@ -635,13 +620,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
     /**
      * 打印数据
      */
-    private void sendPrint(JSONObject jsonObj) {
-        int a = 10;
-        if (testSocket(a)) {
+    private void sendPrint(String jsonObj) {
+        if (testSocket()) {
             MainActivity.client.SendJson(jsonObj);
             addList = null;
             list_order.clear();
@@ -667,23 +650,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 判断是否断开
      *
-     * @param a
+     * @param
      * @return
      */
-    public boolean testSocket(int a) {
+    public boolean testSocket() {
         boolean isConn = MainActivity.client.isServerClose();//判断是否断开
         if (isConn == true) {
-            if (a > 0) {
                 MainActivity.client.runclient(deskIp);
-                a--;
-                testSocket(a);
             } else {
-                return false;
+                return true;
             }
-            return false;
+            return true;
         }
-        return true;
-    }
+
+
 
     /**
      * 进入选中的Fragment
@@ -863,6 +843,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         client.finish();
+
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }

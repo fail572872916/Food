@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,18 +26,19 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by Weili on 2017/7/3.
+ * 设置ip
  */
 
 public class DialogTablde {
-
-
     private SQLiteDatabase db;
     SqlHelper helper;
     int isUpdate =0;
+     AlertDialog dialog;
     public void showDialog(final Context mContext) {
         ImageView iv_dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View view = View.inflate(mContext, R.layout.dialog_setting, null);
+
         builder.setView(view);
         builder.setCancelable(true);
         helper=DbManger.getInstance(mContext);
@@ -55,7 +57,6 @@ public class DialogTablde {
                 isUpdate=1;
             }
 
-
         Glide.with(mContext).load(R.color.transparent)
                 .bitmapTransform(new BlurTransformation(mContext, 150), new CenterCrop(mContext))
                 .into(iv_dialog);
@@ -65,7 +66,7 @@ public class DialogTablde {
                 .findViewById(R.id.btn_comfirm);//确定按钮
         //取消或确定按钮监听事件处理
         final AlertDialog dialog = builder.create();
-
+        dialog.show();
         btn_comfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,9 +84,6 @@ public class DialogTablde {
                     DbManger.insertIP(db,serverIp,tabDesk,isUpdate);
                     dialog.dismiss();
                 }
-
-
-
             }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +92,11 @@ public class DialogTablde {
                 dialog.dismiss();
             }
         });
-        dialog.show();
-
-
     }
+    public   void  closeDialog(){
+        if(dialog!=null)
+            dialog.dismiss();
+    }
+
+
 }

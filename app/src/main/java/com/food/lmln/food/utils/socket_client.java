@@ -13,7 +13,6 @@ package com.food.lmln.food.utils;
 public class socket_client  extends Activity{
 	Socket client;
 	private BufferedWriter writer = null;
-
 	private String foodTY ;
 	private String foodName ;
 	private String foodPrice ;
@@ -97,20 +96,6 @@ public class socket_client  extends Activity{
 		}
 	}
 
-	/**
-     * 判断连接
-     * @return
-     */
-    public  int  sendTest(){
-        int a=0;
-        if(writer != null){
-            a=1;
-        }else{
-            a=0;
-        }
-        return a;
-    }
-
 
 	/**
 	 * 判断是否断开连接，断开返回true,没有返回false
@@ -125,7 +110,6 @@ public class socket_client  extends Activity{
 			return true;
 		}
 	}
-
 	/**
 	 * 发送打印信息
 	 * @param obj
@@ -139,15 +123,13 @@ public class socket_client  extends Activity{
 			System.out.println("主机信息为空，请补充后再试试");
 		}
 	}
-
-
 	/**
 	 * 发送数据，发送失败返回false,发送成功返回true
 	 * @param
 	 * @param
 	 * @return
 	 */
-	public Boolean SendJson(JSONObject obj){
+	public Boolean SendJson(String obj){
 		try{
 			PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 			out.println(obj);

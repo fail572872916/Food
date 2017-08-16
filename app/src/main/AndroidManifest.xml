@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.food.lmln.food">
-
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Required  一些系统要求的权限，如访问网络等-->
     <uses-permission android:name="com.food.lmln.food.permission.JPUSH_MESSAGE" />
