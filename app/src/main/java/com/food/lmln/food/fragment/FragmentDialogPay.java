@@ -242,7 +242,7 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onFailure(Call call, IOException e) {
 
-                Log.d("FragmentDialogPay", e.getMessage());
+//                Log.d("FragmentDialogPay", e.getMessage());
 //                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
                 Message msg = new Message();
                 Bundle data = new Bundle();

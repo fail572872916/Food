@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int tempOk;//临时台号是否成功
     private int orderOk;//临时台号是否成功
     private String orderNo = null; //查询当前桌台订单号
-    DialogTablde mDialog ; //设置的Dialog
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             startTemp();
                         } else {
                             //查询桌台与
-                            selectIpDesk();
+//                            selectIpDesk();
                             selectAndAdd();
                         }
                     } else {
@@ -480,7 +479,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initData() {
 
-        mDialog =  new DialogTablde();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -500,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_setting:
-                new DialogTablde().showDialog(MainActivity.this);
+                 DialogTablde.showDialog(MainActivity.this);
                 fab_setting.showButtonInMenu(false);
                 break;
             case R.id.fab_robot:
@@ -609,8 +608,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (set < 1) {
 
             Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
-
-            new DialogTablde().showDialog(MainActivity.this);
+            DialogTablde.showDialog(MainActivity.this);
+            Log.d("MainActivity", "dsa");
         } else {
             db = helper.getWritableDatabase();
             List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
@@ -843,32 +842,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         client.finish();
-
+//        DialogTablde.dismissScanNumberDialog();
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 设置横屏
-     *
-     * @param newConfig
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        try {
-            super.onConfigurationChanged(newConfig);
-
-            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                // land
-                MainActivity.this.setRequestedOrientation(
-                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            } else {
-                MainActivity.this.setRequestedOrientation(
-                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-        } catch (Exception ex) {
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -884,6 +862,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
+
         stopCode = 2;
         isFlag(false);
         super.onPostResume();
@@ -973,11 +952,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("MainActivity", "in");
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
