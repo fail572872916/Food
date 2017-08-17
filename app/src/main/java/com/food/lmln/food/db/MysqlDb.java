@@ -467,7 +467,8 @@ public class MysqlDb {
      * @return
      */
     public static  List<OrderInfo>   selectRiht(Connection conn, String sql) {
-        List<OrderInfo> newList=new ArrayList<OrderInfo>(); ;
+
+        List<OrderInfo> newList=null;
         int count=1;
         if (conn == null) {
             return null;
@@ -477,7 +478,9 @@ public class MysqlDb {
         try {
             statement = conn.createStatement();
             result = statement.executeQuery(sql);
+            newList=new ArrayList<OrderInfo>();
             while (result.next()){
+
                 //                String data=rs.getString("date");
 //                String time=rs.getString("time");
 //                String desk_no=rs.getString("desk_no");
@@ -506,6 +509,7 @@ public class MysqlDb {
                 sqle.printStackTrace();
             }
         }
+
         return   newList;
     }
 

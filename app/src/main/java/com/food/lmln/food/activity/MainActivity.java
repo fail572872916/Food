@@ -180,8 +180,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
                     newList = (List<OrderInfo>) bundle1.getSerializable("List");
+                    Log.d("MainActivity", "newList:" + newList);
                     if (stopCode == 2) {
-                        if (num1 > 1 && newList.size() >= 1) {
+                        if (num1 > 1 &&  newList != null) {
                             mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
                             mAdapter_order.notifyDataSetChanged();
                             lv_main_order.setAdapter(mAdapter_order);
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     } else {
+                        if (newList!=null&&newList.size()>0);
                         newList.clear();
                     }
                     break;
@@ -281,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
-
     /**
      * 临时下单
      */
@@ -342,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mHandler.sendEmptyMessage(Constant.send_msg_code8);
             }
         }).start();
-
     }
 
     /**
@@ -478,8 +478,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 查询菜单
      */
     private void initData() {
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -649,21 +647,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 判断是否断开
      *
-     * @param
+     * @param ) 断开
      * @return
      */
     public boolean testSocket() {
         boolean isConn = MainActivity.client.isServerClose();//判断是否断开
         if (isConn == true) {
+
                 MainActivity.client.runclient(deskIp);
             } else {
-                return true;
+                isConn=true;
             }
-            return true;
+         return  isConn;
         }
-
-
-
     /**
      * 进入选中的Fragment
      *
@@ -730,7 +726,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentTransaction.addToBackStack(tag);
                 //如果需要，添加到back栈中
                 fragmentTransaction.commit();
-
                 fragment2 = new Blank2Fragment();
                 Bundle bundle2 = new Bundle();
                 bundle2.putString("foodName", tableName);
@@ -789,7 +784,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transaction.hide(fragment3);
         }
     }
-
     private int index = 1;
     private int count = 1;
 
@@ -802,9 +796,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onMoonEvent(OrderInfo info) {
         info = new OrderInfo(index, info.getName(), info.getPrice(), count, true);
         if (info.isFlag()) {
-            stopCode = 1;
+
             isFlag(false);
         }
+
 //        new Thread(new MyThread()).interrupt();
         list_order.add(info);
         addList = new ArrayList<OrderInfo>();
@@ -850,6 +845,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onResume() {
+        stopCode = 2;
         /**
          * 设置为横屏
          */
@@ -863,8 +859,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
 
-        stopCode = 2;
-        isFlag(false);
+
         super.onPostResume();
     }
 
@@ -872,7 +867,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         Log.d("MainActivity", "onPause");
         stopCode = 1;
-        isFlag(true);
+        isFlag(false);
         super.onPause();
     }
 
@@ -884,8 +879,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void isFlag(boolean falg) {
         mHandlerFlag = falg;
         if (mHandlerFlag == true) {
+            stopCode=2;
             new Thread(new MyThread()).start();
         } else {
+            stopCode = 1;
             MyThread callable = new MyThread();
             Thread th = new Thread(callable);
             th.interrupt();

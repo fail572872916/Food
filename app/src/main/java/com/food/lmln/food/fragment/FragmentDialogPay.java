@@ -126,7 +126,6 @@ public class FragmentDialogPay extends DialogFragment {
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
         registerMessageReceiver();
     }
 
@@ -137,12 +136,13 @@ public class FragmentDialogPay extends DialogFragment {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String val = data.getString("value");
+            String order = data.getString("order");
+            Log.d("dsa", order);
             if (val.equals("error")) {
-
-                startCustomCountDownTime(3);
+                startCustomCountDownTime(3,null);
                 Toast.makeText(getActivity(), R.string.error_htp, Toast.LENGTH_SHORT).show();
             } else {
-                startCustomCountDownTime(90);
+                startCustomCountDownTime(90,order);
                 im_pay_show.setImageBitmap(generateBitmap(val, 500, 500));
             }
 
@@ -156,7 +156,6 @@ public class FragmentDialogPay extends DialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);  //点击外部不消失
         view = inflater.inflate(R.layout.fragement_dialog, container, false);
-
         initView();
         return view;
     }
@@ -191,7 +190,6 @@ public class FragmentDialogPay extends DialogFragment {
         registration_id_value = JPushInterface.getRegistrationID(getActivity());
         product_id_value = "1";
         time_value = System.currentTimeMillis() + "";
-
         ScreenUtils.setMargins(im_pay_show, 50, 150, 50, 50);
         String type = null;
         String ordrNo = null;
@@ -216,6 +214,61 @@ public class FragmentDialogPay extends DialogFragment {
         }
     }
 
+
+    /**
+     * 循环查询
+     * @param str
+     */
+    private void postCirculation(String str) {
+        String url = HttpUtils.POSTWX + "Pay1?";
+        mOkHttpClient = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add(product_id_key, str)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+//                Log.d("FragmentDialogPay", e.getMessage());
+//                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
+                Message msg = new Message();
+                Bundle data = new Bundle();
+                data.putString("value", "error");
+                msg.setData(data);
+                handler.sendMessage(msg);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String str = response.body().string();
+                String url = null;
+                String order = null;
+                Log.i("wangshu", str);
+                JSONObject josn = null;
+                try {
+                    josn = new JSONObject(str);
+                    boolean flag = josn.getBoolean("result");
+                    if (flag) {
+                        url = josn.getString("payUrl");
+                        order = josn.getString("order_no");
+                    } else {
+                        url = "error";
+                    }
+                    Message msg = new Message();
+                    Bundle data = new Bundle();
+                    data.putString("value", url);
+                    data.putString("order", order);
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     /**
      * 网络请求
      *
@@ -241,7 +294,6 @@ public class FragmentDialogPay extends DialogFragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
 //                Log.d("FragmentDialogPay", e.getMessage());
 //                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
                 Message msg = new Message();
@@ -250,23 +302,26 @@ public class FragmentDialogPay extends DialogFragment {
                 msg.setData(data);
                 handler.sendMessage(msg);
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
                 String url = null;
+                String order = null;
                 Log.i("wangshu", str);
                 JSONObject josn = null;
                 try {
                     josn = new JSONObject(str);
                     boolean flag = josn.getBoolean("result");
-                    if (flag)
+                    if (flag) {
                         url = josn.getString("payUrl");
-                    else
+                        order = josn.getString("order_no");
+                    } else {
                         url = "error";
+                    }
                     Message msg = new Message();
                     Bundle data = new Bundle();
                     data.putString("value", url);
+                    data.putString("order", order);
                     msg.setData(data);
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
@@ -301,13 +356,14 @@ public class FragmentDialogPay extends DialogFragment {
             }
         });
     }
+
+
     /* 付款成功退出Dialog动画
  * @param view
  */
     public void closeScale(final View view) {
         final ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-
         scaleAnimation.setDuration(800);
         scaleAnimation.setFillAfter(false);
         scaleAnimation.setFillEnabled(true);
@@ -315,7 +371,6 @@ public class FragmentDialogPay extends DialogFragment {
         scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -369,6 +424,7 @@ public class FragmentDialogPay extends DialogFragment {
         filter.addAction(MESSAGE_RECEIVED_ACTION);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, filter);
     }
+
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -392,12 +448,13 @@ public class FragmentDialogPay extends DialogFragment {
     private void setCostomMsg(String msg) {
 //        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         Log.d("FragmentDialogPay", msg);
-        String  json =JsonUtils.useJpushJosn(msg);
-        if(json!=null) {
+        String json = JsonUtils.useJpushJosn(msg);
+        if (json != null) {
             mlistener.onDialogClick(json);
             closeScale(lin_bg);
         }
     }
+
     @Override
     public void onResume() {
         isForeground = true;
@@ -416,8 +473,8 @@ public class FragmentDialogPay extends DialogFragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
-        if(null != countdownTimer)
-        countdownTimer.cancel();
+        if (null != countdownTimer)
+            countdownTimer.cancel();
         Log.d(TAG, "exit");
         super.onDestroy();
     }
@@ -427,7 +484,7 @@ public class FragmentDialogPay extends DialogFragment {
      *
      * @param time
      */
-    private void startCustomCountDownTime(long time) {
+    private void startCustomCountDownTime(long time  ,String str) {
         countdownTimer = new AdvancedCountdownTimer(time * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished, int percent) {
@@ -435,6 +492,9 @@ public class FragmentDialogPay extends DialogFragment {
                 if (isAdded()) {
                     String sAgeFormat = getResources().getString(R.string.text_surplus_time);
                     String sFinalAge = String.format(sAgeFormat, time + "");
+                    if(time%5==0){
+
+                    }
                     if (time < 30) {
                         tv_pay_time.setTextColor(getResources().getColor(R.color.colorAccen1t));
                     }
