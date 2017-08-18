@@ -3,8 +3,6 @@ package com.food.lmln.food.utils;
 /**
  * Created by Weili on 2017/6/9.
  */
-
-
         import java.io.BufferedReader;
         import java.io.BufferedWriter;
         import java.io.File;
@@ -23,11 +21,7 @@ package com.food.lmln.food.utils;
         import android.graphics.BitmapFactory;
         import android.os.Environment;
         import android.util.Log;
-
-        import com.food.lmln.food.BuildConfig;
         import com.food.lmln.food.db.Constant;
-
-        import static com.food.lmln.food.db.Constant.FILENAME;
         import static com.food.lmln.food.utils.OrderUtils.getOrderId;
 
 

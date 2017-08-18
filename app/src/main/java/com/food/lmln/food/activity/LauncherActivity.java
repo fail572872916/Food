@@ -22,7 +22,6 @@ public class LauncherActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_FINISH_LAUNCHERACTIVITY:
-                    //璺宠浆鍒癕ainActivity锛屽苟缁撴潫褰撳墠鐨凩auncherActivity
                     Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -37,10 +36,9 @@ public class LauncherActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 涓嶆樉绀虹郴缁熺殑鏍囬鏍忥紝淇濊瘉windowBackground鍜岀晫闈ctivity_main鐨勫ぇ灏忎竴鏍凤紝鏄剧ず鍦ㄥ睆骞曚笉浼氭湁閿欎綅锛堝幓鎺夎繖涓�琛岃瘯璇曞氨鐭ラ亾鏁堟灉浜嗭級
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // 娉ㄦ剰锛氭坊鍔�3绉掔潯鐪狅紝浠ョ‘淇濋粦灞忎竴浼氬効鐨勬晥鏋滄槑鏄撅紝鍦ㄩ」鐩簲鐢ㄨ鍘绘帀杩�3绉掔潯鐪�
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -49,7 +47,6 @@ public class LauncherActivity extends Activity {
 
         setContentView(R.layout.fragment_layout8);
 
-        // 鍋滅暀3绉掑悗鍙戦�佹秷鎭紝璺宠浆鍒癕ainActivity
         mHandler.sendEmptyMessageDelayed(MSG_FINISH_LAUNCHERACTIVITY, 100);
     }
 

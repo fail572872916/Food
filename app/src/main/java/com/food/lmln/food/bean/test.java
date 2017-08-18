@@ -5,5 +5,4 @@ package com.food.lmln.food.bean;
  */
 
 public class test {
-
 }

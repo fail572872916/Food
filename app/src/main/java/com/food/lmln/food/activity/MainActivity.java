@@ -515,6 +515,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         fab.toggle(false);
     }
+
+    /**
+     * button clicListener
+     */
     View.OnClickListener listerner = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -916,7 +920,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 进入Fragment
      */
     private void inFragment(final String order_no) {
-
         final String orderNo = order_no;
         final MyPopWindow p = new MyPopWindow(MainActivity.this);
         p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
