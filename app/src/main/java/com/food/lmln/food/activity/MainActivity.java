@@ -422,30 +422,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化组件
      */
     private void initView() {
-        lin_one = (LinearLayout) findViewById(R.id.lin_one);
-        lin_three = (LinearLayout) findViewById(R.id.lin_three);
         lv_main = (ListView) findViewById(R.id.lv_main);
-        lv_main_order = (ListView) findViewById(R.id.lv_main_order);
-        tv_order_title = (TextView) findViewById(R.id.tv_order_title);
-        bt_order_add_settlement = (Button) findViewById(R.id.bt_order_add_settlement);
-        bt_order_add_water = (Button) findViewById(R.id.bt_order_add_water);
-        bt_order_add_rice = (Button) findViewById(R.id.bt_order_add_rice);
-        bt_order_place = (Button) findViewById(R.id.bt_order_place);
+        fab = (FloatingActionMenu) findViewById(R.id.fab);
+        lin_one = (LinearLayout) findViewById(R.id.lin_one);
+        myContent = (FrameLayout) findViewById(R.id.myContent);
+        lin_three = (LinearLayout) findViewById(R.id.lin_three);
         tv_order_sum = (TextView) findViewById(R.id.tv_order_sum);
+        lv_main_order = (ListView) findViewById(R.id.lv_main_order);
+        bt_order_place = (Button) findViewById(R.id.bt_order_place);
+        tv_order_title = (TextView) findViewById(R.id.tv_order_title);
         tv_order_price = (TextView) findViewById(R.id.tv_order_price);
-        tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
-        bt_order_place.setOnClickListener(listerner);
-        bt_order_add_water.setOnClickListener(listerner);
-        bt_order_add_settlement.setOnClickListener(listerner);
-        fab_vending_machine = (FloatingActionButton) findViewById(R.id.fab_vending_machine);
-        fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
+        bt_order_add_rice = (Button) findViewById(R.id.bt_order_add_rice);
+        tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
+        fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
+        bt_order_add_water = (Button) findViewById(R.id.bt_order_add_water);
+        bt_order_add_settlement = (Button) findViewById(R.id.bt_order_add_settlement);
+        fab_vending_machine = (FloatingActionButton) findViewById(R.id.fab_vending_machine);
+
+
+        fab.setClosedOnTouchOutside(true);
         fab_robot.setOnClickListener(this);
         fab_setting.setOnClickListener(this);
         fab_vending_machine.setOnClickListener(this);
-        myContent = (FrameLayout) findViewById(R.id.myContent);
-        fab = (FloatingActionMenu) findViewById(R.id.fab);
-        fab.setClosedOnTouchOutside(true);
+        bt_order_place.setOnClickListener(listerner);
+        bt_order_add_water.setOnClickListener(listerner);
+        bt_order_add_settlement.setOnClickListener(listerner);
+
         fragment1 = new BlankFragment();
         editNameDialog = new FragmentDialogPay();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -512,7 +515,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         fab.toggle(false);
     }
-
     View.OnClickListener listerner = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -854,12 +856,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         super.onResume();
     }
-
     @Override
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
-
-
         super.onPostResume();
     }
 
@@ -870,7 +869,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         isFlag(false);
         super.onPause();
     }
-
     /**
      * 判断停止线程
      *
