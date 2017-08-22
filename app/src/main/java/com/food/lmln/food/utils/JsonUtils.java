@@ -32,7 +32,7 @@ public class JsonUtils {
             jsonObject.put("result", rs);
             jsonObject.put("orderInstruct", cmd);
             jsonObject.put("package", data.toString());
-            jsonObject.put("extra", jsonObject1);
+            jsonObject.put("extra", jsonObject1.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

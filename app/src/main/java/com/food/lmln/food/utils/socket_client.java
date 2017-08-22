@@ -46,8 +46,12 @@ public class socket_client extends Activity {
         thr.start();
     }
 
+    /**
+     * 重连
+     * @param ip
+     */
     public void again_connect(final String ip) {
-        if(client!=null){
+
         while (true) {
             Thread thr = new Thread() {
                 @Override
@@ -55,7 +59,6 @@ public class socket_client extends Activity {
                     try {
                         client.sendUrgentData(0xFF);
                     } catch (IOException e) {
-
                         try {
                             client.close();
                             Thread thr1 = new Thread() {
@@ -88,7 +91,7 @@ public class socket_client extends Activity {
 
                 e.printStackTrace();
             }
-        }}
+        }
     }
 
     public void send(String desk_num, String people_num) {

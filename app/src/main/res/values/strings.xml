@@ -8,6 +8,7 @@
     <string name="settlement">结算</string>
     <string name="add_water">加水</string>
     <string name="add_rice">加饭</string>
+    <string name="delete_order">删除未下单</string>
     <string name="order_place">下/改单</string>
     <string name="order_menu_sum">菜单价格</string>
     <string name="order_sum">总计</string>

@@ -6,14 +6,11 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.bean.MenuButton;

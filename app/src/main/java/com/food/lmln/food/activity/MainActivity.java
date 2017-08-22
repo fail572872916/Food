@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView lv_main_order;  //右边订单
     TextView tv_order_title;  //标题
     Button bt_order_add_settlement;     //结算
+    Button  bt_order_clear;             //删除未下单
     Button bt_order_add_water;          //加水
     Button bt_order_add_rice;           //加水
     Button bt_order_place;                //下/改单
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<OrderInfo> newList = new ArrayList<>();
     private List<OrderInfo> addList = new ArrayList<>();
     private List<OrderInfo> list_order = new ArrayList<>();
-    private List<MenuButton> listRight = new ArrayList<MenuButton>();
+    private List<MenuButton> listRight = new ArrayList<>();
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_order_price.setText(R.string.order_menu_sum);
             tv_order_sum_name.setText(R.string.order_sum);
             bt_order_place.setText(R.string.order_place);
+            bt_order_clear.setText(R.string.delete_order);
             switch (msg.what) {
                 case send_msg_code1:
                     Bundle bundle2 = msg.getData();
@@ -171,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
                     int num = bundle.getInt("upOrder");
-                    bt_order_place.setEnabled(num >= 1 ? false : true);
+                    bt_order_place.setEnabled(num <= 1 ? false : true);
                     isFlag(true);
                     break;
                 case send_msg_code4:
@@ -265,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                     String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj,null);
+                     String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj,"");
                         Log.d("json1", "jsonObj:" + json);
                         sendPrint(json);
                     }
@@ -275,6 +278,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         inFragment(orderNo);
                     else
                         Toast.makeText(MainActivity.this, R.string.tip_is_start, Toast.LENGTH_SHORT).show();
+                    break;
+                case Constant.send_msg_code12:
+                    Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
+                    DialogTablde.showDialog(MainActivity.this);
                     break;
                 default:
                     break;
@@ -423,6 +430,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lv_main = (ListView) findViewById(R.id.lv_main);
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
+        bt_order_clear= (Button) findViewById(R.id.bt_order_clear);
         myContent = (FrameLayout) findViewById(R.id.myContent);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
         tv_order_sum = (TextView) findViewById(R.id.tv_order_sum);
@@ -442,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_setting.setOnClickListener(this);
         fab_vending_machine.setOnClickListener(this);
         bt_order_place.setOnClickListener(listerner);
+        bt_order_clear.setOnClickListener(listerner);
         bt_order_add_water.setOnClickListener(listerner);
         bt_order_add_settlement.setOnClickListener(listerner);
         fragment1 = new BlankFragment();
@@ -523,10 +532,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.bt_order_place:
-                    selectIpDesk();
                     if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if(deskNo ==null ||deskNo.equals("")){
+                        selectIpDesk();
+                    }
+
+                    else {
                         mHandlerFlag = false;
                         new Thread(new Runnable() {
                             @Override
@@ -563,6 +575,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                            mHandler.sendEmptyMessage(Constant.send_msg_code11);
 //                        }
 //                    }).start();
+                    break;
+                case R.id.bt_order_clear:
+                    newList.clear();
+                    addList.clear();
+                    list_order.clear();
+                    listRight.clear();
+                    mAdapter_order.notifyDataSetChanged();
+                    Message msg = new Message();
+                    msg.what = send_msg_code1;
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("listRight", (Serializable) listRight);
+                    msg.setData(bundle);
+                    mHandler.sendMessage(msg);
+                    isFlag(true);
+                    tv_order_sum.setText("");
+//                    if(newList.size()==0||addList.size()==0){
+//
+//                    }
                     break;
                 default:
                     break;
@@ -609,11 +639,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = helper.getWritableDatabase();
         int set = DbManger.getCountPerson(db, Constant.DESK_INFO);
         if (set < 1) {
-
-            Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
-            DialogTablde.showDialog(MainActivity.this);
-            Log.d("MainActivity", "dsa");
+            Message msg = new Message();
+            msg.what = Constant.send_msg_code12;
+            mHandler.sendMessage(msg);
         } else {
+
             db = helper.getWritableDatabase();
             List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
             if (li.size() > 0) {
@@ -654,12 +684,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public boolean testSocket() {
         boolean isConn = MainActivity.client.isServerClose();//判断是否断开
+        boolean  link=true;
         if (isConn == true) {
             MainActivity.client.again_connect(deskIp);
+            link=false;
             } else {
-                isConn=false;
+            link=true;
             }
-         return  isConn;
+         return  link;
         }
     /**
      * 进入选中的Fragment
@@ -669,7 +701,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @SuppressLint("NewApi")
     private void setTabSelection(int index, String tableName) {
-        Log.d("MainActivity", tableName);
         // 开启一个Fragment事务
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
@@ -759,8 +790,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int count = 1;
 
     /**
-     * 接收传过来的值
-     *
+     *  even bus
      * @param info
      */
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -775,7 +805,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 //        new Thread(new MyThread()).interrupt();
         list_order.add(info);
-        addList = new ArrayList<OrderInfo>();
+        addList = new ArrayList<>();
         Iterator<OrderInfo> it = list_order.iterator();
         while (it.hasNext()) {
             OrderInfo d = it.next();
@@ -791,7 +821,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     d.setId(dt.getId() + 1);
                 }
             }
-            if (flag == false) {
+            if (!flag) {
                 d.setCount(1);
             }
             addList.add(d);
@@ -881,15 +911,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 进入Fragment
      */
-    private void inFragment(final String order_no) {
-        final String orderNo = order_no;
+    private void inFragment(final String orderNo) {
+
         final MyPopWindow p = new MyPopWindow(MainActivity.this);
         p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
         p.setOnItemClickListener(new MyPopWindow.OnItemClickListener() {
             @Override
             public void setOnItemClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-
                 Bundle bundle = new Bundle();
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
@@ -899,7 +928,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
-                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + order_no);
+                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo);
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();
