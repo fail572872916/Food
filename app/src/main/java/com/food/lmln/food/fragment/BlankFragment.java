@@ -30,8 +30,10 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +51,7 @@ import com.food.lmln.food.db.SqlHelper;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MoveImageView;
 import com.food.lmln.food.utils.MyBitmapUtil;
+import com.food.lmln.food.utils.ScreenUtils;
 import com.food.lmln.food.view.ScrollGridView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -239,10 +242,12 @@ public class BlankFragment extends Fragment {
                 viewHolder = (ViewHolder) view.getTag();
             }
             gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
+            int height = ScreenUtils.getScreenHeight(getActivity());
+            LinearLayout.LayoutParams linearParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+            gd_frgment1.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
+
             simpleList = foodList.get(position).getList();
 
-            Log.d("MyAdapter", "simpleList:" + simpleList);
-            Log.d("MyAdapter", "position:" + position);
 //        获取子列表
             List<FoodinfoSmall> bigList;
             MyBitmapUtil utils;
@@ -517,4 +522,35 @@ public class BlankFragment extends Fragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//取消注册
     }
+
+//    public  void setListViewHeightBasedOnChildren(GridView listView) {
+//        // 获取listview的adapter
+//        ListAdapter listAdapter = listView.getAdapter();
+//        if (listAdapter == null) {
+//            return;
+//        }
+//        // 固定列宽，有多少列
+//        int col = 2;// listView.getNumColumns();
+//        int totalHeight = 0;
+//        // i每次加4，相当于listAdapter.getCount()小于等于4时 循环一次，计算一次item的高度，
+//        // listAdapter.getCount()小于等于8时计算两次高度相加
+//        for (int i = 0; i < listAdapter.getCount(); i += col) {
+//            // 获取listview的每一个item
+//            View listItem = listAdapter.getView(i, null, listView);
+//            listItem.measure(0, 0);
+//            // 获取item的高度和
+//            totalHeight += listItem.getMeasuredHeight();
+//        }
+//
+//        // 获取listview的布局参数
+//        ViewGroup.LayoutParams params = listView.getLayoutParams();
+//        // 设置高度
+//        params.height = totalHeight;
+//        // 设置margin
+//        ((ViewGroup.MarginLayoutParams) params).setMargins(10, -8, 10, 10);
+//        // 设置参数
+//        listView.setLayoutParams(params);
+//    }
+
+
 }

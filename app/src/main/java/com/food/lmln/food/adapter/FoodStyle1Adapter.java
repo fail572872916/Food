@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.food.lmln.food.R;
@@ -16,6 +18,7 @@ import com.food.lmln.food.bean.OrderInfo;
 import com.food.lmln.food.callback.ClothAddCallback;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MyBitmapUtil;
+import com.food.lmln.food.utils.ScreenUtils;
 import com.food.lmln.food.view.ScrollGridView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -78,9 +81,9 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         } else {
             vieewHolder = (VieewHolder) convertView.getTag();
         }
+        int height = ScreenUtils.getScreenHeight(mContext);
         vieewHolder.tv_item_name.setText(list.get(position).getName());
         vieewHolder.tv_item_price.setText("￥"+list.get(position).getPrice()+"");
-
         String url= HttpUtils.url+list.get(position).getIamge();
 
         MyBitmapUtil utils;   utils = new MyBitmapUtil();
@@ -103,8 +106,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
                 EventBus.getDefault().post(new OrderInfo(0, list.get(position).getName(),
                         Double.valueOf( list.get(position).getPrice()), 0,true));
 
-
-
             }
         });
 
@@ -118,9 +119,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
             public TextView tv_item_name;
             public TextView tv_item_price;
         }
-
-
-
 
 
 

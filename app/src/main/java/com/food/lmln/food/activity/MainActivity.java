@@ -3,7 +3,6 @@ package com.food.lmln.food.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
@@ -72,7 +71,6 @@ import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.db.Constant.send_msg_code5;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * 布局1
@@ -677,36 +675,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
         hideFragments(transaction);
         int num = ++index;
-        if (num % 3 == 0) {
-            if (fragment3 == null) {
-                // 如果NewsFragment为空，则创建一个并添加到界面上
-                fragment3 = new Blank3Fragment();
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("foodName", tableName);
-                fragment3.setArguments(bundle2);
-                transaction.add(R.id.myContent, fragment3);
-            } else {
-                // 如果NewsFragment不为空，则直接将它显示出来
-                FragmentManager fgManager = getSupportFragmentManager();
-                //Activity用来管理它包含的Frament，通过getFramentManager()获取
-                FragmentTransaction fragmentTransaction = fgManager.beginTransaction();
-                //获取Framgent事务
-                Fragment fragment = fgManager.findFragmentById(R.id.myContent);
-                //删除一个Fragment之前，先通过FragmentManager的findFragmemtById()，找到对应的Fragment
-                fragmentTransaction.remove(fragment);
-                //删除获取到的Fragment
-                //指定动画，可以自己添加
-                String tag = null;
-                fragmentTransaction.addToBackStack(tag);
-                //如果需要，添加到back栈中
-                fragmentTransaction.commit();
-                fragment3 = new Blank3Fragment();
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("foodName", tableName);
-                fragment3.setArguments(bundle2);
-                transaction.add(R.id.myContent, fragment3);
-            }
-        } else if (num % 3 == 2) {
+        if (num % 2 == 0) {
             if (fragment2 == null) {
                 // 如果NewsFragment为空，则创建一个并添加到界面上
                 fragment2 = new Blank2Fragment();
@@ -759,7 +728,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //如果需要，添加到back栈中
                 fragmentTransaction.commit();
                 Log.d("MainActivity", tableName);
-
                 fragment1 = new BlankFragment();
                 Bundle bundle2 = new Bundle();
                 bundle2.putString("foodName", tableName);
@@ -824,14 +792,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if (flag == false) {
-
                 d.setCount(1);
             }
             addList.add(d);
         }
         mHandler.sendEmptyMessage(send_msg_code2);
     }
-
     /**
      * \
      * 销毁方法
@@ -841,7 +807,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         client.finish();
-//        DialogTablde.dismissScanNumberDialog();
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
@@ -895,7 +860,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 隐藏状态栏
      */
     private void hideNavigationBar() {
-        // TODO Auto-generated method stub
         final View decorView = getWindow().getDecorView();
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -929,7 +893,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
-
                         bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo);
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
