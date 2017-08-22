@@ -12,6 +12,8 @@ public class OrderInfo {
     private int  count;
     private  boolean  flag;
 
+
+
     public OrderInfo(int id, String name, double price, int count, boolean flag) {
         this.id = id;
         this.name = name;

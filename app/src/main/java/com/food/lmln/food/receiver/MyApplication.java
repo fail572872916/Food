@@ -2,8 +2,6 @@ package com.food.lmln.food.receiver;
 
 import android.app.Application;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 

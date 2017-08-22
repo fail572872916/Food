@@ -101,6 +101,8 @@ public class Constant {
     public static final String  PAY_TYPE="pay_type";
     public static final String  ALI="ALI";
     public static final String  WEIXIN="WEIXIN";
+    public static final  int  PAY_TYEPE_ALI= 1;
+    public static final  int  PAY_TYEPE_WX= 2;
 
     /**
      * Handler执行码

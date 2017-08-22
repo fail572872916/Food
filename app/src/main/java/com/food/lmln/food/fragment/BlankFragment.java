@@ -82,9 +82,7 @@ public class BlankFragment extends Fragment {
     String small_img;
     ScrollGridView gd_frgment1;
     private int pageCount;//总个数
-    private int pageIndex = 1; //当前页数;
     private int pageSize = 8;//每页显示的个数
-    private int pageNum;//每页显示的个数
     private SQLiteDatabase db;
     SqlHelper helper;
     private ImageView holdCart;
@@ -106,12 +104,11 @@ public class BlankFragment extends Fragment {
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             foodList = (List<FoodInfo>) bundle.getSerializable("lookList");
+            Log.d("BlankFragment", "foodList:" + foodList);
+
             adapter = new MyAdapter(getActivity(), foodList);
             adapter.notifyDataSetChanged();
-            adapter.notifyDataSetChanged();
-
             viewPager.setAdapter(adapter);
-
         }
     };
 
@@ -120,7 +117,6 @@ public class BlankFragment extends Fragment {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);  //注册
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -128,9 +124,7 @@ public class BlankFragment extends Fragment {
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             tableName = bundle.getString("foodName");
-
         }
-
         rl = (LinearLayout) view.findViewById(R.id.f1);
         holdCart = (ImageView) getActivity().findViewById(R.id.main_holdCart);
         holdRootView = (RelativeLayout) getActivity().findViewById(R.id.container);
@@ -138,8 +132,6 @@ public class BlankFragment extends Fragment {
         db = helper.getWritableDatabase();
         viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
         getData();
-
-
         return view;
     }
 
@@ -153,21 +145,22 @@ public class BlankFragment extends Fragment {
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 foodList1 = MysqlDb.selectFood(conn, "select  * from  " + tableName + "");
+
                 if (foodList1.size() > 0) {
-
                     pageCount = (int) Math.ceil(foodList1.size() / (double) pageSize);
-                    pageNum = (int) Math.ceil(pageCount / (double) pageSize);
+                    Log.d("BlankFragment", "pageCount:" + pageCount);
 
-                    for (int i = 1; i < pageNum + 1; i++) {
+                    for (int i = 1; i <= pageCount; i++) {
                         FoodInfo f = new FoodInfo();
                         f.setKey(i);
-                        personList = MysqlDb.ByPageIndex(conn, tableName, pageIndex, pageSize);
+                        personList = MysqlDb.ByPageIndex(conn, tableName, i, pageSize);
                         f.setList(personList);
                         foodList.add(f);
                     }
+                    Log.d("BlankFragment", "foodList:" + foodList);
                     Message msg = new Message();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("lookList", (Serializable) foodList);
+                    bundle.putSerializable("lookList", (Serializable)foodList);
                     msg.setData(bundle);
                     mHandler.sendMessage(msg);
                 }
@@ -181,8 +174,8 @@ public class BlankFragment extends Fragment {
      */
     private void init() {
         pageCount = DbManger.getCountPerson(db, Constant.TABLE_NAME_FOODINFO);
-        pageNum = (int) Math.ceil(pageCount / (double) pageSize);
-        for (int i = 1; i < pageNum + 1; i++) {
+        pageCount = (int) Math.ceil(pageCount / (double) pageSize);
+        for (int i = 1; i < pageCount + 1; i++) {
             FoodInfo f = new FoodInfo();
             f.setKey(i);
             personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO, i, pageSize);
@@ -207,11 +200,9 @@ public class BlankFragment extends Fragment {
             this.mContext = mContext;
             this.foodList = foodList;
         }
-
-
         //用于存储回收掉的View
         private List<WeakReference<LinearLayout>> viewList = new ArrayList<WeakReference<LinearLayout>>();
-        ;
+
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
@@ -227,7 +218,7 @@ public class BlankFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return pageNum;
+            return pageCount;
         }
 
         @Override
@@ -250,6 +241,8 @@ public class BlankFragment extends Fragment {
             gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
             simpleList = foodList.get(position).getList();
 
+            Log.d("MyAdapter", "simpleList:" + simpleList);
+            Log.d("MyAdapter", "position:" + position);
 //        获取子列表
             List<FoodinfoSmall> bigList;
             MyBitmapUtil utils;
@@ -273,7 +266,6 @@ public class BlankFragment extends Fragment {
             viewHolder.tv_small_text.setText(smallName + "");
             if (simpleList.size() >= 3) {
                 bigList = simpleList.subList(2, simpleList.size());
-
                 mAdapter = new FoodStyle1Adapter(bigList, getActivity(), gd_frgment1);
                 gd_frgment1.setAdapter(mAdapter);
             }
@@ -293,7 +285,6 @@ public class BlankFragment extends Fragment {
                             , 0, true));
                 }
             });
-
             return view;
         }
     }
@@ -494,7 +485,6 @@ public class BlankFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);

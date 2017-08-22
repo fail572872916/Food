@@ -283,7 +283,7 @@ public class MysqlDb {
      * 查当前桌台的订单号
      * @param conn
      * @param sql
-     * @return
+     * @return  status
      */
     public static  String  selectByNo(Connection conn, String sql) {
         String  status =null;
@@ -379,15 +379,17 @@ public class MysqlDb {
      * @return
      */
     public static  int   exuqueteUpdate(Connection conn, String sql) {
+        Log.d("sql", sql);
         if (conn == null) {
             return  (Integer) null;
         }
         Statement statement = null;
         int result = 0;
 //        list=null;
-
         try {
             statement = conn.createStatement();
+            Log.d("MysqlDb", sql);
+
             result = statement.executeUpdate(sql);
             int a=result;
             Log.d("MysqlDb", "a:" + a);

@@ -33,6 +33,7 @@
     <string name="tip_new_add3">临时订单出现异常</string>
     <string name="text_surplus_time">剩余%1$s秒</string>
     <string name="error_htp">请求失败</string>
+    <string name="order_ok_print">下单成功正在通知后厨&#8230;</string>
 
 
 

@@ -21,14 +21,18 @@ public class JsonUtils {
      * @param data
      * @return jsonObject
      */
-    public static String useJosn(boolean rs, String cmd, JSONObject data) {
+    public static String useJosn(boolean rs, String cmd, JSONObject data,String Deskno) {
 
         JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject1= new JSONObject();
         try {
+            if(Deskno!=null){
+                jsonObject1.put("desk_num_str",Deskno);
+            }
             jsonObject.put("result", rs);
             jsonObject.put("orderInstruct", cmd);
-            jsonObject.put("package", data);
-            jsonObject.put("extra", "null");
+            jsonObject.put("package", data.toString());
+            jsonObject.put("extra", jsonObject1);
         } catch (JSONException e) {
             e.printStackTrace();
         }

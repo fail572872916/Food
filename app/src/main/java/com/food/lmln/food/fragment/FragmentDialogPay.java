@@ -136,11 +136,12 @@ public class FragmentDialogPay extends DialogFragment {
                     Bundle data = msg.getData();
                     String val = data.getString("value");
                     String order = data.getString("order");
+                    int type = data.getInt("pay_type");
                     if (val.equals("error")) {
-                        startCustomCountDownTime(3, null);
+                        startCustomCountDownTime(3, null,type);
                         Toast.makeText(getActivity(), R.string.error_htp, Toast.LENGTH_SHORT).show();
                     } else {
-                        startCustomCountDownTime(90, order);
+                        startCustomCountDownTime(90, order,type);
                         im_pay_show.setImageBitmap(generateBitmap(val, 500, 500));
                     }
                     break;
@@ -194,7 +195,6 @@ public class FragmentDialogPay extends DialogFragment {
         view_pay_bg = (FrameLayout) view.findViewById(R.id.view_pay_bg);
         tv_pay_time = (TextView) view.findViewById(R.id.tv_pay_time);
         slideToUp(view);
-        registerMessageReceiver();
         initData();
     }
 
@@ -225,7 +225,8 @@ public class FragmentDialogPay extends DialogFragment {
         if (type.equals(Constant.ALI)) {
             String url = HttpUtils.POSTWX + "Ali_Food_Pay?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
-            postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url);
+
+            postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_ALI);
         } else {
             String url = HttpUtils.POSTWX + "Pay1?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
@@ -233,7 +234,7 @@ public class FragmentDialogPay extends DialogFragment {
             } else if (product_id_value.isEmpty()) {
             } else if (time_value.isEmpty()) {
             } else {
-                postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url);
+                postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_ALI);
             }
         }
     }
@@ -274,7 +275,7 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
-                JSONObject jsonObject = null;
+                JSONObject jsonObject ;
                 try {
                     jsonObject = new JSONObject(str);
                     if (jsonObject != null) {
@@ -301,7 +302,7 @@ public class FragmentDialogPay extends DialogFragment {
      * @param Rtime 时间
      * @param url   访问地址
      */
-    private void postAsynHttp(String mId, String Rid, String Rtime, String order, String url) {
+    private void postAsynHttp(String mId, String Rid, String Rtime, String order, String url, final int type) {
         avloadingIndicatorView_BallClipRotatePulse.setVisibility(View.VISIBLE);
         mOkHttpClient = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
@@ -324,6 +325,7 @@ public class FragmentDialogPay extends DialogFragment {
                 msg.what = Constant.send_msg_code1;
                 Bundle data = new Bundle();
                 data.putString("value", "error");
+                data.putInt("pay_type", type);
                 msg.setData(data);
                 handler.sendMessage(msg);
             }
@@ -349,6 +351,7 @@ public class FragmentDialogPay extends DialogFragment {
                     Bundle data = new Bundle();
                     data.putString("value", url);
                     data.putString("order", order);
+                    data.putInt("pay_type", type);
                     msg.setData(data);
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
@@ -461,6 +464,7 @@ public class FragmentDialogPay extends DialogFragment {
                 String messge = intent.getStringExtra(KEY_MESSAGE);
                 String extras = intent.getStringExtra(KEY_EXTRAS);
                 StringBuilder showMsg = new StringBuilder();
+                Log.d("jpush", extras);
                 showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
                 if (!ExampleUtil.isEmpty(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
@@ -487,7 +491,7 @@ public class FragmentDialogPay extends DialogFragment {
     @Override
     public void onResume() {
         isForeground = true;
-        registerMessageReceiver();
+
         super.onResume();
         Log.d(TAG, "onResume");
     }
@@ -513,7 +517,7 @@ public class FragmentDialogPay extends DialogFragment {
      *
      * @param time
      */
-    private void startCustomCountDownTime(long time, final String str) {
+    private void startCustomCountDownTime(long time, final String str, final int type) {
         countdownTimer = new AdvancedCountdownTimer(time * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished, int percent) {
@@ -521,14 +525,16 @@ public class FragmentDialogPay extends DialogFragment {
                 if (isAdded()) {
                     String sAgeFormat = getResources().getString(R.string.text_surplus_time);
                     String sFinalAge = String.format(sAgeFormat, time + "");
-                    if (time < 81 && time % 8 == 0 && str != null) {
-                        Log.d("FragmentDialogPay", "time:" + time);
-                        Message msg = new Message();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("order_no", str);
-                        msg.setData(bundle);
-                        msg.what = Constant.send_msg_code2;
-                        handler.sendMessage(msg);
+                    if(type==2) {
+                        if (time < 81 && time % 8 == 0 && str != null) {
+                            Log.d("FragmentDialogPay", "time:" + time);
+                            Message msg = new Message();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("order_no", str);
+                            msg.setData(bundle);
+                            msg.what = Constant.send_msg_code2;
+                            handler.sendMessage(msg);
+                        }
                     }
                     if (time < 30) {
                         tv_pay_time.setTextColor(getResources().getColor(R.color.colorAccen1t));
