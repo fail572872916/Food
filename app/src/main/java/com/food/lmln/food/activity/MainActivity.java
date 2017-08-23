@@ -400,11 +400,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化
      */
     private void initSokect() {
-        if (deskIp.isEmpty() && deskNo.isEmpty()) {
-            System.out.println("主机信息为空，请补充后再试试");
-        } else {
             // 连线 server
-            client.runclient(deskIp);
+         client.runclient(deskIp);
             //此线程为接收菜单的线程，循环接收，
             new Thread() {
                 @Override
@@ -420,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }.start();
-        }
+
     }
 
     /**
@@ -537,7 +534,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else if(deskNo ==null ||deskNo.equals("")){
                         selectIpDesk();
                     }
-
                     else {
                         mHandlerFlag = false;
                         new Thread(new Runnable() {
@@ -797,10 +793,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onMoonEvent(OrderInfo info) {
         info = new OrderInfo(index, info.getName(), info.getPrice(), count, info.isFlag());
 //        info = new OrderInfo();
-
-        Log.d("ss", "info:" + info);
         if (info.isFlag()) {
-
             isFlag(false);
         }
 //        new Thread(new MyThread()).interrupt();

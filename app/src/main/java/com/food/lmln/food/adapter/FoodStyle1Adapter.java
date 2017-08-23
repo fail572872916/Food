@@ -1,6 +1,8 @@
 package com.food.lmln.food.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import com.food.lmln.food.R;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.OrderInfo;
 import com.food.lmln.food.callback.ClothAddCallback;
+import com.food.lmln.food.db.Constant;
+import com.food.lmln.food.fragment.FodDetailFragment;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.utils.ScreenUtils;
@@ -35,7 +39,7 @@ public class FoodStyle1Adapter extends BaseAdapter    {
     LayoutInflater mInfnflater;
     private List<FoodinfoSmall> list;    //功能集合
     private Context mContext; //上下文
-    private ClothAddCallback callback; //回调接口
+
 
     ScrollGridView gd_frgment1;
 
@@ -81,7 +85,7 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         } else {
             vieewHolder = (VieewHolder) convertView.getTag();
         }
-        int height = ScreenUtils.getScreenHeight(mContext);
+
         vieewHolder.tv_item_name.setText(list.get(position).getName());
         vieewHolder.tv_item_price.setText("￥"+list.get(position).getPrice()+"");
         String url= HttpUtils.url+list.get(position).getIamge();
@@ -105,6 +109,9 @@ public class FoodStyle1Adapter extends BaseAdapter    {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventBus.getDefault().post(new OrderInfo(0, list.get(position).getName(),
                         Double.valueOf( list.get(position).getPrice()), 0,true));
+
+
+
 
             }
         });

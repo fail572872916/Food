@@ -105,6 +105,11 @@ public class Constant {
     public static final  int  PAY_TYEPE_WX= 2;
 
     /**
+     * 查看详情
+     */
+    public static final String FOOD_DETAIL  = "food_detail";
+
+    /**
      * Handler执行码
      */
     public static final int send_msg_code1 = 0x101;

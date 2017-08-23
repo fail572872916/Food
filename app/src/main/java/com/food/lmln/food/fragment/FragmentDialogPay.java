@@ -2,7 +2,6 @@ package com.food.lmln.food.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -109,7 +108,6 @@ public class FragmentDialogPay extends DialogFragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(Constant.PAY_TYPE);
         }
-
     }
 
     @Override
@@ -180,7 +178,7 @@ public class FragmentDialogPay extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);  //点击外部不消失
-        view = inflater.inflate(R.layout.fragement_dialog, container, false);
+        view = inflater.inflate(R.layout.fragement_dialog_pay, container, false);
         initView();
         return view;
     }
@@ -212,7 +210,7 @@ public class FragmentDialogPay extends DialogFragment {
 //            }
 //        });
         registration_id_value = JPushInterface.getRegistrationID(getActivity());
-        product_id_value = "1";
+        product_id_value = "1.0";
         time_value = System.currentTimeMillis() + "";
         ScreenUtils.setMargins(im_pay_show, 50, 150, 50, 50);
         String type = null;
@@ -234,7 +232,7 @@ public class FragmentDialogPay extends DialogFragment {
             } else if (product_id_value.isEmpty()) {
             } else if (time_value.isEmpty()) {
             } else {
-                postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_ALI);
+                postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_WX);
             }
         }
     }
@@ -278,14 +276,20 @@ public class FragmentDialogPay extends DialogFragment {
                 JSONObject jsonObject ;
                 try {
                     jsonObject = new JSONObject(str);
+                    Log.d("FragmentDialogPay", "jsonObject:" + jsonObject);
                     if (jsonObject != null) {
-                        Message msg = new Message();
-                        msg.what = Constant.send_msg_code3;
-                        Bundle data = new Bundle();
-                        data.putString("query", jsonObject.toString());
+                        boolean result= jsonObject.getBoolean("result");
+                        String  money = jsonObject.getString("money");
+                        if(result && money!=null) {
+                            Message msg = new Message();
+                            msg.what = Constant.send_msg_code3;
+                            Bundle data = new Bundle();
+                            data.putString("query", jsonObject.toString());
 
-                        msg.setData(data);
-                        handler.sendMessage(msg);
+                            msg.setData(data);
+                            handler.sendMessage(msg);
+                        }
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -525,7 +529,7 @@ public class FragmentDialogPay extends DialogFragment {
                 if (isAdded()) {
                     String sAgeFormat = getResources().getString(R.string.text_surplus_time);
                     String sFinalAge = String.format(sAgeFormat, time + "");
-                    if(type==2) {
+                    if(type == Constant.PAY_TYEPE_WX) {
                         if (time < 81 && time % 8 == 0 && str != null) {
                             Log.d("FragmentDialogPay", "time:" + time);
                             Message msg = new Message();

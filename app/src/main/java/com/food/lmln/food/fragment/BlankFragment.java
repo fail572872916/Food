@@ -278,6 +278,14 @@ public class BlankFragment extends Fragment {
             viewHolder.im_small.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    FodDetailFragment  editNameDialog = new FodDetailFragment();
+//                    FragmentManager fm = getActivity().getSupportFragmentManager();
+//                    Bundle bundle = new Bundle();
+//                    OrderInfo info=  new OrderInfo(0, bigName, Double.valueOf(bigPrice)
+//                            , 0, true);
+//
+//                    bundle.putString(Constant.FOOD_DETAIL,info.toString());
+//                    editNameDialog.show(fm, "payDialog");
                     EventBus.getDefault().post(new OrderInfo(0, smallName, Double.valueOf(smallPrice)
                             , 0, true));
                 }
@@ -286,6 +294,15 @@ public class BlankFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
+//                    FodDetailFragment  editNameDialog = new FodDetailFragment();;
+//                    FragmentManager fm = getActivity().getSupportFragmentManager();
+//                    Bundle bundle = new Bundle();
+//                   OrderInfo info=  new OrderInfo(0, bigName, Double.valueOf(bigPrice)
+//                            , 0, true);
+//
+//                    bundle.putString(Constant.FOOD_DETAIL,info.toString());
+//                    editNameDialog.setArguments(bundle);
+//                    editNameDialog.show(fm, "payDialog");
                     EventBus.getDefault().post(new OrderInfo(0, bigName, Double.valueOf(bigPrice)
                             , 0, true));
                 }

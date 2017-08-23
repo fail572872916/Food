@@ -12,6 +12,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.util.Log;
 
 public class socket_client extends Activity {
     Socket client;
@@ -51,7 +52,6 @@ public class socket_client extends Activity {
      * @param ip
      */
     public void again_connect(final String ip) {
-
         while (true) {
             Thread thr = new Thread() {
                 @Override
@@ -59,6 +59,7 @@ public class socket_client extends Activity {
                     try {
                         client.sendUrgentData(0xFF);
                     } catch (IOException e) {
+                        e.printStackTrace();
                         try {
                             client.close();
                             Thread thr1 = new Thread() {
@@ -76,6 +77,7 @@ public class socket_client extends Activity {
                                 }
                             };
                             thr1.start();
+
                         } catch (IOException e1) {
 
                             e1.printStackTrace();
@@ -83,6 +85,7 @@ public class socket_client extends Activity {
 
                     }
                 }
+
             };
             thr.start();
             try {
