@@ -2,20 +2,15 @@ package com.food.lmln.food.fragment;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -29,11 +24,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,14 +35,10 @@ import com.food.lmln.food.adapter.FoodStyle1Adapter;
 import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
-import com.food.lmln.food.bean.OrderInfo;
-import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.db.SqlHelper;
-import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MoveImageView;
-import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.utils.ScreenUtils;
 import com.food.lmln.food.view.ScrollGridView;
 
@@ -69,15 +57,14 @@ import java.util.List;
 import static com.food.lmln.food.db.Constant.PASSWORD;
 import static com.food.lmln.food.db.Constant.SQLURL;
 import static com.food.lmln.food.db.Constant.USERNAME;
-import static com.food.lmln.food.db.Constant.send_msg_code1;
-import static com.food.lmln.food.db.Constant.send_msg_code3;
-
 
 public class BlankFragment extends Fragment {
-    private List<FoodinfoSmall> simpleList = new ArrayList<FoodinfoSmall>();
-    private List<FoodinfoSmall> personList = new ArrayList<FoodinfoSmall>();
-    private List<FoodinfoSmall> foodList1 = new ArrayList<FoodinfoSmall>();
-    List<FoodInfo> foodList = new ArrayList<FoodInfo>();
+
+    private View view; //fragment_layout;
+    private List<FoodinfoSmall> simpleList = new ArrayList<>();
+    private List<FoodinfoSmall> personList = new ArrayList<>();
+    private List<FoodinfoSmall> foodList1 = new ArrayList<>();
+    List<FoodInfo> foodList = new ArrayList<>();
     private FoodStyle1Adapter mAdapter;
     String big_imageUrl;
     String small_imageUrl;
@@ -85,7 +72,7 @@ public class BlankFragment extends Fragment {
     String small_img;
     ScrollGridView gd_frgment1;
     private int pageCount;//总个数
-    private int pageSize = 8;//每页显示的个数
+    private int pageSize = 9;//每页显示的个数
     private SQLiteDatabase db;
     SqlHelper helper;
     private ImageView holdCart;
@@ -101,6 +88,7 @@ public class BlankFragment extends Fragment {
     private MyAdapter adapter;
     private Connection conn; //Connection连接
     private String tableName;
+    int[] viewSize = new int[2];
 
     Handler mHandler = new Handler() {
         @Override
@@ -119,11 +107,13 @@ public class BlankFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);  //注册
+
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_blank1, container, false);
+        view = inflater.inflate(R.layout.fragment_blank1, container, false);
         Bundle bundle = getArguments();//从activity传过来的Bundle
         if (bundle != null) {
             tableName = bundle.getString("foodName");
@@ -134,7 +124,13 @@ public class BlankFragment extends Fragment {
         helper = DbManger.getInstance(getActivity());
         db = helper.getWritableDatabase();
         viewPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
+
+        pageCount = (int) Math.ceil(pageCount / (double) pageSize);
+        init();
+
         getData();
+
+
         return view;
     }
 
@@ -149,7 +145,7 @@ public class BlankFragment extends Fragment {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                 foodList1 = MysqlDb.selectFood(conn, "select  * from  " + tableName + "");
 
-                if (foodList1.size() > 0) {
+                if (foodList1 !=null&&foodList1.size() > 0) {
                     pageCount = (int) Math.ceil(foodList1.size() / (double) pageSize);
                     Log.d("BlankFragment", "pageCount:" + pageCount);
 
@@ -163,7 +159,7 @@ public class BlankFragment extends Fragment {
                     Log.d("BlankFragment", "foodList:" + foodList);
                     Message msg = new Message();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("lookList", (Serializable)foodList);
+                    bundle.putSerializable("lookList", (Serializable) foodList);
                     msg.setData(bundle);
                     mHandler.sendMessage(msg);
                 }
@@ -176,36 +172,49 @@ public class BlankFragment extends Fragment {
      * 判断操作
      */
     private void init() {
-        pageCount = DbManger.getCountPerson(db, Constant.TABLE_NAME_FOODINFO);
-        pageCount = (int) Math.ceil(pageCount / (double) pageSize);
-        for (int i = 1; i < pageCount + 1; i++) {
-            FoodInfo f = new FoodInfo();
-            f.setKey(i);
-            personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO, i, pageSize);
-            f.setList(personList);
-            foodList.add(f);
-        }
+//        pageCount = DbManger.getCountPerson(db, Constant.TABLE_NAME_FOODINFO);
+//        for (int i = 1; i < pageCount + 1; i++) {
+//            FoodInfo f = new FoodInfo();
+//            f.setKey(i);
+//            personList = DbManger.getListByPageIndex(db, Constant.TABLE_NAME_FOODINFO, i, pageSize);
+//            f.setList(personList);
+//            foodList.add(f);
+//        }
+
+
+        // getView width,height
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                //移除监听
+                view.removeOnLayoutChangeListener(this);
+                view.getWidth(); // 获取宽度
+                view.getHeight(); // 获取高度
+                viewSize[0] = view.getWidth();
+                viewSize[1] = view.getHeight();
+            }
+        });
     }
 
     /**
      * 适配器  MyAdapter
      */
-    class MyAdapter extends PagerAdapter {
+   private class MyAdapter extends PagerAdapter {
         private String bigName;
         private String smallName;
         private String smallPrice;
         private String bigPrice;
         private ViewPager pager;
         Context mContext;
-        List<FoodInfo> foodList = new ArrayList<FoodInfo>();
+        List<FoodInfo> foodList = new ArrayList<>();
 
         public MyAdapter(Context mContext, List<FoodInfo> foodList) {
             this.mContext = mContext;
             this.foodList = foodList;
         }
-        //用于存储回收掉的View
-        private List<WeakReference<LinearLayout>> viewList = new ArrayList<WeakReference<LinearLayout>>();
 
+        //用于存储回收掉的View
+        private List<WeakReference<LinearLayout>> viewList = new ArrayList<>();
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
@@ -216,7 +225,7 @@ public class BlankFragment extends Fragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
             LinearLayout view = (LinearLayout) object;
             container.removeView(view);
-            viewList.add(new WeakReference<LinearLayout>(view));
+            viewList.add(new WeakReference<>(view));
         }
 
         @Override
@@ -229,84 +238,75 @@ public class BlankFragment extends Fragment {
             if (pager == null) {
                 pager = (ViewPager) container;
             }
-            View view = null;
-            ViewHolder viewHolder = null;
-            if (view == null) {
-                view = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_plus_one, null);
+            View view ;
+            ViewHolder viewHolder ;
+
+                view = (View) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_plus_one, null);
                 viewHolder = new ViewHolder();
-                viewHolder.im_big = (ImageView) view.findViewById(R.id.im_big);
-                viewHolder.im_small = (ImageView) view.findViewById(R.id.im_small);
-                viewHolder.tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
+//                viewHolder.im_big = (ImageView) view.findViewById(R.id.im_big);
+//                viewHolder.im_small = (ImageView) view.findViewById(R.id.im_small);
+//                viewHolder.tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
                 view.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) view.getTag();
-            }
+
+
             gd_frgment1 = (ScrollGridView) view.findViewById(R.id.gd_frgment1);
             int height = ScreenUtils.getScreenHeight(getActivity());
-            LinearLayout.LayoutParams linearParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
             gd_frgment1.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
-
             simpleList = foodList.get(position).getList();
+            Log.d("MyAdapter", "simpleList:" + simpleList);
 
-//        获取子列表
-            List<FoodinfoSmall> bigList;
-            MyBitmapUtil utils;
-            utils = new MyBitmapUtil();
-            if (simpleList.size() >= 1) {
-                bigList = simpleList.subList(0, 1);
-                bigName = bigList.get(0).getName();
-                big_img = bigList.get(0).getIamge();
-                bigPrice = bigList.get(0).getPrice();
-            }
-            if (simpleList.size() >= 2) {
-                bigList = simpleList.subList(1, 2);
-                small_img = bigList.get(0).getIamge();
-                smallName = bigList.get(0).getName();
-                smallPrice = bigList.get(0).getPrice();
-            }
-            big_imageUrl = HttpUtils.url + String.valueOf(big_img);
-            small_imageUrl = HttpUtils.url + String.valueOf(small_img);
-            utils.display(big_imageUrl, viewHolder.im_big);
-            utils.display(small_imageUrl, viewHolder.im_small);
-            viewHolder.tv_small_text.setText(smallName + "");
-            if (simpleList.size() >= 3) {
-                bigList = simpleList.subList(2, simpleList.size());
-                mAdapter = new FoodStyle1Adapter(bigList, getActivity(), gd_frgment1);
-                gd_frgment1.setAdapter(mAdapter);
-            }
+//
+////        获取子列表
+//            List<FoodinfoSmall> bigList;
+//            MyBitmapUtil utils;
+//            utils = new MyBitmapUtil();
+//            if (simpleList.size() >= 1) {
+//                bigList = simpleList.subList(0, 1);
+//                bigName = bigList.get(0).getName();
+//                big_img = bigList.get(0).getIamge();
+//                bigPrice = bigList.get(0).getPrice();
+//            }
+//            if (simpleList.size() >= 2) {
+//                bigList = simpleList.subList(1, 2);
+//                small_img = bigList.get(0).getIamge();
+//                smallName = bigList.get(0).getName();
+//                smallPrice = bigList.get(0).getPrice();
+//            }
+//            big_imageUrl = HttpUtils.url + String.valueOf(big_img);
+//            small_imageUrl = HttpUtils.url + String.valueOf(small_img);
+//            utils.display(big_imageUrl, viewHolder.im_big);
+//            utils.display(small_imageUrl, viewHolder.im_small);
+//            viewHolder.tv_small_text.setText(smallName + "");
+//            viewHolder.im_small.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    EventBus.getDefault().post(new OrderInfo(0, smallName, Double.valueOf(smallPrice)
+//                            , 0, true));
+//                }
+//            });
+//            viewHolder.im_big.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    EventBus.getDefault().post(new OrderInfo(0, bigName, Double.valueOf(bigPrice)
+//                            , 0, true));
+//                }
+//            });
+//            if (simpleList.size() >= 3) {
+//                bigList = simpleList.subList(2, simpleList.size());
+            mAdapter = new FoodStyle1Adapter(simpleList, getActivity(), gd_frgment1, viewSize);
+            gd_frgment1.setAdapter(mAdapter);
+//            }
+            mAdapter.setOnDetailListener(new FoodStyle1Adapter.OnFoodDetailListener() {
+                @Override
+                public void onFoodDetailClick(String person) {
+                    Toast.makeText(getActivity(), person, Toast.LENGTH_SHORT).show();
+                }
+            });
             pager.addView(view, 0);
-            viewHolder.im_small.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    FodDetailFragment  editNameDialog = new FodDetailFragment();
-//                    FragmentManager fm = getActivity().getSupportFragmentManager();
-//                    Bundle bundle = new Bundle();
-//                    OrderInfo info=  new OrderInfo(0, bigName, Double.valueOf(bigPrice)
-//                            , 0, true);
-//
-//                    bundle.putString(Constant.FOOD_DETAIL,info.toString());
-//                    editNameDialog.show(fm, "payDialog");
-                    EventBus.getDefault().post(new OrderInfo(0, smallName, Double.valueOf(smallPrice)
-                            , 0, true));
-                }
-            });
-            viewHolder.im_big.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-//                    FodDetailFragment  editNameDialog = new FodDetailFragment();;
-//                    FragmentManager fm = getActivity().getSupportFragmentManager();
-//                    Bundle bundle = new Bundle();
-//                   OrderInfo info=  new OrderInfo(0, bigName, Double.valueOf(bigPrice)
-//                            , 0, true);
-//
-//                    bundle.putString(Constant.FOOD_DETAIL,info.toString());
-//                    editNameDialog.setArguments(bundle);
-//                    editNameDialog.show(fm, "payDialog");
-                    EventBus.getDefault().post(new OrderInfo(0, bigName, Double.valueOf(bigPrice)
-                            , 0, true));
-                }
-            });
             return view;
         }
     }
@@ -366,8 +366,6 @@ public class BlankFragment extends Fragment {
     private void initData(ViewHolder viewHolder) {
 
 //        initAnimation();
-
-
 //        gd_frgment1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

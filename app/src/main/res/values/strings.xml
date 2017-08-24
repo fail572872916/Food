@@ -36,6 +36,8 @@
     <string name="error_htp">请求失败</string>
     <string name="order_ok_print">下单成功正在通知后厨&#8230;</string>
 
+    <string name="state_gv_food">食物</string>
+
 
 
 

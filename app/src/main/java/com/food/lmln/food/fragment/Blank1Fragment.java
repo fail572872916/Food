@@ -40,12 +40,12 @@ public class Blank1Fragment extends Fragment {
 
 
     private ViewPager vPager;
-    private List<Fragment> list = new ArrayList<Fragment>();
+    private List<Fragment> list = new ArrayList<>();
     private SpecialCuisineAdapter adapter;
 
 
     private SpecialCuisineAdapter adapter1;
-    Handler mHandler ;
+    Handler mHandler;
     private String str;
 
     public Blank1Fragment() {
@@ -74,7 +74,7 @@ public class Blank1Fragment extends Fragment {
     }
 
     private void initView() {
-        vPager  = (ViewPager) view.findViewById(R.id.vp_fragment1);
+        vPager = (ViewPager) view.findViewById(R.id.vp_fragment1);
 
         BlankFragment fragment5 = new BlankFragment();
         list.add(fragment5);
@@ -84,15 +84,7 @@ public class Blank1Fragment extends Fragment {
         vPager.setAdapter(adapter);
 
 
-
-        }
-
-
-
-
-
-
-
+    }
 
 
 }

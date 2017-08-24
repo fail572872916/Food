@@ -2,6 +2,7 @@ package com.food.lmln.food.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -124,9 +125,9 @@ public class Blank5Fragment extends Fragment {
 
     private void initView() {
         gd_frgment1 = (GridView) view.findViewById(R.id.gd_frgment1);
-        ib_big = (ImageView) view.findViewById(R.id.im_big);
-        ib_small = (ImageView) view.findViewById(R.id.im_small);
-        tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
+//        ib_big = (ImageView) view.findViewById(R.id.im_big);
+//        ib_small = (ImageView) view.findViewById(R.id.im_small);
+//        tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
 
     }
 
@@ -141,12 +142,14 @@ public class Blank5Fragment extends Fragment {
         vto2.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                gd_frgment1.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    gd_frgment1.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
                 getInfo[0] = gd_frgment1.getWidth();
                 getInfo[1] = heiget;
-                for (int i = 0; i < getInfo.length; i++) {
-                    Log.d(TAG, "getInfo[i]:" + getInfo[i]);
-                }
+//                for (int i = 0; i < getInfo.length; i++) {
+//                    Log.d(TAG, "getInfo[i]:" + getInfo[i]);
+//                }
 
             }
         });

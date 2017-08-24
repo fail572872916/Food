@@ -75,7 +75,7 @@ public class Blank4Fragment extends Fragment {
     private String text;
     private String big_imageUrl;
     private String small_imageUrl;
-    private     int  [] getInfo = new int[2];
+    private    int  [] getInfo = new int[2];
     private int heiget;
     private DbManger dbManager;
 
@@ -133,9 +133,9 @@ public class Blank4Fragment extends Fragment {
 
     private void initView() {
         gd_frgment1 = (GridView) view.findViewById(R.id.gd_frgment1);
-        ib_big = (ImageView) view.findViewById(R.id.im_big);
-        ib_small = (ImageView) view.findViewById(R.id.im_small);
-        tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
+//        ib_big = (ImageView) view.findViewById(R.id.im_big);
+//        ib_small = (ImageView) view.findViewById(R.id.im_small);
+//        tv_small_text = (TextView) view.findViewById(R.id.tv_small_text);
 
     }
 
@@ -153,9 +153,9 @@ public class Blank4Fragment extends Fragment {
                 gd_frgment1.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 getInfo[0] = gd_frgment1.getWidth();
                 getInfo[1] = heiget;
-                for (int i = 0; i < getInfo.length; i++) {
-                    Log.d(TAG, "getInfo[i]:" + getInfo[i]);
-                }
+//                for (int i = 0; i < getInfo.length; i++) {
+//                    Log.d(TAG, "getInfo[i]:" + getInfo[i]);
+//                }
 
             }
         });

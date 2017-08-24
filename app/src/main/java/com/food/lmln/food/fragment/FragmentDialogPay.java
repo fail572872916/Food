@@ -135,7 +135,7 @@ public class FragmentDialogPay extends DialogFragment {
                     String val = data.getString("value");
                     String order = data.getString("order");
                     int type = data.getInt("pay_type");
-                    if (val.equals("error")) {
+                    if (val!=null&&val.equals("error")) {
                         startCustomCountDownTime(3, null,type);
                         Toast.makeText(getActivity(), R.string.error_htp, Toast.LENGTH_SHORT).show();
                     } else {
@@ -220,7 +220,7 @@ public class FragmentDialogPay extends DialogFragment {
             type = temp[0];
             ordrNo = temp[1];
         }
-        if (type.equals(Constant.ALI)) {
+        if (type!=null&&type.equals(Constant.ALI)) {
             String url = HttpUtils.POSTWX + "Ali_Food_Pay?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
 
@@ -228,12 +228,8 @@ public class FragmentDialogPay extends DialogFragment {
         } else {
             String url = HttpUtils.POSTWX + "Pay1?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
-            if (registration_id_value.isEmpty()) {
-            } else if (product_id_value.isEmpty()) {
-            } else if (time_value.isEmpty()) {
-            } else {
+
                 postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_WX);
-            }
         }
     }
 
@@ -242,8 +238,7 @@ public class FragmentDialogPay extends DialogFragment {
      * "
      * 循环查询
      *
-     * @param "order_key"
-     * @param str
+     * @param str  OrderNO
      */
     private void postCirculation(String str) {
         String url = HttpUtils.WX_QUERY;
@@ -276,8 +271,8 @@ public class FragmentDialogPay extends DialogFragment {
                 JSONObject jsonObject ;
                 try {
                     jsonObject = new JSONObject(str);
-                    Log.d("FragmentDialogPay", "jsonObject:" + jsonObject);
-                    if (jsonObject != null) {
+
+
                         boolean result= jsonObject.getBoolean("result");
                         String  money = jsonObject.getString("money");
                         if(result && money!=null) {
@@ -290,7 +285,7 @@ public class FragmentDialogPay extends DialogFragment {
                             handler.sendMessage(msg);
                         }
 
-                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -337,10 +332,10 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
-                String url = null;
+                String url ;
                 String order = null;
                 Log.i("wangshu", str);
-                JSONObject josn = null;
+                JSONObject josn ;
                 try {
                     josn = new JSONObject(str);
                     boolean flag = josn.getBoolean("result");
@@ -422,7 +417,7 @@ public class FragmentDialogPay extends DialogFragment {
     /**
      * 生成二维码
      *
-     * @param content
+     * @param content 上下文
      * @param width   宽
      * @param height  高
      * @return bitmap
@@ -480,7 +475,7 @@ public class FragmentDialogPay extends DialogFragment {
     /**
      * 收到信息打印
      *
-     * @param msg
+     * @param msg  json
      */
     private void setCostomMsg(String msg) {
 //        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
@@ -519,7 +514,9 @@ public class FragmentDialogPay extends DialogFragment {
     /**
      * 开始计时 传入参数 time ，单位秒
      *
-     * @param time
+     * @param time 秒
+     * @param   str 订单号
+     * @param   ty
      */
     private void startCustomCountDownTime(long time, final String str, final int type) {
         countdownTimer = new AdvancedCountdownTimer(time * 1000, 1000) {
@@ -559,7 +556,6 @@ public class FragmentDialogPay extends DialogFragment {
      * 定义一个接口，提供Activity使用
      */
     OnDialogListener mlistener;
-
     public interface OnDialogListener {
         void onDialogClick(String person);
     }
