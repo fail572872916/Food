@@ -91,6 +91,8 @@ public class Constant {
      */
     public static final String CMD_PRINT = "8906063211##";//打印
     public static final String CMD_CLEAR = "8906063212##";//清台
+    public static final String CMD_RICE = "8906063213##";//加饭
+    public static final String CMD_WATER = "8906063214##";//加水
     public static final String CLEAR_DESK = "clear";//命令
     public static final int BUFFER_SIZE = 1024;
 

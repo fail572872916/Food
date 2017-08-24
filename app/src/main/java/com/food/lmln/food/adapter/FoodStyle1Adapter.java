@@ -2,9 +2,6 @@ package com.food.lmln.food.adapter;
 
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +14,17 @@ import android.widget.TextView;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.bean.FoodinfoSmall;
-import com.food.lmln.food.bean.OrderInfo;
-import com.food.lmln.food.db.Constant;
-import com.food.lmln.food.fragment.FodDetailFragment;
-import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.view.ScrollGridView;
+import com.google.gson.Gson;
 
-import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static com.food.lmln.food.utils.ScreenUtils.getGridViewWeight;
 
 
@@ -89,7 +86,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         }
         int  height;
         switch (list.size()){
-
             case 1:
             case 2:
             case 3:
@@ -101,14 +97,18 @@ public class FoodStyle1Adapter extends BaseAdapter    {
             case 9:
                 height=3;
                 gd_frgment1.setNumColumns(3);
-
                 break;
             default:
                 height=2;
                 gd_frgment1.setNumColumns(2);
                 break;
         }
-        LinearLayout.LayoutParams linearParams =new LinearLayout.LayoutParams(viewSize[0]/height, (viewSize[1]-(height*50))/height);
+        LinearLayout.LayoutParams linearParams;
+        if(height<3)
+            linearParams =new LinearLayout.LayoutParams(viewSize[0]-(height*100)/height, (viewSize[1]-(height*100))/height);
+        else
+            linearParams =new LinearLayout.LayoutParams(viewSize[0]/height, (viewSize[1]-(height*50))/height);
+
         vieewHolder.lin_item.setLayoutParams(linearParams);
         LinearLayout.LayoutParams lin =new LinearLayout.LayoutParams((viewSize[0]-(height*60)/height), ((viewSize[1]-(height*150))/height));
         vieewHolder.im_item_image.setLayoutParams(lin);
@@ -136,7 +136,9 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 //                EventBus.getDefault().post(new OrderInfo(0, list.get(position).getName(),
 //                        Double.valueOf( list.get(position).getPrice()), 0,true));
                 FoodinfoSmall  info =new   FoodinfoSmall(0, list.get(position).getName(),list.get(position).getDescribe(), list.get(position).getPrice(),list.get(position).getIamge());
-                mlistener.onFoodDetailClick(info.toString());
+                Gson gson =new Gson();
+           String  str  =   gson.toJson(info);
+                mlistener.onFoodDetailClick(str);
             }
         });
 
@@ -146,7 +148,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 
 
     private class VieewHolder {
-
         private LinearLayout lin_item;
         private ImageView im_item_image;
         private TextView tv_item_name;

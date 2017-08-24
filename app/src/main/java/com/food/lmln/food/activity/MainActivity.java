@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
@@ -46,12 +47,14 @@ import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -60,7 +63,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import cn.jpush.android.api.JPushInterface;
+
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.ORDERTABLE;
 import static com.food.lmln.food.db.Constant.PASSWORD;
@@ -72,6 +77,7 @@ import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.db.Constant.send_msg_code5;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * 布局1
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView lv_main_order;  //右边订单
     TextView tv_order_title;  //标题
     Button bt_order_add_settlement;     //结算
-    Button  bt_order_clear;             //删除未下单
+    Button bt_order_clear;             //删除未下单
     Button bt_order_add_water;          //加水
     Button bt_order_add_rice;           //加水
     Button bt_order_place;                //下/改单
@@ -130,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String before;  //临时订单
     private int updateFouding; //自增
     private int startDeskNo;//临时台号是否成功
-    private int tempOk=0;//临时台号是否成功
+    private int tempOk = 0;//临时台号是否成功
     private int orderOk;//临时台号是否成功
     private String orderNo = null; //查询当前桌台订单号
     Handler mHandler = new Handler() {
@@ -174,16 +180,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
                     int num = bundle.getInt("upOrder");
-                    bt_order_place.setEnabled(num <= 1 ? false : true);
+                    bt_order_place.setEnabled(num <= 1 ? true : false);
                     isFlag(true);
                     break;
                 case send_msg_code4:
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
                     newList = (List<OrderInfo>) bundle1.getSerializable("List");
-                    Log.d("MainActivity", "newList:" + newList);
+
                     if (stopCode == 2) {
-                        if (num1 > 1 &&  newList != null) {
+                        if (num1 > 1 && newList != null) {
                             mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
                             mAdapter_order.notifyDataSetChanged();
                             lv_main_order.setAdapter(mAdapter_order);
@@ -191,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     } else {
-                        if (newList!=null&&newList.size()>0);
+                        if (newList != null && newList.size() > 0) ;
                         newList.clear();
                     }
                     break;
@@ -251,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case Constant.send_msg_code10:
                     if (orderOk == 1) {
-                        Toast.makeText(MainActivity.this, + R.string.order_ok_print, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, +R.string.order_ok_print, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObj = new JSONObject();//创建json格式的数据
                         JSONArray jsonArr = new JSONArray();//json格式的数组
                         try {
@@ -268,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                     String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj,"");
+                        String json = JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj, "");
                         Log.d("json1", "jsonObj:" + json);
                         sendPrint(json);
                     }
@@ -288,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
     /**
      * 临时下单
      */
@@ -304,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                     tempOk = MysqlDb.exuqueteUpdate(conn, sql);
                 }
-                if (tempOk>0) {
+                if (tempOk > 0) {
                     if (tempOk == 1) {
                         String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
                                 + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "20" + "','" + 1 + "','" + 0 + "');";
@@ -349,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     /**
      * 添加桌台
      */
@@ -362,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     /**
      * 进行开台
      */
@@ -400,23 +409,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化
      */
     private void initSokect() {
-            // 连线 server
-         client.runclient(deskIp);
-            //此线程为接收菜单的线程，循环接收，
-            new Thread() {
-                @Override
-                public void run() {
-                    while (true) {
-                        if (client.i) {
+        // 连线 server
+        client.runclient(deskIp);
+        //此线程为接收菜单的线程，循环接收，
+        new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (client.i) {
 
-                            client.i = false;
-                        } else if (client.j) {
+                        client.i = false;
+                    } else if (client.j) {
 
-                            client.j = false;
-                        }
+                        client.j = false;
                     }
                 }
-            }.start();
+            }
+        }.start();
 
     }
 
@@ -427,11 +436,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lv_main = (ListView) findViewById(R.id.lv_main);
         fab = (FloatingActionMenu) findViewById(R.id.fab);
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
-        bt_order_clear= (Button) findViewById(R.id.bt_order_clear);
         myContent = (FrameLayout) findViewById(R.id.myContent);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
         tv_order_sum = (TextView) findViewById(R.id.tv_order_sum);
         lv_main_order = (ListView) findViewById(R.id.lv_main_order);
+        bt_order_clear = (Button) findViewById(R.id.bt_order_clear);
         bt_order_place = (Button) findViewById(R.id.bt_order_place);
         tv_order_title = (TextView) findViewById(R.id.tv_order_title);
         tv_order_price = (TextView) findViewById(R.id.tv_order_price);
@@ -466,22 +475,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDialogClick(String person) {
                 Log.d("person", person);
-                JSONObject js =null;
-                String js1=null;
+                JSONObject js = null;
+                String js1 = null;
                 try {
-                     js = new JSONObject(person);
-                    if(js!= null){
-                   js1=      JsonUtils.useJosn(true,Constant.CMD_CLEAR,js,deskNo);
+                    js = new JSONObject(person);
+                    if (js != null) {
+                        js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, js, deskNo);
                         Log.d("ks1", js1);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(js1!=null)
-                sendPrint(js1);
+                if (js1 != null)
+                    sendPrint(js1);
             }
         });
     }
+
     /**
      * 查询菜单
      */
@@ -501,17 +511,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_setting:
-                 DialogTablde.showDialog(MainActivity.this);
+                DialogTablde.showDialog(MainActivity.this);
                 fab_setting.showButtonInMenu(false);
                 break;
             case R.id.fab_robot:
                 Toast.makeText(this, "呼叫机器人", Toast.LENGTH_SHORT).show();
                 break;
-
             case R.id.fab_vending_machine:
                 Toast.makeText(this, "呼叫售卖机", Toast.LENGTH_SHORT).show();
                 break;
@@ -531,17 +541,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.bt_order_place:
                     if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
-                    } else if(deskNo ==null ||deskNo.equals("")){
+                    } else if (deskNo == null || deskNo.equals("")) {
                         selectIpDesk();
-                    }
-                    else {
+                    } else {
+                        bt_order_place.setEnabled(false);
                         mHandlerFlag = false;
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 selectIpDesk();
                                 conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                                founding = MysqlDb.selectDeskNO(conn, "select  " + Constant.SHOP_STATUS + " from  " + Constant.SHOP_DESK + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
+                                founding = MysqlDb.selectDeskNO(conn, "select  " +
+                                        Constant.SHOP_STATUS + " from  " +
+                                        Constant.SHOP_DESK + " where " +
+                                        Constant.DESK_NO + " =" + "'" + deskNo + "'");
                                 mHandler.sendEmptyMessage(Constant.send_msg_code5);
                             }
                         }).start();
@@ -549,14 +562,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case R.id.bt_order_add_water:
                     String rid = JPushInterface.getRegistrationID(getApplicationContext());
-                    if (!rid.isEmpty()) {
-                        Toast.makeText(MainActivity.this, rid, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Get registration fail, JPush init failed!", Toast.LENGTH_SHORT).show();
+
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("desk_no_str", deskNo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+                    String json = JsonUtils.useJosn(true, Constant.CMD_WATER, jsonObject, "");
+                    Log.d("MainActivity", json);
+                    sendPrint(json);
                     break;
                 case R.id.bt_order_add_rice:
-                    JPushInterface.init(getApplicationContext());
+                    JSONObject jsonObject1 = new JSONObject();
+                    try {
+                        jsonObject1.put("desk_no_str", deskNo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String json1 = JsonUtils.useJosn(true, Constant.CMD_RICE, jsonObject1, "");
+                    Log.d("MainActivity", json1);
+                    sendPrint(json1);
                     break;
                 case R.id.bt_order_add_settlement:
                     inFragment(VeDate.getOrderNum());
@@ -573,7 +599,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    }).start();
                     break;
                 case R.id.bt_order_clear:
-                    newList.clear();
                     addList.clear();
                     list_order.clear();
                     listRight.clear();
@@ -601,6 +626,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public class MyThread implements Runnable {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
         public void stop() {
             try {
                 reader.close();
@@ -608,6 +634,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+
         @Override
         public void run() {
             try {
@@ -628,6 +655,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     /**
      * 查询桌台与Ip
      */
@@ -648,27 +676,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     /**
      * 打印数据
      */
     private void sendPrint(String jsonObj) {
         if (testSocket()) {
             MainActivity.client.SendJson(jsonObj);
-            addList = null;
+            addList.clear();
             list_order.clear();
             Message msg = new Message();
             msg.what = send_msg_code3;
-            Bundle bundle = new Bundle();
-            bundle.putInt("upOrder", 0);
-            msg.setData(bundle);
+
             stopCode = 2;
             mHandler.sendMessage(msg);
         } else {
             Message msg = new Message();
             msg.what = send_msg_code3;
-            Bundle bundle = new Bundle();
-            bundle.putInt("upOrder", 0);
-            msg.setData(bundle);
+
             mHandler.sendMessage(msg);
             Toast.makeText(MainActivity.this, "连接失败...", Toast.LENGTH_SHORT).show();
         }
@@ -680,15 +705,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public boolean testSocket() {
         boolean isConn = MainActivity.client.isServerClose();//判断是否断开
-        boolean  link=true;
+        boolean link = true;
         if (isConn == true) {
             MainActivity.client.again_connect(deskIp);
-            link=false;
-            } else {
-            link=true;
-            }
-         return  link;
+            link = false;
+        } else {
+            link = true;
         }
+        return link;
+    }
+
     /**
      * 进入选中的Fragment
      *
@@ -782,11 +808,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transaction.hide(fragment3);
         }
     }
+
     private int index = 1;
     private int count = 1;
 
     /**
-     *  even bus
+     * even bus
+     *
      * @param info
      */
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -815,12 +843,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if (!flag) {
+                addList.add(d);
                 d.setCount(1);
             }
-            addList.add(d);
         }
         mHandler.sendEmptyMessage(send_msg_code2);
     }
+
     /**
      * \
      * 销毁方法
@@ -834,7 +863,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EventBus.getDefault().unregister(this);
     }
 
-
     @Override
     protected void onResume() {
         stopCode = 2;
@@ -846,6 +874,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         super.onResume();
     }
+
     @Override
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
@@ -859,6 +888,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         isFlag(false);
         super.onPause();
     }
+
     /**
      * 判断停止线程
      *
@@ -867,7 +897,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void isFlag(boolean falg) {
         mHandlerFlag = falg;
         if (mHandlerFlag == true) {
-            stopCode=2;
+            stopCode = 2;
             new Thread(new MyThread()).start();
         } else {
             stopCode = 1;
@@ -932,7 +962,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

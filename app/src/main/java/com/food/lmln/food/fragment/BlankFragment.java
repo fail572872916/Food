@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -28,13 +29,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodStyle1Adapter;
 import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
+import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.db.SqlHelper;
@@ -138,7 +139,6 @@ public class BlankFragment extends Fragment {
      * 获取数据
      */
     private void getData() {
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -302,7 +302,7 @@ public class BlankFragment extends Fragment {
             mAdapter.setOnDetailListener(new FoodStyle1Adapter.OnFoodDetailListener() {
                 @Override
                 public void onFoodDetailClick(String person) {
-                    Toast.makeText(getActivity(), person, Toast.LENGTH_SHORT).show();
+                    showDetail(person);
                 }
             });
             pager.addView(view, 0);
@@ -567,5 +567,18 @@ public class BlankFragment extends Fragment {
 //        listView.setLayoutParams(params);
 //    }
 
+    /**
+     * 传入信息
+     * @param info  菜信息，具体查看
+     */
+    private void  showDetail(String info){
+        FragmentFoodDetail  editNameDialog = new FragmentFoodDetail();;
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        Bundle bundle = new Bundle();
+
+        bundle.putString(Constant.FOOD_DETAIL,info);
+        editNameDialog.setArguments(bundle);
+        editNameDialog.show(fm, "payDialog");
+    }
 
 }

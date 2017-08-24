@@ -6,13 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONObject;
-
 import android.app.Activity;
-import android.util.Log;
 
 public class socket_client extends Activity {
     Socket client;
@@ -30,6 +25,8 @@ public class socket_client extends Activity {
             public void run() {
                 try {
                     client = new Socket(ip, 30000);
+                    client.setKeepAlive(true);// 开启保持活动状态的套接字
+                    client.setSoTimeout(1 * 1 * 10);// 设置超时时间
                     if (writer == null) {
                         writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF8"));
                     } else {
@@ -52,48 +49,50 @@ public class socket_client extends Activity {
      * @param ip
      */
     public void again_connect(final String ip) {
-        while (true) {
-            Thread thr = new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        client.sendUrgentData(0xFF);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            while (true) {
+                Thread thr = new Thread() {
+                    @Override
+                    public void run() {
                         try {
-                            client.close();
-                            Thread thr1 = new Thread() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        client = new Socket(ip, 30000);
-                                        //client = new Socket("192.168.0.199",30000);
-                                        //InputStream dataStream = client.getInputStream();
-                                        writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF8"));
-                                    } catch (IOException e) {
+                            client.sendUrgentData(0xFF);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            try {
+                                client.close();
+                                Thread thr1 = new Thread() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            client = new Socket(ip, 30000);
+                                            //client = new Socket("192.168.0.199",30000);
+                                            //InputStream dataStream = client.getInputStream();
+                                            writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF8"));
+                                        } catch (IOException e) {
 
-                                        e.printStackTrace();
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                            };
-                            thr1.start();
+                                };
+                                thr1.start();
 
-                        } catch (IOException e1) {
+                            } catch (IOException e1) {
 
-                            e1.printStackTrace();
+                                e1.printStackTrace();
+                            }
+
                         }
-
                     }
+
+                };
+                thr.start();
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+
+                    e.printStackTrace();
                 }
 
-            };
-            thr.start();
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
 
-                e.printStackTrace();
-            }
         }
     }
 

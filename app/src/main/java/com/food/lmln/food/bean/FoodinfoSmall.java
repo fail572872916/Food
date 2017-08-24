@@ -27,8 +27,8 @@ public class FoodinfoSmall {
 
     @Override
     public String toString() {
-        return "FoodinfoSmall [id=" + id + ", name=" + name + ", describe="
-                + describe + ", price=" + price + ", iamge=" + iamge + "]";
+        return "id=" + id + ", name=" + name + ", describe="
+                + describe + ", price=" + price + ", iamge=" + iamge + "";
     }
     public int getId() {
         return id;
