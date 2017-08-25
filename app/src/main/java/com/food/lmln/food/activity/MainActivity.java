@@ -688,12 +688,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Message msg = new Message();
             msg.what = send_msg_code3;
 
-            stopCode = 2;
+            stopCode = 1;
             mHandler.sendMessage(msg);
         } else {
             Message msg = new Message();
             msg.what = send_msg_code3;
-
+            stopCode = 1;
             mHandler.sendMessage(msg);
             Toast.makeText(MainActivity.this, "连接失败...", Toast.LENGTH_SHORT).show();
         }
@@ -884,7 +884,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         Log.d("MainActivity", "onPause");
-        stopCode = 1;
+        stopCode = 2;
         isFlag(false);
         super.onPause();
     }

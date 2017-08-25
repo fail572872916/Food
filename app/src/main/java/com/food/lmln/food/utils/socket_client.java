@@ -1,5 +1,4 @@
 package com.food.lmln.food.utils;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import org.json.JSONObject;
 import android.app.Activity;
-
 public class socket_client extends Activity {
     Socket client;
     private BufferedWriter writer = null;
@@ -26,7 +24,7 @@ public class socket_client extends Activity {
                 try {
                     client = new Socket(ip, 30000);
                     client.setKeepAlive(true);// 开启保持活动状态的套接字
-                    client.setSoTimeout(1 * 1 * 10);// 设置超时时间
+                    client.setSoTimeout(3 );// 设置超时时间
                     if (writer == null) {
                         writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF8"));
                     } else {
@@ -35,8 +33,8 @@ public class socket_client extends Activity {
                     ReceiveDate();
                     again_connect(ip);
                 } catch (IOException e) {
-                    // TODO 自动生成的 catch 块
-                    e.printStackTrace();
+                    throw new RuntimeException();
+
                 }
             }
         };

@@ -1,0 +1,36 @@
+TASK com.food.lmln.food id=40
+  ACTIVITY com.food.lmln.food/.activity.TestActivity 4a9284a0 pid=6771
+    Local Activity 4a78d8e4 State:
+      mResumed=true mStopped=false mFinished=false
+      mLoadersStarted=true
+      mChangingConfigurations=false
+      mCurrentConfig={1.0 310mcc260mnc zh_CN ldltr sw540dp w960dp h515dp 320dpi lrg long land finger qwerty/v/v dpad/v s.6}
+    FragmentManager misc state:
+      mActivity=com.food.lmln.food.activity.TestActivity@4a78d8e4
+      mContainer=android.app.Activity$1@4a7a40d0
+      mCurState=5 mStateSaved=false mDestroyed=false
+    ViewRoot:
+      mAdded=true mRemoved=false
+      mConsumeBatchedInputScheduled=false
+      mPendingInputEventCount=0
+      mProcessInputEventsScheduled=false
+      mTraversalScheduled=false
+      android.view.ViewRootImpl$NativePreImeInputStage: mQueueLength=0
+      android.view.ViewRootImpl$ImeInputStage: mQueueLength=0
+      android.view.ViewRootImpl$NativePostImeInputStage: mQueueLength=0
+    Choreographer:
+      mFrameScheduled=false
+      mLastFrameTime=3183199 (338 ms ago)
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{4a78e3a4 V.E..... R....... 0,0-1920,1080}
+        android.widget.LinearLayout{4a78ec3c V.E..... ........ 0,0-1920,1080}
+          android.view.ViewStub{4a7b155c G.E..... ......I. 0,0-0,0 #102030e}
+          android.widget.FrameLayout{4a7b1764 V.ED.... ........ 0,50-1920,1080 #1020002 android:id/content}
+            android.widget.LinearLayout{4a7b2488 V.E..... ........ 0,0-1920,1030}
+              android.widget.TextView{4a7b2694 V.ED.... ........ 32,32-32,70 #7f0d00f0 app:id/tv}
+              android.widget.EditText{4a7bd3c4 VFED..CL .F...... 32,70-1888,149 #7f0d00f1 app:id/editText1}
+              android.widget.Button{4a7b0c70 VFED..C. ........ 32,149-602,245 #7f0d00f2 app:id/button1}
+    Looper (main, tid 1) {4a790e74}
+      Message 0: { when=+149ms callback=android.widget.Editor$Blink target=android.widget.Editor$Blink }
+      Message 1: { when=+1s72ms callback=com.food.lmln.food.services.BackService$2 target=android.os.Handler }
+      (Total messages: 2, idling=false, quitting=false)
