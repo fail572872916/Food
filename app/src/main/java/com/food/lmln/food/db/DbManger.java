@@ -261,9 +261,10 @@ public class DbManger {
         if (db != null) {
             Cursor cursor = db.rawQuery("select * from " + tableName, null);
             count = cursor.getCount();
-            cursor.close();
+            db.close();
+
         }
-        db.close();
+
         return count;
     }
 }

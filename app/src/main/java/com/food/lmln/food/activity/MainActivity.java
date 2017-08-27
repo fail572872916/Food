@@ -1,14 +1,20 @@
 package com.food.lmln.food.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.food.lmln.IBackService;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
@@ -39,6 +46,7 @@ import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.Blank3Fragment;
 import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.FragmentDialogPay;
+import com.food.lmln.food.services.BackService;
 import com.food.lmln.food.utils.FileUtils;
 import com.food.lmln.food.utils.JsonUtils;
 import com.food.lmln.food.utils.VeDate;
@@ -99,16 +107,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_order_sum_name;         //总计
     FoodOrderAdapter mAdapter_order; //l类型适配器
     //创建Socket通信
-    static socket_client client = new socket_client();
     FrameLayout myContent;
     private SQLiteDatabase db;
     SqlHelper helper;
+    /**
+     * services相关
+     */
+    private Intent mServiceIntent;
+    private IBackService iBackService;
+    private boolean isBind = false;
+    private final String socketParmar = "0xFF";
     /**
      * 用于对Fragment进行管理
      */
     private BlankFragment fragment1;
     private Blank2Fragment fragment2;
-    private Blank3Fragment fragment3;
     FragmentDialogPay editNameDialog;
     private DbManger dbManager;
     private List<OrderInfo> newList = new ArrayList<>();
@@ -197,13 +210,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     } else {
-                        if (newList != null && newList.size() > 0) ;
+                        if (newList != null && newList.size() > 0)
                         newList.clear();
                     }
                     break;
                 case send_msg_code5:
                     if (founding != null) {
-                        if (founding == Constant.STATUS_RUN || founding.equals(Constant.STATUS_RUN)) {
+                        if (founding.equals( Constant.STATUS_RUN) || founding.equals(Constant.STATUS_RUN)) {
                             startTemp();
                         } else {
                             //查询桌台与
@@ -280,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case Constant.send_msg_code11:
-                    if (orderNo != null && orderNo != "")
+                    if (orderNo != null &&! orderNo.equals(""))
                         inFragment(orderNo);
                     else
                         Toast.makeText(MainActivity.this, R.string.tip_is_start, Toast.LENGTH_SHORT).show();
@@ -303,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 orderNowNo = getOrderId();
-                String sql = "";
+                String sql ;
                 for (OrderInfo orderInfo : addList) {
                     dateNow = VeDate.getStringDateShort();
                     timeNow = VeDate.getTimeShort();
@@ -398,35 +411,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //注册事件
         EventBus.getDefault().register(this);
-
         initView();
         initData();
         new Thread(new MyThread()).start();
-
-    }
-
-    /**
-     * 初始化
-     */
-    private void initSokect() {
-        // 连线 server
-        client.runclient(deskIp);
-        //此线程为接收菜单的线程，循环接收，
-        new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (client.i) {
-
-                        client.i = false;
-                    } else if (client.j) {
-
-                        client.j = false;
-                    }
-                }
-            }
-        }.start();
-
     }
 
     /**
@@ -458,6 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bt_order_place.setOnClickListener(listerner);
         bt_order_clear.setOnClickListener(listerner);
         bt_order_add_water.setOnClickListener(listerner);
+        bt_order_add_rice.setOnClickListener(listerner);
         bt_order_add_settlement.setOnClickListener(listerner);
         fragment1 = new BlankFragment();
         editNameDialog = new FragmentDialogPay();
@@ -470,16 +458,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
         selectIpDesk();
-        initSokect();
+
+
+        BackService.PORT = Constant.SOCKET_PORT;
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
                 Log.d("person", person);
-                JSONObject js = null;
+                JSONObject js ;
                 String js1 = null;
                 try {
                     js = new JSONObject(person);
-                    if (js != null) {
+                    if (js.length()>0) {
                         js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, js, deskNo);
                         Log.d("ks1", js1);
                     }
@@ -539,7 +529,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.bt_order_place:
-                    if (addList == null || addList.size() < 1) {
+                    if (!Socketudge(socketParmar)) {
+                        Toast.makeText(MainActivity.this, R.string.socket_seng_check, Toast.LENGTH_SHORT).show();
+                    } else if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
                     } else if (deskNo == null || deskNo.equals("")) {
                         selectIpDesk();
@@ -561,30 +553,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_water:
-                    String rid = JPushInterface.getRegistrationID(getApplicationContext());
-
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("desk_no_str", deskNo);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    if (Socketudge(socketParmar)) {
+                        String rid = JPushInterface.getRegistrationID(getApplicationContext());
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("desk_no_str", deskNo);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String json = JsonUtils.useJosn(true, Constant.CMD_WATER, jsonObject, "");
+                        Log.d("MainActivity", json);
+                        Socketudge(json);
                     }
-                    String json = JsonUtils.useJosn(true, Constant.CMD_WATER, jsonObject, "");
-                    Log.d("MainActivity", json);
-                    sendPrint(json);
                     break;
                 case R.id.bt_order_add_rice:
-                    JSONObject jsonObject1 = new JSONObject();
-                    try {
-                        jsonObject1.put("desk_no_str", deskNo);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    if (Socketudge(socketParmar)) {
+                        JSONObject jsonObject1 = new JSONObject();
+                        try {
+                            jsonObject1.put("desk_no_str", deskNo);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String json1 = JsonUtils.useJosn(true, Constant.CMD_RICE, jsonObject1, "");
+                        Log.d("gg", json1);
+                        Socketudge(json1);
                     }
-                    String json1 = JsonUtils.useJosn(true, Constant.CMD_RICE, jsonObject1, "");
-                    Log.d("MainActivity", json1);
-                    sendPrint(json1);
                     break;
                 case R.id.bt_order_add_settlement:
+                    Socketudge(socketParmar);
                     inFragment(VeDate.getOrderNum());
 //                    if(deskNo.isEmpty())
 //                    selectIpDesk();
@@ -611,9 +607,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mHandler.sendMessage(msg);
                     isFlag(true);
                     tv_order_sum.setText("");
-//                    if(newList.size()==0||addList.size()==0){
-//
-//                    }
                     break;
                 default:
                     break;
@@ -667,7 +660,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             msg.what = Constant.send_msg_code12;
             mHandler.sendMessage(msg);
         } else {
-
             db = helper.getWritableDatabase();
             List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
             if (li.size() > 0) {
@@ -675,14 +667,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 deskIp = li.get(0).getLocal_ip();
             }
         }
+        mServiceIntent = new Intent(this, BackService.class);
+        BackService.HOST = deskIp;
+        BackService.PORT = Constant.SOCKET_PORT;
     }
 
     /**
      * 打印数据
      */
     private void sendPrint(String jsonObj) {
-        if (testSocket()) {
-            MainActivity.client.SendJson(jsonObj);
+        if (Socketudge(socketParmar)) {
+
+            Socketudge(jsonObj);
             addList.clear();
             list_order.clear();
             Message msg = new Message();
@@ -691,29 +687,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             stopCode = 1;
             mHandler.sendMessage(msg);
         } else {
-            Message msg = new Message();
-            msg.what = send_msg_code3;
+            Message msg1 = new Message();
+            msg1.what = send_msg_code3;
             stopCode = 1;
-            mHandler.sendMessage(msg);
+            mHandler.sendMessage(msg1);
             Toast.makeText(MainActivity.this, "连接失败...", Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * 判断是否断开
-     * true  断开
-     */
-    public boolean testSocket() {
-        boolean isConn = MainActivity.client.isServerClose();//判断是否断开
-        boolean link = true;
-        if (isConn == true) {
-            MainActivity.client.again_connect(deskIp);
-            link = false;
-        } else {
-            link = true;
-        }
-        return link;
-    }
 
     /**
      * 进入选中的Fragment
@@ -748,7 +729,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //删除获取到的Fragment
                 //指定动画，可以自己添加
                 String tag = null;
-                fragmentTransaction.addToBackStack(tag);
                 //如果需要，添加到back栈中
                 fragmentTransaction.commit();
                 fragment2 = new Blank2Fragment();
@@ -777,7 +757,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //删除获取到的Fragment
                 //指定动画，可以自己添加
                 String tag = null;
-                fragmentTransaction.addToBackStack(tag);
                 //如果需要，添加到back栈中
                 fragmentTransaction.commit();
                 Log.d("MainActivity", tableName);
@@ -804,9 +783,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (fragment2 != null) {
             transaction.hide(fragment2);
         }
-        if (fragment3 != null) {
-            transaction.hide(fragment3);
-        }
+
     }
 
     private int index = 1;
@@ -820,11 +797,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info) {
         info = new OrderInfo(index, info.getName(), info.getPrice(), count, info.isFlag());
-//        info = new OrderInfo();
+
         if (info.isFlag()) {
             isFlag(false);
         }
-//        new Thread(new MyThread()).interrupt();
+
         list_order.add(info);
         addList = new ArrayList<>();
         Iterator<OrderInfo> it = list_order.iterator();
@@ -850,6 +827,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHandler.sendEmptyMessage(send_msg_code2);
     }
 
+    // 注册广播
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BackService.HEART_BEAT_ACTION);
+        intentFilter.addAction(BackService.MESSAGE_ACTION);
+        registerReceiver(mReceiver, intentFilter);
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // 消息广播
+            if (action.equals(BackService.MESSAGE_ACTION)) {
+                String stringExtra = intent.getStringExtra("message");
+
+            } else if (action.equals(BackService.HEART_BEAT_ACTION)) {// 心跳广播
+
+            }
+        }
+    };
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // 未连接为空
+            //
+
+
+//            Toast.makeText(TestActivity.this, "没连接上", Toast.LENGTH_SHORT).show();
+            iBackService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // 已连接
+            iBackService = IBackService.Stub.asInterface(service);
+        }
+    };
+
     /**
      * \
      * 销毁方法
@@ -858,14 +874,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        client.finish();
+        unregisterReceiver(mReceiver);
+        if (isBind) {
+            unbindService(connection);
+            isBind = false;
+        }
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
+        // 开始服务
+        registerReceiver();
+    }
+
     protected void onResume() {
-        stopCode = 2;
+        // 注册广播 最好在onResume中注册
+        registerReceiver();
+        stopCode = 1;
+        isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
+        mServiceIntent = new Intent(this, BackService.class);
+        BackService.HOST = deskIp;
+        BackService.PORT = Constant.SOCKET_PORT;
         /**
          * 设置为横屏
          */
@@ -879,11 +912,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPostResume() {
         Log.d("MainActivity", "onPostResume");
         super.onPostResume();
+        stopCode = 1;
+
     }
 
     @Override
     protected void onPause() {
         Log.d("MainActivity", "onPause");
+        // 注销广播 最好在onPause上注销
+        unregisterReceiver(mReceiver);
+        // 注销服务
+        if (isBind) {
+            unbindService(connection);
+            isBind = false;
+        }
         stopCode = 2;
         isFlag(false);
         super.onPause();
@@ -929,6 +971,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+    }
+
+    private boolean Socketudge(final String data) {
+        try {
+            if (iBackService == null) {
+                Toast.makeText(MainActivity.this, R.string.socket_seng_check, Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+
+                boolean isSend = iBackService.sendMessage(data);
+                if (!isSend) {
+                    Toast.makeText(MainActivity.this, R.string.socket_seng_fail, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     /**

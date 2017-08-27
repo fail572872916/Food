@@ -2,11 +2,11 @@ package com.food.lmln.food.services;
 
 /**
  * Created by Administrator on 2017/8/25.
+ * socket服务类
  */
-
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -18,11 +18,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.food.lmln.IBackService;
 
 public class BackService extends Service {
+
+
+
+
     private static final String TAG = "BackService";
     /**
      * 心跳检测时间
@@ -32,31 +36,38 @@ public class BackService extends Service {
     /**
      * 主机IP地址
      */
-    private static final String HOST = "192.168.0.108";
+    public static  String HOST = "192.168.16.136";
     /**
      * 端口号
      */
-    public static final int PORT = 30000;
+    public static  int PORT = 30000;
     /**
      * 消息广播
      */
-    public static final String MESSAGE_ACTION = "org.feng.message_ACTION";
+    public static final String MESSAGE_ACTION = "com.food.message_ACTION";
     /**
      * 心跳广播
      */
-    public static final String HEART_BEAT_ACTION = "org.feng.heart_beat_ACTION";
+    public static final String HEART_BEAT_ACTION = "com.food.heart_beat_ACTION";
     private long sendTime = 0L;
     /**
      * 弱引用 在引用对象的同时允许对垃圾对象进行回收
      */
     private WeakReference<Socket> mSocket;
     private ReadThread mReadThread;
+    private InitSocketThread initSockeTh = new InitSocketThread();
+    private MyRunnable myRunnable = new MyRunnable();
+
     private IBackService.Stub iBackService = new IBackService.Stub() {
+
         @Override
         public boolean sendMessage(String message) throws RemoteException {
+
+
             return sendMsg(message);
         }
     };
+
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -66,74 +77,100 @@ public class BackService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        new InitSocketThread().start();
+
+        Log.d("fdsa", "onCreate"+HOST);
+        Log.d("fdsa", "onCreate"+PORT);
+        initSockeTh.start();
     }
+
     // 发送心跳包
     private Handler mHandler = new Handler();
-    private Runnable heartBeatRunnable = new Runnable() {
-        @Override
+
+    class MyRunnable implements Runnable {
+        private MyRunnable() {
+        }
+
+        private MyRunnable instance;
+
+        public MyRunnable getInstance() {
+            if (instance == null) {
+                instance = new MyRunnable();
+            }
+            return instance;
+        }
+
         public void run() {
-                boolean isSuccess = sendMsg("0xFF");// 就发送一个\r\n过去, 如果发送失败，就重新初始化一个socket
-            Log.d(TAG, "isSuccess:" + isSuccess);
-                if (!isSuccess) {
-                    mHandler.removeCallbacks(heartBeatRunnable);
+            boolean isSuccess = sendMsg("0xFF");// 就发送一个\r\n过去, 如果发送失败，就重新初始化一个socket
+            if (!isSuccess) {
+                mHandler.removeCallbacks(myRunnable);
+                if (mReadThread != null) {
+                    Log.d("fdsa", "333");
                     mReadThread.release();
-                    releaseLastSocket(mSocket);
-                    new InitSocketThread().start();
                 }
+                releaseLastSocket(mSocket);
+                initSockeTh = new InitSocketThread();
+                initSockeTh.start();
+                Log.d("fdsa", "444");
+            }
             mHandler.postDelayed(this, HEART_BEAT_RATE);
         }
-    };
+    }
 
 
     public boolean sendMsg(String msg) {
+
         if (null == mSocket || null == mSocket.get()) {
             return false;
         }
         Socket soc = mSocket.get();
-            try {
-            soc.sendUrgentData(0xFF);//发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
-
-
-        } catch (Exception se) {
-          throw new RuntimeException();
+        Log.d("fdsa", "555");
+        try {
+            if (soc != null && soc.isConnected() && !soc.isClosed()) {
+                OutputStream os = soc.getOutputStream();
+                String message = msg + "\r\n";
+                os.write(message.getBytes());
+                os.flush();
+                sendTime = System.currentTimeMillis();//每次发送成数据，就改一下最后成功发送的时间，节省心跳间隔时间
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
         return true;
-//        try {
-//            if (soc != null && soc.isConnected() && !soc.isClosed()) {
-////            if (!soc.isClosed() && !soc.isOutputShutdown()) {
-//                OutputStream os = soc.getOutputStream();
-//                String message = msg + "0xff";
-//                os.write(message.getBytes());
-//                os.flush();
-//                sendTime = System.currentTimeMillis();// 每次发送成功数据，就改一下最后成功发送的时间，节省心跳间隔时间
-//                Log.i(TAG, "发送成功的时间：" + sendTime);
-//            } else {
-//                return false;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        return true;
     }
 
     // 初始化socket
     private void initSocket() throws UnknownHostException, IOException {
-        Socket socket = null;
-            socket = initSocketddd();
-            if (socket != null && socket.isConnected() && !socket.isClosed()) {
-                mSocket = new WeakReference<Socket>(socket);
-                mReadThread = new ReadThread(socket);
-                mReadThread.start();
-                mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);// 初始化成功后，就准备发送心跳包
-            } else {
+        Socket socket ;
+        mSocket = null;
+        socket = initSocketddd();
+        if (socket != null && socket.isConnected() && !socket.isClosed()) {
+            mSocket = new WeakReference<>(socket);
+            mReadThread = new ReadThread(socket);
+            mReadThread.start();
+            mHandler.removeCallbacks(initSockeTh);
+            mHandler.removeCallbacks(myRunnable);
+            mHandler.postDelayed(myRunnable, HEART_BEAT_RATE);// 初始化成功后，就准备发送心跳包
+        } else {
+            mHandler.removeCallbacks(initSockeTh);
+            mHandler.removeCallbacks(myRunnable);
+            if (mReadThread != null) {
+                android.util.Log.d("fdsa", "我进来过没有");
+                mHandler.removeCallbacks(mReadThread);
+                mReadThread.release();
 
-            socket=null;
             }
+            releaseLastSocket(mSocket);
+            mHandler.postDelayed(myRunnable, HEART_BEAT_RATE);// 初始化成功后，就准备发送心跳包
+        }
     }
+
+    @Nullable
     private static Socket initSocketddd() {
-        Socket socket = null;
+
+        Socket socket ;
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(HOST, PORT), TIME_OUT);
@@ -151,7 +188,7 @@ public class BackService extends Service {
         try {
             if (null != mSocket) {
                 Socket sk = mSocket.get();
-                if (sk!=null && !sk.isClosed()) {
+                if (sk != null && !sk.isClosed()) {
                     sk.close();
                 }
                 sk = null;
@@ -162,10 +199,23 @@ public class BackService extends Service {
         }
     }
 
-    class InitSocketThread extends Thread {
+    private class InitSocketThread extends Thread {
+        public InitSocketThread initSockeTh;
+
+        private InitSocketThread() {
+        }
+
+        public synchronized InitSocketThread getInstance() {
+            if (initSockeTh == null) {
+                initSockeTh = new InitSocketThread();
+            }
+            return initSockeTh;
+        }
+
         @Override
         public void run() {
             super.run();
+
             try {
                 initSocket();
             } catch (UnknownHostException e) {
@@ -173,6 +223,7 @@ public class BackService extends Service {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -222,6 +273,15 @@ public class BackService extends Service {
                 }
             }
         }
+    }
+
+    /**
+     * 服务被销毁时调用
+     */
+    @Override
+    public void onDestroy() {
+        Log.e("Service", "onDestroy");
+        super.onDestroy();
     }
 
 }

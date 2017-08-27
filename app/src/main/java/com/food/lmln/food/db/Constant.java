@@ -7,6 +7,7 @@ package com.food.lmln.food.db;
 public class Constant {
 
 
+    public static final int SOCKET_PORT =30000;
     /**
      * MyslSqlConnection
      */

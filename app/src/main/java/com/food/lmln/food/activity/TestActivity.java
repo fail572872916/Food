@@ -45,6 +45,7 @@ public class TestActivity extends Activity {
     }
     private void initData() {
         mServiceIntent = new Intent(this, BackService.class);
+        BackService.HOST="515151515";
         btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +57,16 @@ public class TestActivity extends Activity {
                         Toast.makeText(TestActivity.this,
                                 "没有连接，可能是服务器已断开", Toast.LENGTH_SHORT).show();
                     } else {
+                        String str="192.168.16.136";
+                        String name1="lmln13579";
+                        String name2="30000";
+                        str=name1+str+name1+name2;
+
+                        try {
+                            iBackService.sendMessage(str);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                         boolean isSend = iBackService.sendMessage(string);
                         Toast.makeText(TestActivity.this,
                                 isSend ? "success" : "fail", Toast.LENGTH_SHORT)
