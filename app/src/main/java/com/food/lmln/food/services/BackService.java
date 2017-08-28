@@ -24,9 +24,6 @@ import com.food.lmln.IBackService;
 
 public class BackService extends Service {
 
-
-
-
     private static final String TAG = "BackService";
     /**
      * 心跳检测时间
@@ -89,7 +86,6 @@ public class BackService extends Service {
     class MyRunnable implements Runnable {
         private MyRunnable() {
         }
-
         private MyRunnable instance;
 
         public MyRunnable getInstance() {
@@ -98,7 +94,6 @@ public class BackService extends Service {
             }
             return instance;
         }
-
         public void run() {
             boolean isSuccess = sendMsg("0xFF");// 就发送一个\r\n过去, 如果发送失败，就重新初始化一个socket
             if (!isSuccess) {
@@ -143,7 +138,7 @@ public class BackService extends Service {
 
     // 初始化socket
     private void initSocket() throws UnknownHostException, IOException {
-        Socket socket ;
+        Socket socket =null;
         mSocket = null;
         socket = initSocketddd();
         if (socket != null && socket.isConnected() && !socket.isClosed()) {
@@ -170,7 +165,7 @@ public class BackService extends Service {
     @Nullable
     private static Socket initSocketddd() {
 
-        Socket socket ;
+        Socket socket=null ;
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(HOST, PORT), TIME_OUT);
@@ -281,6 +276,15 @@ public class BackService extends Service {
     @Override
     public void onDestroy() {
         Log.e("Service", "onDestroy");
+
+        mHandler.removeCallbacks(mReadThread);
+        mHandler.removeCallbacks(initSockeTh);
+
+        mHandler.removeCallbacks(myRunnable);
+
+
+        Log.e("Service", "执行了");
+
         super.onDestroy();
     }
 

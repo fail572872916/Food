@@ -48,17 +48,20 @@ import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.services.BackService;
 import com.food.lmln.food.utils.FileUtils;
 import com.food.lmln.food.utils.JsonUtils;
+import com.food.lmln.food.utils.NetWorkCheck;
 import com.food.lmln.food.utils.VeDate;
 import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,7 +70,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import cn.jpush.android.api.JPushInterface;
+
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.ORDERTABLE;
 import static com.food.lmln.food.db.Constant.PASSWORD;
@@ -79,6 +84,7 @@ import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.db.Constant.send_msg_code5;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * 布局1
@@ -322,19 +328,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
-        // 开始服务
-        registerReceiver();
+
     }
+
     @Override
     protected void onResume() {
         // 注册广播 最好在onResume中注册
-        registerReceiver();
-        stopCode = 1;
-        isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
-        mServiceIntent = new Intent(this, BackService.class);
-        BackService.HOST = deskIp;
-        BackService.PORT = Constant.SOCKET_PORT;
+
+        stopCode = 2;
         /**
          * 设置为横屏
          */
@@ -367,14 +368,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     *
      * 销毁方法
      * 销毁
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
+//        unregisterReceiver(mReceiver);
         if (isBind) {
             unbindService(connection);
             isBind = false;
@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (tempOk > 0) {
                     if (tempOk == 1) {
                         String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
-                                + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "20" + "','" + 1 + "','" + 0 + "');";
+                                + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "" + "','" + 1 + "','" + 0 + "');";
                         conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                         orderOk = MysqlDb.exuqueteUpdate(conn, sql1);
                     }
@@ -426,9 +426,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }).start();
     }
 
-        /**
-         * 更新奔条目i
-         */
+    /**
+     * 更新奔条目i
+     */
     private void updateDeskTemp() {
         new Thread(new Runnable() {
             @Override
@@ -518,8 +518,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = helper.getWritableDatabase();
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
+        BackService.HOST=deskIp;
+        registerReceiver();
+        mServiceIntent = new Intent(MainActivity.this, BackService.class);
+        isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
+        isBind=false;
+        startService(mServiceIntent);
         selectIpDesk();
-
 
         BackService.PORT = Constant.SOCKET_PORT;
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
@@ -545,12 +550,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogTablde.setCloseListener(new DialogTablde.OnDialogCloseListener() {
             @Override
             public void onDialogCloseClick() {
-                Log.d("MainActivity", "我进来了");
+                Log.d("MainActivity", "isBind:" + isBind);
+                if (isBind) {
+                    unbindService(connection);
+                    stopService(mServiceIntent);
+                    unregisterReceiver(mReceiver);
+                    isBind = false;
+                }
+
                 selectIpDesk();
             }
         });
     }
 
+    /**
+     * 查询桌台与Ip
+     */
+    private void selectIpDesk() {
+        db = helper.getWritableDatabase();
+        int set = DbManger.getCountPerson(db, Constant.DESK_INFO);
+        if (set < 1) {
+            Message msg = new Message();
+            msg.what = Constant.send_msg_code12;
+            mHandler.sendMessage(msg);
+        } else {
+            db = helper.getWritableDatabase();
+            List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
+            if (li.size() > 0) {
+                deskNo = li.get(0).getLocal_desk();
+                deskIp = li.get(0).getLocal_ip();
+            }
+        }
+
+
+
+        // 开始服务
+        registerReceiver();
+        if(!isBind){
+            BackService.HOST = deskIp;
+            BackService.PORT = Constant.SOCKET_PORT;
+            bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
+            // 开始服务
+            mServiceIntent = new Intent(this, BackService.class);
+            startService(mServiceIntent);
+            isBind = true;
+
+        }
+
+    }
     /**
      * 查询菜单
      */
@@ -602,6 +649,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, R.string.socket_seng_check, Toast.LENGTH_SHORT).show();
                     } else if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
+                    } else if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
+                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
                     } else if (deskNo == null || deskNo.equals("")) {
                         selectIpDesk();
                     } else {
@@ -622,7 +671,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_water:
-                    if (Socketudge(Constant.SOCKETPARMAR)) {
+                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
+                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
+                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
                         String rid = JPushInterface.getRegistrationID(getApplicationContext());
                         JSONObject jsonObject = new JSONObject();
                         try {
@@ -636,7 +687,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_rice:
-                    if (Socketudge(Constant.SOCKETPARMAR)) {
+                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
+                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
+                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
                         JSONObject jsonObject1 = new JSONObject();
                         try {
                             jsonObject1.put("desk_no_str", deskNo);
@@ -649,8 +702,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case R.id.bt_order_add_settlement:
-                    Socketudge(Constant.SOCKETPARMAR);
-                    inFragment(VeDate.getOrderNum());
+                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
+                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Socketudge(Constant.SOCKETPARMAR);
+                        inFragment(VeDate.getOrderNum());
+                    }
 //                    if(deskNo.isEmpty())
 //                    selectIpDesk();
 //                    else
@@ -718,28 +775,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /**
-     * 查询桌台与Ip
-     */
-    private void selectIpDesk() {
-        db = helper.getWritableDatabase();
-        int set = DbManger.getCountPerson(db, Constant.DESK_INFO);
-        if (set < 1) {
-            Message msg = new Message();
-            msg.what = Constant.send_msg_code12;
-            mHandler.sendMessage(msg);
-        } else {
-            db = helper.getWritableDatabase();
-            List<DeskInfo> li = DbManger.selectDeskInfo(db, Constant.DESK_INFO);
-            if (li.size() > 0) {
-                deskNo = li.get(0).getLocal_desk();
-                deskIp = li.get(0).getLocal_ip();
-            }
-        }
-        mServiceIntent = new Intent(this, BackService.class);
-        BackService.HOST = deskIp;
-        BackService.PORT = Constant.SOCKET_PORT;
-    }
 
     /**
      * 打印数据
@@ -926,6 +961,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            Toast.makeText(TestActivity.this, "没连接上", Toast.LENGTH_SHORT).show();
             iBackService = null;
         }
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // 已连接
@@ -934,13 +970,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    @Override
-    protected void onPostResume() {
-        Log.d("MainActivity", "onPostResume");
-        super.onPostResume();
-        stopCode = 1;
-
-    }
 
     /**
      * 判断停止线程
@@ -986,8 +1015,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 发送socket
-     * @param data  发送参数
-     * @return  ture/false;
+     *
+     * @param data 发送参数
+     * @return ture/false;
      */
     private boolean Socketudge(final String data) {
         try {

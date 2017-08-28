@@ -2,6 +2,69 @@
 <items version="2" >
 
     <item
+        is-multidex="true"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\org.greenrobot\eventbus\3.0.0\ddd99896e9569eaababbe81b35d80e1b91c4ad85\eventbus-3.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="ddd99896e9569eaababbe81b35d80e1b91c4ad85">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\eventbus-3.0.0_c639e9eb50268b802b832cec6314b936205f4bfd\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\project\Food\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_912d27d052d5cc4c23b71b22d2872fe9dc79428d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\de6a480b4712c992750d37750e841d67c0ffdfd0\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="476390e81d32f9d08f9f5aab6c2b28f314a37828">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ae6a904f4612323f194f44a4158a8e4fbeab838f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\f40d5eb56850be2b483cc608cae9a6b640f3fd21\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="637572952be0db98c9288fb9f9fb923a71401be1">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_956aa062a13d1245304dba2ad9ccb2dd9c17477f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\project\Food\app\libs\core-3.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="2287494d4f5f9f3a9a2bb6980e3f32053721b315">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\core-3.2.1_f9cd357f8948abb37383c2621f01156567a1b938\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\f75a76f42c5cb8681a00732601ab0eae97849947\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="1c3b9743fe8bb166a90a7e98b9b9f1f8021d80cd">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_379a021b0097f7c6c677a1153118045a906ff614\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.7.0\1dc44f4cec20a64cebb68b90b4218f82ac7948b1\okio-1.7.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="1dc44f4cec20a64cebb68b90b4218f82ac7948b1">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.7.0_d60dfea1e38531506aa48eeb5c9a72e3ff9ed1fb\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="E:\project\Food\app\libs\core-3.2.1.jar"
         jumboMode="false"
@@ -11,6 +74,78 @@
         <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\core-3.2.1_f9cd357f8948abb37383c2621f01156567a1b938.jar" />
     </item>
     <item
+        is-multidex="true"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.nineoldandroids\library\2.4.0\e9b63380f3a242dbdbf103a2355ad7e43bad17cb\library-2.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\library-2.4.0_67583e56032f0a08f7f735f4c3092c670ec85b88\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.2.0\f7873a2ebde246a45c2a8d6f3247108b4c88a879\okhttp-3.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="f7873a2ebde246a45c2a8d6f3247108b4c88a879">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\okhttp-3.2.0_f532ef64834980a79500624e1302c5cba18c3d01\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\a320a4c0b03df75c91fca12154d3658577f21f88\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="df451c6f391e3e32022fc964ed87bd57a5869128">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f979de45a7eb4b2161c31cb08c52f6d272a83afe\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\glide-3.7.0_a6f496a83b66ceb20f95318f6702d2905c7688c9\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\7455646f2328060ecb8482ecc8d04b63e634b3b8\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="7880825917f7ad26d7fdfaa421cd1e1827d13c10">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_151ebeefe573323343e64c6db3ac579fe37249c1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\project\Food\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="09424f51d11ad69fdec627747a14c4fd27723fb7">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_1ae710e3da24073bdc29b20ccd399eaca254a4b7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.8.1\2a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0\gson-2.8.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\gson-2.8.1_07a393a7bb7914fbc45c6727b1e953dcaaac0c0d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\7455646f2328060ecb8482ecc8d04b63e634b3b8\output\jars\libs\jcore-android_v1.1.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="0149c38b9688b28e80fab18616d4e80c1906d573">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\jcore-android_v1.1.1_f3a3482469549ecae3df6d0e4aa56175d5b5ea65\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="E:\project\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
         jumboMode="false"
@@ -18,6 +153,24 @@
         revision="25.0.3"
         sha1="7b9bfb6c4e4885660378a9c13330915c321f6cca">
         <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\mysql-connector-java-5.0.8-bin_e27638adadcceb6469b8abae192481b564396c02.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="E:\project\Food\app\libs\mysql-connector-java-5.0.8-bin.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="7b9bfb6c4e4885660378a9c13330915c321f6cca">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\2\mysql-connector-java-5.0.8-bin_e27638adadcceb6469b8abae192481b564396c02\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Administrator\.android\build-cache\f40d5eb56850be2b483cc608cae9a6b640f3fd21\output\jars\libs\jpush-android_v3.0.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="7da1fe9424ad39b3e138685e798569b7e404e8df">
+        <dex dex="E:\project\Food\app\build\intermediates\transforms\dex\debug\folders\1000\10\jpush-android_v3.0.3_1c3fa2a2e6e4af3f3c35ef686ab0a5f11e29841b\classes.dex" />
     </item>
 
 </items>

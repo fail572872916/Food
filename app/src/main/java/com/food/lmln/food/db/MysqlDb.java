@@ -1,16 +1,9 @@
 package com.food.lmln.food.db;
-
-import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

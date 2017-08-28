@@ -39,6 +39,7 @@
     <string name="state_gv_food">食物</string>
     <string name="socket_seng_fail">连接失败</string>
     <string name="socket_seng_check">没有连接，可能是服务器已断开</string>
+    <string name="netrock_check">请检查网络是否连接</string>
 
 
 
