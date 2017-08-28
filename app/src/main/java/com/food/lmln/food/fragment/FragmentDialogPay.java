@@ -516,7 +516,7 @@ public class FragmentDialogPay extends DialogFragment {
      *
      * @param time 秒
      * @param   str 订单号
-     * @param   ty
+     * @param   type  类型
      */
     private void startCustomCountDownTime(long time, final String str, final int type) {
         countdownTimer = new AdvancedCountdownTimer(time * 1000, 1000) {
@@ -559,7 +559,6 @@ public class FragmentDialogPay extends DialogFragment {
     public interface OnDialogListener {
         void onDialogClick(String person);
     }
-
     public void setOnDialogListener(OnDialogListener dialogListener) {
         this.mlistener = dialogListener;
     }

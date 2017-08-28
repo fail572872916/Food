@@ -8,6 +8,7 @@ public class Constant {
 
 
     public static final int SOCKET_PORT =30000;
+    public static  final String SOCKETPARMAR = "0xFF";
     /**
      * MyslSqlConnection
      */
@@ -115,6 +116,7 @@ public class Constant {
     /**
      * Handler执行码
      */
+    public static final int send_msg_code0 = 0x100;
     public static final int send_msg_code1 = 0x101;
     public static final int send_msg_code2 = 0x102;
     public static final int send_msg_code3 = 0x103;

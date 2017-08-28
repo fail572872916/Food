@@ -17,6 +17,7 @@ import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.SqlHelper;
+import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.utils.SystemUtils;
 
 import java.util.List;
@@ -32,6 +33,20 @@ public class DialogTablde {
     static SqlHelper helper;
     static int isUpdate =0;
      static AlertDialog dialog;
+    /**
+     * 定义一个接口，提供Activity使用
+     */
+ public static OnDialogCloseListener mlistener;
+    public   interface OnDialogCloseListener {
+
+
+        void onDialogCloseClick();
+    }
+
+    public void setCloseListener(OnDialogCloseListener dialogListener) {
+        this.mlistener = dialogListener;
+    }
+
     public  static  void showDialog(final Context mContext) {
         ImageView iv_dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -82,6 +97,8 @@ public class DialogTablde {
                 }
                 else {
                     DbManger.insertIP(db,serverIp,tabDesk,isUpdate);
+
+                    mlistener.onDialogCloseClick();
                     dialog.dismiss();
                 }
             }
@@ -98,6 +115,7 @@ public class DialogTablde {
         dialog.cancel();
         dialog.dismiss();
     }
+
 
 
 }
