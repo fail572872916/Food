@@ -152,7 +152,6 @@ public class BackService extends Service {
             mHandler.removeCallbacks(initSockeTh);
             mHandler.removeCallbacks(myRunnable);
             if (mReadThread != null) {
-                android.util.Log.d("fdsa", "我进来过没有");
                 mHandler.removeCallbacks(mReadThread);
                 mReadThread.release();
 
@@ -222,7 +221,7 @@ public class BackService extends Service {
         }
     }
 
-    public class ReadThread extends Thread {
+    private class ReadThread extends Thread {
         private WeakReference<Socket> mWeakSocket;
         private boolean isStart = true;
 
@@ -276,15 +275,12 @@ public class BackService extends Service {
     @Override
     public void onDestroy() {
         Log.e("Service", "onDestroy");
-
+        mReadThread.release();
+        releaseLastSocket(mSocket);
         mHandler.removeCallbacks(mReadThread);
         mHandler.removeCallbacks(initSockeTh);
-
         mHandler.removeCallbacks(myRunnable);
-
-
         Log.e("Service", "执行了");
-
         super.onDestroy();
     }
 

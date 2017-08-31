@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 
 import com.food.lmln.food.R;
+import com.food.lmln.food.bean.DeskTemp;
 import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.receiver.LocalBroadcastManager;
 import com.food.lmln.food.utils.ExampleUtil;
@@ -48,7 +49,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
@@ -74,11 +77,11 @@ public class FragmentDialogPay extends DialogFragment {
     public static final String KEY_TITLE = "title";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
-
+    private String  returnList;
     public String registration_id_key = "registration_id_key";
     public String registration_id_value = "";
     public String product_id_key = "product_id_key";
-    public String product_id_value = "";
+    public String product_id_value = null;
     public String time_key = "time_key";
     public String order_key = "order_key";
     public String time_value = "";
@@ -210,15 +213,19 @@ public class FragmentDialogPay extends DialogFragment {
 //            }
 //        });
         registration_id_value = JPushInterface.getRegistrationID(getActivity());
-        product_id_value = "1.0";
+//        product_id_value = "1.0";
         time_value = System.currentTimeMillis() + "";
         ScreenUtils.setMargins(im_pay_show, 50, 150, 50, 50);
         String type = null;
         String ordrNo = null;
+
         if (mParam1 != null) {
+            Log.d("jpush", mParam1+"dsadsa");
             String temp[] = mParam1.split("####");
             type = temp[0];
             ordrNo = temp[1];
+            product_id_value = temp[2];
+            returnList=temp[3];
         }
         if (type!=null&&type.equals(Constant.ALI)) {
             String url = HttpUtils.POSTWX + "Ali_Food_Pay?";

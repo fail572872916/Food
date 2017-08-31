@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="jpush-3.0.3">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/f40d5eb56850be2b483cc608cae9a6b640f3fd21/output/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.android/build-cache/f40d5eb56850be2b483cc608cae9a6b640f3fd21/output/jars/libs/jpush-android_v3.0.3.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/f40d5eb56850be2b483cc608cae9a6b640f3fd21/output/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/95b6c2806cf4b5064cacbe5026b52c255ac00577/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/95b6c2806cf4b5064cacbe5026b52c255ac00577/output/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.android/build-cache/95b6c2806cf4b5064cacbe5026b52c255ac00577/output/jars/libs/jpush-android_v3.0.3.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

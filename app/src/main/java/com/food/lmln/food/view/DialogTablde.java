@@ -81,7 +81,6 @@ public class DialogTablde {
                 .into(iv_dialog);
 
         //取消或确定按钮监听事件处理
-
         btn_comfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,10 +109,6 @@ public class DialogTablde {
             }
         });
 
-    }
-    public static void dismissScanNumberDialog() {
-        dialog.cancel();
-        dialog.dismiss();
     }
 
 

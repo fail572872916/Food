@@ -36,6 +36,7 @@ import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
 import com.food.lmln.food.bean.DeskInfo;
+import com.food.lmln.food.bean.DeskTemp;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
 import com.food.lmln.food.db.Constant;
@@ -54,14 +55,12 @@ import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -70,8 +69,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import cn.jpush.android.api.JPushInterface;
+import java.util.StringTokenizer;
 
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.ORDERTABLE;
@@ -115,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Intent mServiceIntent;
     private IBackService iBackService;
     private boolean isBind = false;
-
     /**
      * 用于对Fragment进行管理
      */
@@ -126,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<OrderInfo> newList = new ArrayList<>();
     private List<OrderInfo> addList = new ArrayList<>();
     private List<OrderInfo> list_order = new ArrayList<>();
-    private List<MenuButton> listRight = new ArrayList<>();
+    private List<MenuButton>  mebuLeft = new ArrayList<>();
+    private List<DeskTemp> deskList =new ArrayList<>(); //临时订单
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -144,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private String founding; //开台状态
     private int startFouding; //是否开台
+
     private String finallyOrder;// 写入订单
     private String before;  //临时订单
     private int updateFouding; //自增
@@ -166,16 +165,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 case send_msg_code1:
                     Bundle bundle2 = msg.getData();
-                    listRight = (List<MenuButton>) bundle2.getSerializable("listRight");
+                    mebuLeft = (List<MenuButton>) bundle2.getSerializable("listRight");
                     fragment1 = new BlankFragment();
-                    if (listRight.size() > 0) {
-                        String name = listRight.get(0).getName();
+                    if (mebuLeft.size() > 0) {
+                        String name = mebuLeft.get(0).getName();
                         EventBus.getDefault().post(new DeskInfo(name, name));
-                        lv_main.setAdapter(new FoodTypeMenuAdapter(listRight, MainActivity.this));
+                        lv_main.setAdapter(new FoodTypeMenuAdapter(mebuLeft, MainActivity.this));
                         lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                setTabSelection(position, String.valueOf(listRight.get(position).getName()));
+                                setTabSelection(position, String.valueOf(mebuLeft.get(position).getName()));
                             }
                         });
                     }
@@ -292,20 +291,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case Constant.send_msg_code11:
-                    if (orderNo != null && !orderNo.equals(""))
-                        inFragment(orderNo);
+
+
+                        if(deskList!=null &&deskList.size()>0){
+                            String orderId=null;
+                            double  price = 0;
+                            for (DeskTemp deskTemp : deskList) {
+                               orderId=deskTemp.getConsumptionId();
+                             price +=deskTemp.getFoodPrice() * deskTemp.getFoodCount();
+
+                            }
+                        inFragment(orderId,price,deskList);
+                        }
                     else
-                        Toast.makeText(MainActivity.this, R.string.tip_is_start, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.tip_order_exption, Toast.LENGTH_SHORT).show();
                     break;
                 case Constant.send_msg_code12:
                     Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
                     DialogTablde.showDialog(MainActivity.this);
                     break;
+
+
                 default:
                     break;
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,21 +359,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onStop() {
-        Log.d("MainActivity", "我被挡住了");
+
         super.onStop();
 
     }
 
     @Override
     protected void onPause() {
-        Log.d("MainActivity", "onPause");
-        // 注销广播 最好在onPause上注销
-        unregisterReceiver(mReceiver);
-        // 注销服务
-        if (isBind) {
-            unbindService(connection);
-            isBind = false;
-        }
+
         stopCode = 2;
         isFlag(false);
         super.onPause();
@@ -374,7 +379,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unregisterReceiver(mReceiver);
+
+        // 注销广播 最好在onPause上注销
+        unregisterReceiver(mReceiver);
+        // 注销服务
         if (isBind) {
             unbindService(connection);
             isBind = false;
@@ -411,7 +419,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-
     /**
      * 新开的临时台
      */
@@ -425,7 +432,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-
     /**
      * 更新奔条目i
      */
@@ -469,6 +475,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                 startFouding = MysqlDb.exuqueteUpdate(conn, "update    " + Constant.SHOP_DESK + " set  " + Constant.SHOP_STATUS + "='" + Constant.STATUS_RUN + "'  where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
                 mHandler.sendEmptyMessage(Constant.send_msg_code6);
+            }
+        }).start();
+    }
+
+    /**
+     * 查询价格
+     */
+    public void selectOrderMoney() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
+                deskList   = MysqlDb.selectMoney(conn, "select *  from  " +
+                        Constant.DESK_TEMP + " where " +
+                        Constant.DESK_NO + " =" + "'" + deskNo + "'");
+//                Log.d("MainActivity","deskListfdsa"+ deskList);
+//                Message msg =new Message();
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(Constant.DESK_TEMP, (Serializable) deskList);
+//                msg.setData(bundle);
+                mHandler.sendEmptyMessage(Constant.send_msg_code11);
             }
         }).start();
     }
@@ -523,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mServiceIntent = new Intent(MainActivity.this, BackService.class);
         isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
         isBind=false;
+
         startService(mServiceIntent);
         selectIpDesk();
 
@@ -550,7 +578,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogTablde.setCloseListener(new DialogTablde.OnDialogCloseListener() {
             @Override
             public void onDialogCloseClick() {
-                Log.d("MainActivity", "isBind:" + isBind);
+                Log.d("MainActivity", "isBind22:" + isBind);
                 if (isBind) {
                     unbindService(connection);
                     stopService(mServiceIntent);
@@ -562,7 +590,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
     /**
      * 查询桌台与Ip
      */
@@ -583,17 +610,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-
-        // 开始服务
         registerReceiver();
-        if(!isBind){
+        // 开始服务
+
+        if(!isBind&&deskNo.length()>1){
             BackService.HOST = deskIp;
             BackService.PORT = Constant.SOCKET_PORT;
+            mServiceIntent = new Intent(this, BackService.class);
             bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
             // 开始服务
-            mServiceIntent = new Intent(this, BackService.class);
             startService(mServiceIntent);
             isBind = true;
+            Log.d("MainActivity", "isBind11:" + isBind);
 
         }
 
@@ -606,18 +634,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
-                listRight = MysqlDb.selectCuisine(conn, "select  * from  " + ORDERTABLE + "");
+                mebuLeft = MysqlDb.selectCuisine(conn, "select  * from  " + ORDERTABLE + "");
                 Message msg = new Message();
                 msg.what = send_msg_code1;
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("listRight", (Serializable) listRight);
+                bundle.putSerializable("listRight", (Serializable) mebuLeft);
                 msg.setData(bundle);
                 mHandler.sendMessage(msg);
 
             }
         }).start();
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -674,7 +701,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
                         Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
                     } else if (Socketudge(Constant.SOCKETPARMAR)) {
-                        String rid = JPushInterface.getRegistrationID(getApplicationContext());
+//                        String rid = JPushInterface.getRegistrationID(getApplicationContext());
                         JSONObject jsonObject = new JSONObject();
                         try {
                             jsonObject.put("desk_no_str", deskNo);
@@ -704,31 +731,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.bt_order_add_settlement:
                     if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
                         Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
-                    }else {
-                        Socketudge(Constant.SOCKETPARMAR);
-                        inFragment(VeDate.getOrderNum());
+                    }  else if (Socketudge(Constant.SOCKETPARMAR)) {
+
+                        selectOrderMoney();
                     }
-//                    if(deskNo.isEmpty())
-//                    selectIpDesk();
-//                    else
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-//                            orderNo = MysqlDb.selectDeskNO(conn, "select  " + Constant.CONSUMPTIONID + " from  " + Constant.DESK_CONSUMPTIONID + " where " + Constant.DESK_NO + " =" + "'" + deskNo + "'");
-//                            mHandler.sendEmptyMessage(Constant.send_msg_code11);
-//                        }
-//                    }).start();
+
+
                     break;
                 case R.id.bt_order_clear:
                     addList.clear();
                     list_order.clear();
-                    listRight.clear();
+
                     mAdapter_order.notifyDataSetChanged();
                     Message msg = new Message();
                     msg.what = send_msg_code1;
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("listRight", (Serializable) listRight);
+                    bundle.putSerializable("listRight", (Serializable) mebuLeft);
                     msg.setData(bundle);
                     mHandler.sendMessage(msg);
                     isFlag(true);
@@ -774,7 +792,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
 
     /**
      * 打印数据
@@ -1042,7 +1059,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 进入Fragment
      */
-    private void inFragment(final String orderNo) {
+    private void inFragment(final String orderNo, final double money, final List<DeskTemp> list) {
 
         final MyPopWindow p = new MyPopWindow(MainActivity.this);
         p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -1053,13 +1070,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
-                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo);
+                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo+"####"+ String.valueOf(money)+"####"+list.toString());
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
-                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo);
+                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo+"####" +String.valueOf(money)+"####"+list.toString());
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();

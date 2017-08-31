@@ -7,7 +7,7 @@ package com.food.lmln.food.db;
 public class Constant {
 
 
-    public static final int SOCKET_PORT =30000;
+    public static final int SOCKET_PORT =30000;      //socket端口号
     public static  final String SOCKETPARMAR = "0xFF";
     /**
      * MyslSqlConnection
@@ -39,13 +39,14 @@ public class Constant {
     public static  final String  ORDER_TEMP ="order_temp" ;//临时订单表
     public static  final String  ORDER_DATE ="order_date" ;//订单日期
 
-    public static  final String  ORDER_ID ="order_id" ;//订单号
+
     public static  final String  DESKTEMP_TIME ="time" ;//订单号
     /**
      * OrderInfo
      */
 
     public static  final String  ORDER_INFO ="order_info" ;//订单表
+    public static  final String  ORDER_ID ="order_id" ;//订单号
 
 
 
@@ -91,11 +92,11 @@ public class Constant {
     /**
      * 打印命令
      */
+    public static final String CMD_OPEN = "8906063210##";//开台
     public static final String CMD_PRINT = "8906063211##";//打印
     public static final String CMD_CLEAR = "8906063212##";//清台
     public static final String CMD_RICE = "8906063213##";//加饭
     public static final String CMD_WATER = "8906063214##";//加水
-    public static final String CLEAR_DESK = "clear";//命令
     public static final int BUFFER_SIZE = 1024;
 
 
@@ -129,6 +130,7 @@ public class Constant {
     public static final int send_msg_code10 = 0x110;
     public static final int send_msg_code11 = 0x111;
     public static final int send_msg_code12 = 0x112;
+    public static final int send_msg_code13 = 0x113;
 
 
 }
