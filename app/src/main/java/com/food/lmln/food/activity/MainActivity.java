@@ -55,12 +55,15 @@ import com.food.lmln.food.view.DialogTablde;
 import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.gson.Gson;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -69,8 +72,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
-
 import static com.food.lmln.food.db.Constant.DESK_TEMP;
 import static com.food.lmln.food.db.Constant.ORDERTABLE;
 import static com.food.lmln.food.db.Constant.PASSWORD;
@@ -82,7 +83,6 @@ import static com.food.lmln.food.db.Constant.send_msg_code3;
 import static com.food.lmln.food.db.Constant.send_msg_code4;
 import static com.food.lmln.food.db.Constant.send_msg_code5;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * 布局1
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<OrderInfo> newList = new ArrayList<>();
     private List<OrderInfo> addList = new ArrayList<>();
     private List<OrderInfo> list_order = new ArrayList<>();
-    private List<MenuButton>  mebuLeft = new ArrayList<>();
-    private List<DeskTemp> deskList =new ArrayList<>(); //临时订单
+    private List<MenuButton> mebuLeft = new ArrayList<>();
+    private List<DeskTemp> deskList = new ArrayList<>(); //临时订单
     private FloatingActionMenu fab;  //悬浮菜单按钮
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mAdapter_order.notifyDataSetChanged();
                             lv_main_order.setAdapter(mAdapter_order);
                             bt_order_place.setEnabled(true);
+                            isFlag(true);
                             break;
                         }
                     } else {
@@ -285,25 +286,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        String json = JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj, "");
+                        String json = JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObj, "", "");
                         Log.d("json1", "jsonObj:" + json);
                         sendPrint(json);
                     }
                     break;
                 case Constant.send_msg_code11:
+                    if (deskList != null && deskList.size() > 0) {
+                        String orderId = null;
+                        double price = 0;
+                        for (DeskTemp deskTemp : deskList) {
+                            orderId = deskTemp.getConsumptionId();
+                            price += deskTemp.getFoodPrice() * deskTemp.getFoodCount();
 
-
-                        if(deskList!=null &&deskList.size()>0){
-                            String orderId=null;
-                            double  price = 0;
-                            for (DeskTemp deskTemp : deskList) {
-                               orderId=deskTemp.getConsumptionId();
-                             price +=deskTemp.getFoodPrice() * deskTemp.getFoodCount();
-
-                            }
-                        inFragment(orderId,price,deskList);
                         }
-                    else
+                        Gson gson = new Gson();
+                        String foodDetail = gson.toJson(deskList);
+
+                        inFragment(orderId, price, foodDetail);
+                    } else
                         Toast.makeText(MainActivity.this, R.string.tip_order_exption, Toast.LENGTH_SHORT).show();
                     break;
                 case Constant.send_msg_code12:
@@ -364,13 +365,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    protected void onPause() {
-
-        stopCode = 2;
-        isFlag(false);
-        super.onPause();
-    }
 
     /**
      * 销毁方法
@@ -403,22 +397,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (OrderInfo orderInfo : addList) {
                     dateNow = VeDate.getStringDateShort();
                     timeNow = VeDate.getTimeShort();
+
                     sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow + "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
                     conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                     tempOk = MysqlDb.exuqueteUpdate(conn, sql);
-                }
-                if (tempOk > 0) {
-                    if (tempOk == 1) {
-                        String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
-                                + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "" + "','" + 1 + "','" + 0 + "');";
-                        conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                        orderOk = MysqlDb.exuqueteUpdate(conn, sql1);
+                    if (tempOk > 0) {
+                        if (tempOk == 1) {
+                            String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
+                                    + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "" + "','" + 1 + "','" + 0 + "');";
+                            conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
+                            orderOk = MysqlDb.exuqueteUpdate(conn, sql1);
+                        }
                     }
                 }
+
                 mHandler.sendEmptyMessage(Constant.send_msg_code10);
             }
         }).start();
     }
+
     /**
      * 新开的临时台
      */
@@ -432,6 +429,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     /**
      * 更新奔条目i
      */
@@ -487,13 +485,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                deskList   = MysqlDb.selectMoney(conn, "select *  from  " +
+                deskList = MysqlDb.selectMoney(conn, "select *  from  " +
                         Constant.DESK_TEMP + " where " +
                         Constant.DESK_NO + " =" + "'" + deskNo + "'");
 //                Log.d("MainActivity","deskListfdsa"+ deskList);
 //                Message msg =new Message();
 //                Bundle bundle = new Bundle();
-//                bundle.putSerializable(Constant.DESK_TEMP, (Serializable) deskList);
+//                bundle.putSerializable(Constant.DESK_TEMP, (Serializable) sdeskList);
 //                msg.setData(bundle);
                 mHandler.sendEmptyMessage(Constant.send_msg_code11);
             }
@@ -506,24 +504,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
 
         lv_main = (ListView) findViewById(R.id.lv_main);
-
         fab = (FloatingActionMenu) findViewById(R.id.fab);
-
         lin_one = (LinearLayout) findViewById(R.id.lin_one);
         myContent = (FrameLayout) findViewById(R.id.myContent);
         lin_three = (LinearLayout) findViewById(R.id.lin_three);
         tv_order_sum = (TextView) findViewById(R.id.tv_order_sum);
-
         lv_main_order = (ListView) findViewById(R.id.lv_main_order);
         bt_order_clear = (Button) findViewById(R.id.bt_order_clear);
         bt_order_place = (Button) findViewById(R.id.bt_order_place);
         tv_order_title = (TextView) findViewById(R.id.tv_order_title);
         tv_order_price = (TextView) findViewById(R.id.tv_order_price);
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
-        bt_order_add_rice = (Button) findViewById(R.id.bt_order_add_rice);
+
         tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
         fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
+        bt_order_add_rice = (Button) findViewById(R.id.bt_order_add_rice);
         bt_order_add_water = (Button) findViewById(R.id.bt_order_add_water);
+        bt_order_add_rice.setVisibility(View.GONE);
+        bt_order_add_water.setVisibility(View.GONE);
         bt_order_add_settlement = (Button) findViewById(R.id.bt_order_add_settlement);
         fab_vending_machine = (FloatingActionButton) findViewById(R.id.fab_vending_machine);
         fab.setClosedOnTouchOutside(true);
@@ -532,8 +530,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_vending_machine.setOnClickListener(this);
         bt_order_place.setOnClickListener(listerner);
         bt_order_clear.setOnClickListener(listerner);
-        bt_order_add_water.setOnClickListener(listerner);
-        bt_order_add_rice.setOnClickListener(listerner);
+//        bt_order_add_water.setOnClickListener(listerner);
+//        bt_order_add_rice.setOnClickListener(listerner);
         bt_order_add_settlement.setOnClickListener(listerner);
         fragment1 = new BlankFragment();
         editNameDialog = new FragmentDialogPay();
@@ -545,33 +543,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = helper.getWritableDatabase();
         dbManager = new DbManger(this);
         dbManager.copyDBFile();
-        BackService.HOST=deskIp;
+        BackService.HOST = deskIp;
         registerReceiver();
         mServiceIntent = new Intent(MainActivity.this, BackService.class);
         isBind = bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
-        isBind=false;
-
+        isBind = false;
         startService(mServiceIntent);
         selectIpDesk();
-
         BackService.PORT = Constant.SOCKET_PORT;
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
+
+                JSONObject jsonObject = new JSONObject();
+
+                person = person.replaceAll("\\\\", "");
                 Log.d("person", person);
                 JSONObject js;
                 String js1 = null;
-                try {
-                    js = new JSONObject(person);
-                    if (js.length() > 0) {
-                        js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, js, deskNo);
-                        Log.d("ks1", js1);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (js1 != null)
-                    sendPrint(js1);
+
+
+                js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, jsonObject, deskNo, person);
+
+                sendPrint(js1);
+
+
             }
         });
         DialogTablde dialogTablde = new DialogTablde();
@@ -590,6 +586,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     /**
      * 查询桌台与Ip
      */
@@ -608,12 +605,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 deskIp = li.get(0).getLocal_ip();
             }
         }
-
-
         registerReceiver();
         // 开始服务
 
-        if(!isBind&&deskNo.length()>1){
+        if (!isBind && deskNo.length() > 1) {
             BackService.HOST = deskIp;
             BackService.PORT = Constant.SOCKET_PORT;
             mServiceIntent = new Intent(this, BackService.class);
@@ -626,6 +621,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
     /**
      * 查询菜单
      */
@@ -645,6 +641,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -697,41 +694,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }).start();
                     }
                     break;
-                case R.id.bt_order_add_water:
-                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
-                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
-                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
-//                        String rid = JPushInterface.getRegistrationID(getApplicationContext());
-                        JSONObject jsonObject = new JSONObject();
-                        try {
-                            jsonObject.put("desk_no_str", deskNo);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        String json = JsonUtils.useJosn(true, Constant.CMD_WATER, jsonObject, "");
-                        Log.d("MainActivity", json);
-                        Socketudge(json);
-                    }
-                    break;
-                case R.id.bt_order_add_rice:
-                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
-                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
-                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
-                        JSONObject jsonObject1 = new JSONObject();
-                        try {
-                            jsonObject1.put("desk_no_str", deskNo);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        String json1 = JsonUtils.useJosn(true, Constant.CMD_RICE, jsonObject1, "");
-                        Log.d("gg", json1);
-                        Socketudge(json1);
-                    }
-                    break;
+//                case R.id.bt_order_add_water:
+//                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
+//                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
+//                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
+////                        String rid = JPushInterface.getRegistrationID(getApplicationContext());
+//                        JSONObject jsonObject = new JSONObject();
+//                        try {
+//                            jsonObject.put("desk_no_str", deskNo);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        String json = JsonUtils.useJosn(true, Constant.CMD_WATER, jsonObject, "");
+//                        Log.d("MainActivity", json);
+//                        Socketudge(json);
+//                    }
+//                    break;
+//                case R.id.bt_order_add_rice:
+//                    if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
+//                        Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
+//                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
+//                        JSONObject jsonObject1 = new JSONObject();
+//                        try {
+//                            jsonObject1.put("desk_no_str", deskNo);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        String json1 = JsonUtils.useJosn(true, Constant.CMD_RICE, jsonObject1, "");
+//                        Log.d("gg", json1);
+//                        Socketudge(json1);
+//                    }
+//                    break;
                 case R.id.bt_order_add_settlement:
                     if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
                         Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
-                    }  else if (Socketudge(Constant.SOCKETPARMAR)) {
+                    } else if (Socketudge(Constant.SOCKETPARMAR)) {
 
                         selectOrderMoney();
                     }
@@ -802,10 +799,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Socketudge(jsonObj);
             addList.clear();
             list_order.clear();
+
+            stopCode = 1;
             Message msg = new Message();
             msg.what = send_msg_code3;
 
-            stopCode = 1;
             mHandler.sendMessage(msg);
         } else {
             Message msg1 = new Message();
@@ -904,7 +902,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (fragment2 != null) {
             transaction.hide(fragment2);
         }
-
     }
 
     private int index = 1;
@@ -1059,7 +1056,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 进入Fragment
      */
-    private void inFragment(final String orderNo, final double money, final List<DeskTemp> list) {
+    private void inFragment(final String orderNo, final double money, final String list) {
 
         final MyPopWindow p = new MyPopWindow(MainActivity.this);
         p.showAtLocation(MainActivity.this.findViewById(R.id.myContent), Gravity.CENTER_HORIZONTAL | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -1070,13 +1067,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
-                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo+"####"+ String.valueOf(money)+"####"+list.toString());
+                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo + "####" + String.valueOf(money) + "####" + list.toString());
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
-                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo+"####" +String.valueOf(money)+"####"+list.toString());
+                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo + "####" + String.valueOf(money) + "####" + list.toString());
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();

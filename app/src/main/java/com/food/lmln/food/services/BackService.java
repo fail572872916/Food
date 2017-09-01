@@ -275,7 +275,7 @@ public class BackService extends Service {
     @Override
     public void onDestroy() {
         Log.e("Service", "onDestroy");
-        mReadThread.release();
+//        mReadThread.release();
         releaseLastSocket(mSocket);
         mHandler.removeCallbacks(mReadThread);
         mHandler.removeCallbacks(initSockeTh);

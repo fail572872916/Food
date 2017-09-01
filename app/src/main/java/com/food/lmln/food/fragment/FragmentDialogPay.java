@@ -143,16 +143,8 @@ public class FragmentDialogPay extends DialogFragment {
                     Bundle bundle2 = msg.getData();
                     String query = bundle2.getString("query");
                     if (query != null) {
-                        Log.d("dsa", query);
-                        JSONObject jsonObject = new JSONObject();
-                        try {
-                            jsonObject.put("data",query);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d(TAG, "jsonObject:" + jsonObject);
-                        setCostomMsg(jsonObject.toString());
+                        setCostomMsg(query);
                     }
                         break;
                 default:
@@ -270,7 +262,6 @@ public class FragmentDialogPay extends DialogFragment {
                             msg.setData(data);
                             handler.sendMessage(msg);
                         }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -448,6 +439,8 @@ public class FragmentDialogPay extends DialogFragment {
                 String extras = intent.getStringExtra(KEY_EXTRAS);
                 StringBuilder showMsg = new StringBuilder();
                 Log.d("jpush", extras);
+
+                extras=   extras.replaceAll( "\\\\", "");
                 showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
                 if (!ExampleUtil.isEmpty(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");

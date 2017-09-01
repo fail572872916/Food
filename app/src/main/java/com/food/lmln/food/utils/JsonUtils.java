@@ -23,7 +23,8 @@ public class JsonUtils {
      * @param data
      * @return jsonObject
      */
-    public static String useJosn(boolean rs, String cmd, JSONObject data,String Deskno) {
+    public static String useJosn(boolean rs, String cmd, JSONObject data,String Deskno,String clear) {
+
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject1= new JSONObject();
         try {
@@ -34,6 +35,7 @@ public class JsonUtils {
             jsonObject.put("orderInstruct", cmd);
             jsonObject.put("package", data.toString());
             jsonObject.put("extra", jsonObject1.toString());
+            jsonObject.put("clear", clear);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -46,20 +48,19 @@ public class JsonUtils {
      * @return
      */
     public static String useJpushJosn(String js,String m1) {
-//{"data":"{\"order\":\"20170816125005\",\"pay_type\":1,\"status\":true,\"money\":\"1.00\"}"}
+//{"money":"1","order":"D201709010026","pay_type":2,"result":true}
+// [{"consumptionId":"D201709010025","date":"2017-09-01","deskNO":"4号桌","time":"13:23:15","foodName":"小炒肉","foodPrice":35.0,"foodCount":1.0},
+// {"consumptionId":"D201709010026","date":"2017-09-01","deskNO":"4号桌","time":"14:32:45","foodName":"咕噜肉","foodPrice":45.0,"foodCount":1.0}]
+
         Log.d("JsonUtils", js);
-        JSONObject jsonObject= null;
         JSONObject jsonObject1= new JSONObject();
-        String json =null;
         try {
-            jsonObject = new JSONObject(js);
-            json =jsonObject.getString("data");
-            jsonObject1.put("data",json);
+            jsonObject1.put("data",js);
             jsonObject1.put("orderDetail",m1.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("JsonUtils", "jsonObject1:" + jsonObject1);
+
         return jsonObject1.toString();
     }
 
