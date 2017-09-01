@@ -27,10 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.food.lmln.food.R;
-import com.food.lmln.food.bean.DeskTemp;
 import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.receiver.LocalBroadcastManager;
 import com.food.lmln.food.utils.ExampleUtil;
@@ -44,16 +41,11 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.kale.lib.time.AdvancedCountdownTimer;
 import com.wang.avi.AVLoadingIndicatorView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -64,12 +56,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static org.greenrobot.eventbus.EventBus.TAG;
-
-
 /**
  * Created by Weili on 2017/7/27.
  */
-
 public class FragmentDialogPay extends DialogFragment {
     //for receive customer msg from jpush server
     private MessageReceiver mMessageReceiver;
@@ -77,15 +66,15 @@ public class FragmentDialogPay extends DialogFragment {
     public static final String KEY_TITLE = "title";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
-    private String  returnList;
-    public String registration_id_key = "registration_id_key";
+    private String  order_detail_value; //订单信息
+    private String  order_detail_key="order_detail_key";//订单
+    public String registration_id_key = "registration_id_key"; //极光id
     public String registration_id_value = "";
     public String product_id_key = "product_id_key";
     public String product_id_value = null;
     public String time_key = "time_key";
-    public String order_key = "order_key";
-    public String time_value = "";
-
+    public String order_key = "order_key"; //订单好
+    public String time_value = null;
     private String mParam1;
     private View view;
     private FrameLayout view_pay_bg;
@@ -130,8 +119,6 @@ public class FragmentDialogPay extends DialogFragment {
         public void handleMessage(Message msg) {
             avloadingIndicatorView_BallClipRotatePulse.setVisibility(View.GONE);
             super.handleMessage(msg);
-
-
             switch (msg.what) {
                 case Constant.send_msg_code1:
                     Bundle data = msg.getData();
@@ -160,14 +147,14 @@ public class FragmentDialogPay extends DialogFragment {
                         JSONObject jsonObject = new JSONObject();
                         try {
                             jsonObject.put("data",query);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        Log.d(TAG, "jsonObject:" + jsonObject);
                         setCostomMsg(jsonObject.toString());
                     }
                         break;
-
-
                 default:
                     break;
             }
@@ -225,22 +212,18 @@ public class FragmentDialogPay extends DialogFragment {
             type = temp[0];
             ordrNo = temp[1];
             product_id_value = temp[2];
-            returnList=temp[3];
+            order_detail_value=temp[3];
         }
         if (type!=null&&type.equals(Constant.ALI)) {
             String url = HttpUtils.POSTWX + "Ali_Food_Pay?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
-
             postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_ALI);
         } else {
             String url = HttpUtils.POSTWX + "Pay1?";
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
-
                 postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_WX);
         }
     }
-
-
     /**
      * "
      * 循环查询
@@ -261,9 +244,6 @@ public class FragmentDialogPay extends DialogFragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-//                Log.d("FragmentDialogPay", e.getMessage());
-//                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
-
                 Message msg = new Message();
                 msg.what = Constant.send_msg_code3;
                 Bundle data = new Bundle();
@@ -276,10 +256,9 @@ public class FragmentDialogPay extends DialogFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
                 JSONObject jsonObject ;
+                Log.d("FragmentDialogPay", str);
                 try {
                     jsonObject = new JSONObject(str);
-
-
                         boolean result= jsonObject.getBoolean("result");
                         String  money = jsonObject.getString("money");
                         if(result && money!=null) {
@@ -291,7 +270,6 @@ public class FragmentDialogPay extends DialogFragment {
                             msg.setData(data);
                             handler.sendMessage(msg);
                         }
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -341,7 +319,6 @@ public class FragmentDialogPay extends DialogFragment {
                 String str = response.body().string();
                 String url ;
                 String order = null;
-                Log.i("wangshu", str);
                 JSONObject josn ;
                 try {
                     josn = new JSONObject(str);
@@ -486,8 +463,7 @@ public class FragmentDialogPay extends DialogFragment {
      */
     private void setCostomMsg(String msg) {
 //        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-        Log.d("FragmentDialogPay", msg);
-        String json = JsonUtils.useJpushJosn(msg);
+        String json = JsonUtils.useJpushJosn(msg,order_detail_value);
         Log.d("aaaa", json);
         if (json != null) {
             mlistener.onDialogClick(json);

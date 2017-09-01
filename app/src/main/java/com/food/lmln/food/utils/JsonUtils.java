@@ -1,5 +1,7 @@
 package com.food.lmln.food.utils;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +24,6 @@ public class JsonUtils {
      * @return jsonObject
      */
     public static String useJosn(boolean rs, String cmd, JSONObject data,String Deskno) {
-
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject1= new JSONObject();
         try {
@@ -44,17 +45,22 @@ public class JsonUtils {
      * @param js
      * @return
      */
-    public static String useJpushJosn(String js) {
+    public static String useJpushJosn(String js,String m1) {
 //{"data":"{\"order\":\"20170816125005\",\"pay_type\":1,\"status\":true,\"money\":\"1.00\"}"}
+        Log.d("JsonUtils", js);
         JSONObject jsonObject= null;
+        JSONObject jsonObject1= new JSONObject();
         String json =null;
         try {
             jsonObject = new JSONObject(js);
             json =jsonObject.getString("data");
+            jsonObject1.put("data",json);
+            jsonObject1.put("orderDetail",m1.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return json;
+        Log.d("JsonUtils", "jsonObject1:" + jsonObject1);
+        return jsonObject1.toString();
     }
 
 
