@@ -30,7 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.food.lmln.IBackService;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
@@ -39,6 +38,7 @@ import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.DeskTemp;
 import com.food.lmln.food.bean.MenuButton;
 import com.food.lmln.food.bean.OrderInfo;
+import com.food.lmln.food.bean.OrderTemp;
 import com.food.lmln.food.db.Constant;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
@@ -46,6 +46,8 @@ import com.food.lmln.food.db.SqlHelper;
 import com.food.lmln.food.fragment.Blank2Fragment;
 import com.food.lmln.food.fragment.BlankFragment;
 import com.food.lmln.food.fragment.FragmentDialogPay;
+import com.food.lmln.food.model.OrderTempDao;
+import com.food.lmln.food.model.OrderTempImpl;
 import com.food.lmln.food.services.BackService;
 import com.food.lmln.food.utils.FileUtils;
 import com.food.lmln.food.utils.JsonUtils;
@@ -56,14 +58,12 @@ import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //创建Socket通信
     FrameLayout myContent;
     private SQLiteDatabase db;
+    private OrderTempDao dao;
     SqlHelper helper;
     /**
      * services相关
@@ -148,8 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int updateFouding; //自增
     private int startDeskNo;//临时台号是否成功
     private int tempOk = 0;//临时台号是否成功
-    private int orderOk;//临时台号是否成功
-    private String orderNo = null; //查询当前桌台订单号
+    private int orderOk ; //订单插入成功？
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case send_msg_code3:
                     Bundle bundle = msg.getData();
                     int num = bundle.getInt("upOrder");
-                    bt_order_place.setEnabled(num <= 1 ? true : false);
+                    bt_order_place.setEnabled(num >=1 ? true : false);
                     isFlag(true);
                     break;
                 case send_msg_code4:
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     break;
                 case Constant.send_msg_code10:
-                    if (orderOk == 1) {
+                    if (tempOk >=1) {
                         Toast.makeText(MainActivity.this, +R.string.order_ok_print, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObj = new JSONObject();//创建json格式的数据
                         JSONArray jsonArr = new JSONArray();//json格式的数组
@@ -298,7 +298,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (DeskTemp deskTemp : deskList) {
                             orderId = deskTemp.getConsumptionId();
                             price += deskTemp.getFoodPrice() * deskTemp.getFoodCount();
-
                         }
                         Gson gson = new Gson();
                         String foodDetail = gson.toJson(deskList);
@@ -311,15 +310,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this, R.string.tip_set_ip, Toast.LENGTH_SHORT).show();
                     DialogTablde.showDialog(MainActivity.this);
                     break;
-
-
-                default:
+                    default:
                     break;
             }
         }
     };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -360,9 +355,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onStop() {
-
         super.onStop();
-
     }
 
 
@@ -392,7 +385,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new Thread(new Runnable() {
             @Override
             public void run() {
-                orderNowNo = getOrderId();
+                String order=dao.getOrderemp();
+                OrderTemp ot= new OrderTemp();
+                boolean  down=false;
+                if(order == null ||order.equals("")){
+                    orderNowNo = getOrderId();
+                    ot.setOrder_temp(orderNowNo);
+                    dao.updOrderemp(ot);
+                    down=true;
+                }else {
+                    orderNowNo=dao.getOrderemp();
+                }
                 String sql;
                 for (OrderInfo orderInfo : addList) {
                     dateNow = VeDate.getStringDateShort();
@@ -401,15 +404,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow + "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
                     conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                     tempOk = MysqlDb.exuqueteUpdate(conn, sql);
-                    if (tempOk > 0) {
-                        if (tempOk == 1) {
-                            String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
-                                    + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "" + "','" + 1 + "','" + 0 + "');";
-                            conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
-                            orderOk = MysqlDb.exuqueteUpdate(conn, sql1);
-                        }
+
+                    if (tempOk > 0 && down) {
+                        downOrder();
                     }
                 }
+
 
                 mHandler.sendEmptyMessage(Constant.send_msg_code10);
             }
@@ -429,7 +429,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-
     /**
      * 更新奔条目i
      */
@@ -449,6 +448,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }).start();
     }
 
+    private void downOrder() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String sql1 = "INSERT INTO " + Constant.ORDER_INFO + "( `order_id`, `desk`, `strat_time`, `end_time`, `order_date`, `order_describe`, `order_price`, `order_status`, `pay_type`)" + " VALUES ('"
+                        + orderNowNo + "', '" + deskNo + "', '" + timeNow + "','" + "" + "', '" + dateNow + "', '" + "" + "', '" + "" + "','" + 1 + "','" + 0 + "');";
+                conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
+                orderOk = MysqlDb.exuqueteUpdate(conn, sql1);
+            }
+        }).start();
+    }
     /**
      * 添加桌台
      */
@@ -533,6 +543,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        bt_order_add_water.setOnClickListener(listerner);
 //        bt_order_add_rice.setOnClickListener(listerner);
         bt_order_add_settlement.setOnClickListener(listerner);
+        dao = new OrderTempImpl(new SqlHelper(this));
         fragment1 = new BlankFragment();
         editNameDialog = new FragmentDialogPay();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -554,19 +565,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
-
                 JSONObject jsonObject = new JSONObject();
-
                 person = person.replaceAll("\\\\", "");
                 Log.d("person", person);
                 JSONObject js;
-                String js1 = null;
-
-
+                String js1 ;
                 js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, jsonObject, deskNo, person);
 
+                dao.updOrderemp(new OrderTemp(""));
                 sendPrint(js1);
-
 
             }
         });
@@ -616,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 开始服务
             startService(mServiceIntent);
             isBind = true;
-            Log.d("MainActivity", "isBind11:" + isBind);
+
 
         }
 
@@ -732,8 +739,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         selectOrderMoney();
                     }
-
-
                     break;
                 case R.id.bt_order_clear:
                     addList.clear();
@@ -758,10 +763,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 定时运行
      */
-    public class MyThread implements Runnable {
+    private class MyThread implements Runnable {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        public void stop() {
+        private void stop() {
             try {
                 reader.close();
             } catch (IOException e) {
@@ -795,7 +800,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void sendPrint(String jsonObj) {
         if (Socketudge(Constant.SOCKETPARMAR)) {
-
             Socketudge(jsonObj);
             addList.clear();
             list_order.clear();
@@ -818,8 +822,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 进入选中的Fragment
      *
-     * @param index
-     * @param tableName
+     * @param index  数量
+     * @param tableName  表名
      */
     @SuppressLint("NewApi")
     private void setTabSelection(int index, String tableName) {
@@ -910,7 +914,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * even bus
      *
-     * @param info
+     * @param info  得到的信息
      */
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onMoonEvent(OrderInfo info) {
@@ -988,11 +992,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 判断停止线程
      *
-     * @param falg
+     * @param falg  t/f
      */
     public void isFlag(boolean falg) {
-        mHandlerFlag = falg;
-        if (mHandlerFlag == true) {
+
+        if (falg) {
             stopCode = 2;
             new Thread(new MyThread()).start();
         } else {
@@ -1067,13 +1071,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
-                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo + "####" + String.valueOf(money) + "####" + list.toString());
+                        bundle.putString(Constant.PAY_TYPE, Constant.ALI + "####" + orderNo + "####" + String.valueOf(money) + "####" + list);
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
-                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo + "####" + String.valueOf(money) + "####" + list.toString());
+                        bundle.putString(Constant.PAY_TYPE, Constant.WEIXIN + "####" + orderNo + "####" + String.valueOf(money) + "####" + list);
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();

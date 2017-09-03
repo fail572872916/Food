@@ -7,6 +7,7 @@ import android.util.Log;
 
 /**
  * Created by Weili on 2017/6/14.
+ * Sqlite
  */
 
 public class SqlHelper extends SQLiteOpenHelper {
@@ -38,9 +39,9 @@ public class SqlHelper extends SQLiteOpenHelper {
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + "local_ip  TEXT(60),"
                 + "local_desk  TEXT(60) );");
+        db.execSQL("create table  desk_temp(id integer primary key autoincrement not null,order_temp text )");
+        db.execSQL("Insert into desk_temp Values(1,'');");
 
-
-        Log.d("SqlHelper", "onCreate");
     }
     /**
      *   版本更行时

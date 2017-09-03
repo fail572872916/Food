@@ -54,17 +54,12 @@ public class BackService extends Service {
     private ReadThread mReadThread;
     private InitSocketThread initSockeTh = new InitSocketThread();
     private MyRunnable myRunnable = new MyRunnable();
-
     private IBackService.Stub iBackService = new IBackService.Stub() {
-
         @Override
         public boolean sendMessage(String message) throws RemoteException {
-
-
             return sendMsg(message);
         }
     };
-
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -135,10 +130,9 @@ public class BackService extends Service {
         }
         return true;
     }
-
     // 初始化socket
     private void initSocket() throws UnknownHostException, IOException {
-        Socket socket =null;
+        Socket socket ;
         mSocket = null;
         socket = initSocketddd();
         if (socket != null && socket.isConnected() && !socket.isClosed()) {
@@ -243,7 +237,7 @@ public class BackService extends Service {
                 try {
                     InputStream is = socket.getInputStream();
                     byte[] buffer = new byte[1024 * 4];
-                    int length = 0;
+                    int length ;
                     while (!socket.isClosed() && !socket.isInputShutdown()
                             && isStart && ((length = is.read(buffer)) != -1)) {
                         if (length > 0) {

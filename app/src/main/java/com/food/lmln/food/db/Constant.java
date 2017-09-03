@@ -2,11 +2,10 @@ package com.food.lmln.food.db;
 
 /**
  * Created by Weili on 2017/6/14.
+ * 常量类
  */
 
 public class Constant {
-
-
     public static final int SOCKET_PORT =30000;      //socket端口号
     public static  final String SOCKETPARMAR = "0xFF";
     /**
