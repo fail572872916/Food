@@ -2,6 +2,7 @@ package com.food.lmln.food.utils;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,15 +53,21 @@ public class JsonUtils {
 // [{"consumptionId":"D201709010025","date":"2017-09-01","deskNO":"4号桌","time":"13:23:15","foodName":"小炒肉","foodPrice":35.0,"foodCount":1.0},
 // {"consumptionId":"D201709010026","date":"2017-09-01","deskNO":"4号桌","time":"14:32:45","foodName":"咕噜肉","foodPrice":45.0,"foodCount":1.0}]
 
-        Log.d("JsonUtils", js);
+
+
         JSONObject jsonObject1= new JSONObject();
+        JSONArray myJsonArray ;
         try {
-            jsonObject1.put("data",js);
-            jsonObject1.put("orderDetail",m1.toString());
+            myJsonArray = new JSONArray(m1);
+
+            JSONObject json= new JSONObject(js);
+
+            jsonObject1.put("data",json);
+            Log.d("JsonUtils", json+"——————————————————"+json.toString());
+            jsonObject1.put("orderDetail",myJsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return jsonObject1.toString();
     }
 

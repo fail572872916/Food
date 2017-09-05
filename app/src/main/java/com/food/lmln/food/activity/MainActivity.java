@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab_robot;  //呼叫机器人
     private FloatingActionButton fab_setting; //设置
     private FloatingActionButton fab_vending_machine; //售卖机
-    public boolean mHandlerFlag = true;
+    public boolean mHandlerFlag = false;
     private String timeNow;//当前时间
     private String dateNow; //当前日期
     private String orderNowNo;//当前订单编号
@@ -189,18 +189,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tv_order_sum.setText("￥:" + money);
                     break;
                 case send_msg_code3:
+                    bt_order_place.setEnabled(true);
                     Bundle bundle = msg.getData();
                     int num = bundle.getInt("upOrder");
-                    bt_order_place.setEnabled(num >=1 ? true : false);
+                    bt_order_place.setEnabled(true);
                     isFlag(true);
                     break;
                 case send_msg_code4:
                     Bundle bundle1 = msg.getData();
                     int num1 = bundle1.getInt("Select");
                     newList = (List<OrderInfo>) bundle1.getSerializable("List");
-
                     if (stopCode == 2) {
-                        if (num1 > 1 && newList != null) {
+                        if ( newList != null) {
                             mAdapter_order = new FoodOrderAdapter(newList, MainActivity.this);
                             mAdapter_order.notifyDataSetChanged();
                             lv_main_order.setAdapter(mAdapter_order);
@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        }
 //                        String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObject);
 //                        sendPrint(json);
+                        dao.updOrderemp(new OrderTemp(""));
                         startTemp();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.tip_fail_desk, Toast.LENGTH_SHORT).show();
@@ -246,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case Constant.send_msg_code7:
                     if (!finallyOrder.equals("") || finallyOrder != null) {
+                        Log.d("sss",finallyOrder+"");
                         FileUtils.rewriteOrdera(finallyOrder);
                         updateDeskTemp();
                     } else {
@@ -343,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         // 注册广播 最好在onResume中注册
 
-        stopCode = 2;
         /**
          * 设置为横屏
          */
@@ -404,13 +405,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     sql = "INSERT INTO " + DESK_TEMP + "(`date`, `time`, `desk_no`, `consumptionID`, `foodName`, `foodPrice`, `foodCount`)" + " VALUES ('" + dateNow + "', '" + timeNow + "', '" + deskNo + "','" + orderNowNo + "', '" + orderInfo.getName() + "', '" + orderInfo.getPrice() + "', " + orderInfo.getCount() + ");";
                     conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                     tempOk = MysqlDb.exuqueteUpdate(conn, sql);
-
-                    if (tempOk > 0 && down) {
-                        downOrder();
-                    }
                 }
 
-
+                if (tempOk > 0 && down) {
+                    downOrder();
+                }
                 mHandler.sendEmptyMessage(Constant.send_msg_code10);
             }
         }).start();
@@ -436,11 +435,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new Thread(new Runnable() {
             @Override
             public void run() {
-                before = finallyOrder.substring(0, 7);
-                int a = Integer.valueOf(finallyOrder.substring(7, finallyOrder.length()));
+                before = finallyOrder.substring(0, 9);
+                Log.d("sss",before+"_+___________"+finallyOrder);
+                int a = Integer.valueOf(finallyOrder.substring(9, finallyOrder.length()));
                 String date = VeDate.getStringDateShort();
-                a = a + 1;
-                before = before + String.valueOf(a);
+                a+= 1;
+            String and=VeDate.addZeroForNum(String.valueOf(a),4);
+                before = before + String.valueOf(and);
+                Log.d("sss",before+"_+___________");
                 conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                 updateFouding = MysqlDb.exuqueteUpdate(conn, "update    " + Constant.ORDER_TEMP + " set  " + Constant.ORDER_ID + "='" + before + "' , " + Constant.ORDER_DATE + "='" + date + "'");
                 mHandler.sendEmptyMessage(Constant.send_msg_code8);
@@ -448,6 +450,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }).start();
     }
 
+    /**
+     * 插入订单
+     */
     private void downOrder() {
         new Thread(new Runnable() {
             @Override
@@ -550,6 +555,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.myContent, fragment1);
         transaction.commit();
+        isFlag(true);
         helper = DbManger.getInstance(this);
         db = helper.getWritableDatabase();
         dbManager = new DbManger(this);
@@ -571,7 +577,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JSONObject js;
                 String js1 ;
                 js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, jsonObject, deskNo, person);
-
+                Log.d("MainActivity", js1);
                 dao.updOrderemp(new OrderTemp(""));
                 sendPrint(js1);
 
@@ -686,7 +692,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         selectIpDesk();
                     } else {
                         bt_order_place.setEnabled(false);
-                        mHandlerFlag = false;
+//                        mHandlerFlag = false;
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -764,6 +770,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 定时运行
      */
     private class MyThread implements Runnable {
+            private MyThread instance;
+            public MyThread getInstance() {
+                if (instance == null) {
+                    instance = new MyThread();
+                }
+                return instance;
+            }
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         private void stop() {
@@ -773,11 +786,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
-
         @Override
         public void run() {
             try {
                 while (mHandlerFlag) {
+                    Log.d("data","我执行了");
                     Thread.sleep(3000);// 线程暂停10秒，单位毫秒
                     conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
                     newList = MysqlDb.selectRiht(conn, "select  * from   desk_temp where desk_no='" + deskNo + "'");
@@ -803,16 +816,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Socketudge(jsonObj);
             addList.clear();
             list_order.clear();
-
-            stopCode = 1;
+            stopCode = 2;
             Message msg = new Message();
             msg.what = send_msg_code3;
-
             mHandler.sendMessage(msg);
         } else {
             Message msg1 = new Message();
             msg1.what = send_msg_code3;
-            stopCode = 1;
+            stopCode = 2;
             mHandler.sendMessage(msg1);
             Toast.makeText(MainActivity.this, "连接失败...", Toast.LENGTH_SHORT).show();
         }
@@ -998,14 +1009,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (falg) {
             stopCode = 2;
+            mHandlerFlag=true;
             new Thread(new MyThread()).start();
         } else {
             stopCode = 1;
+            mHandlerFlag=false;
             MyThread callable = new MyThread();
             Thread th = new Thread(callable);
             th.interrupt();
             callable.stop();
-            mHandler.removeCallbacks(new MyThread());
+            mHandler.removeCallbacks(callable);
         }
     }
 

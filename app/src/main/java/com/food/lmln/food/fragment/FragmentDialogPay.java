@@ -34,6 +34,7 @@ import com.food.lmln.food.utils.ExampleUtil;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.JsonUtils;
 import com.food.lmln.food.utils.ScreenUtils;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -440,12 +441,25 @@ public class FragmentDialogPay extends DialogFragment {
                 StringBuilder showMsg = new StringBuilder();
                 Log.d("jpush", extras);
 
-                extras=   extras.replaceAll( "\\\\", "");
+
+                Log.d("jpush", extras);
+                JSONObject json = null;
+                String data = null;
+                try {
+                     json= new JSONObject(extras);
+                 data=json.getString("data");
+
+                    setCostomMsg(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
                 if (!ExampleUtil.isEmpty(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
                 }
-                setCostomMsg(extras);
+
+
             }
         }
     }

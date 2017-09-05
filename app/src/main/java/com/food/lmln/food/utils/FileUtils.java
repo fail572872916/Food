@@ -170,7 +170,7 @@ public class FileUtils {
             int ordrNo=0;
             LocalCacheUtil();
             if(order.length()>10) {
-                 ordrNo = Integer.parseInt(order.substring(9, 13));
+                 ordrNo = Integer.parseInt(order.substring(9, order.length()));
             }
             else {
                 ordrNo=1;
