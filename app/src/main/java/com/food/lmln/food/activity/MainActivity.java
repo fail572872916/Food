@@ -436,13 +436,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 before = finallyOrder.substring(0, 9);
-                Log.d("sss",before+"_+___________"+finallyOrder);
                 int a = Integer.valueOf(finallyOrder.substring(9, finallyOrder.length()));
                 String date = VeDate.getStringDateShort();
                 a+= 1;
-            String and=VeDate.addZeroForNum(String.valueOf(a),4);
+                String and=VeDate.addZeroForNum(String.valueOf(a),4);
                 before = before + String.valueOf(and);
-                Log.d("sss",before+"_+___________");
                 conn = MysqlDb.openConnection(Constant.SQLURL, Constant.USERNAME, Constant.PASSWORD);
                 updateFouding = MysqlDb.exuqueteUpdate(conn, "update    " + Constant.ORDER_TEMP + " set  " + Constant.ORDER_ID + "='" + before + "' , " + Constant.ORDER_DATE + "='" + date + "'");
                 mHandler.sendEmptyMessage(Constant.send_msg_code8);
@@ -530,7 +528,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_order_title = (TextView) findViewById(R.id.tv_order_title);
         tv_order_price = (TextView) findViewById(R.id.tv_order_price);
         fab_robot = (FloatingActionButton) findViewById(R.id.fab_robot);
-
         tv_order_sum_name = (TextView) findViewById(R.id.tv_order_sum_name);
         fab_setting = (FloatingActionButton) findViewById(R.id.fab_setting);
         bt_order_add_rice = (Button) findViewById(R.id.bt_order_add_rice);

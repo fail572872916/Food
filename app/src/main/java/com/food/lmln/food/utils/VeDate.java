@@ -527,6 +527,12 @@ public class VeDate {
     }
 
 
+    /**
+     * 补位
+     * @param str  字符串
+     * @param strLength  length()
+     * @return  string
+     */
     public static String addZeroForNum(String str, int strLength) {
         int strLen = str.length();
         if (strLen < strLength) {
@@ -538,7 +544,6 @@ public class VeDate {
                 strLen = str.length();
             }
         }
-
         return str;
     }
 

@@ -33,18 +33,18 @@ import static com.food.lmln.food.utils.ScreenUtils.getGridViewWeight;
  * 左侧适配器
  */
 
-public class FoodStyle1Adapter extends BaseAdapter    {
+public class FoodStyle1Adapter extends BaseAdapter {
     LayoutInflater mInfnflater;
     private List<FoodinfoSmall> list;    //功能集合
     private Context mContext; //上下文
     private ScrollGridView gd_frgment1;
     private int viewSize[];
 
-    public FoodStyle1Adapter(List<FoodinfoSmall> list, Context mContext, ScrollGridView gd_frgment1,int[] viewsize) {
+    public FoodStyle1Adapter(List<FoodinfoSmall> list, Context mContext, ScrollGridView gd_frgment1, int[] viewsize) {
         this.list = list;
         this.mContext = mContext;
         this.gd_frgment1 = gd_frgment1;
-        this.viewSize=viewsize;
+        this.viewSize = viewsize;
     }
 
 //    public FoodStyle1Adapter(List<FoodInfo> list, Context mContext, ClothAddCallback callback) {
@@ -70,7 +70,7 @@ public class FoodStyle1Adapter extends BaseAdapter    {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-         VieewHolder vieewHolder;
+        VieewHolder vieewHolder;
         if (convertView == null) {
             vieewHolder = new VieewHolder();
             LayoutInflater mInflater = LayoutInflater.from(mContext);
@@ -79,45 +79,46 @@ public class FoodStyle1Adapter extends BaseAdapter    {
             vieewHolder.im_item_image = (ImageView) convertView.findViewById(R.id.im_item_image);
             vieewHolder.tv_item_name = (TextView) convertView.findViewById(R.id.tv_item_name);
             vieewHolder.tv_item_price = (TextView) convertView.findViewById(R.id.tv_item_price);
-            vieewHolder.im_item_image.setLayoutParams(getGridViewWeight(mContext,list));
+            vieewHolder.im_item_image.setLayoutParams(getGridViewWeight(mContext, list));
             convertView.setTag(vieewHolder);
         } else {
             vieewHolder = (VieewHolder) convertView.getTag();
         }
-        int  height;
-        switch (list.size()){
+        int height;
+        switch (list.size()) {
             case 1:
             case 2:
             case 3:
-        height=1;
+                height = 1;
                 gd_frgment1.setNumColumns(1);
                 break;
             case 7:
             case 8:
             case 9:
-                height=3;
+                height = 3;
                 gd_frgment1.setNumColumns(3);
                 break;
             default:
-                height=2;
+                height = 2;
                 gd_frgment1.setNumColumns(2);
                 break;
         }
         LinearLayout.LayoutParams linearParams;
-        if(height<3)
-            linearParams =new LinearLayout.LayoutParams(viewSize[0]-(height*100)/height, (viewSize[1]-(height*100))/height);
+        if (height < 3)
+            linearParams = new LinearLayout.LayoutParams(viewSize[0] - (height * 100) / height, (viewSize[1] - (height * 100)) / height);
         else
-            linearParams =new LinearLayout.LayoutParams(viewSize[0]/height, (viewSize[1]-(height*50))/height);
+            linearParams = new LinearLayout.LayoutParams(viewSize[0] / height, (viewSize[1] - (height * 50)) / height);
 
         vieewHolder.lin_item.setLayoutParams(linearParams);
-        LinearLayout.LayoutParams lin =new LinearLayout.LayoutParams((viewSize[0]-(height*60)/height), ((viewSize[1]-(height*150))/height));
+        LinearLayout.LayoutParams lin = new LinearLayout.LayoutParams((viewSize[0] - (height * 60) / height), ((viewSize[1] - (height * 150)) / height));
         vieewHolder.im_item_image.setLayoutParams(lin);
 
         vieewHolder.tv_item_name.setText(list.get(position).getName());
-        vieewHolder.tv_item_price.setText("￥"+list.get(position).getPrice()+"");
-        String url= HttpUtils.url+list.get(position).getIamge();
-        MyBitmapUtil utils;   utils = new MyBitmapUtil();
-        utils.display(url,vieewHolder.im_item_image);
+        vieewHolder.tv_item_price.setText("￥" + list.get(position).getPrice() + "");
+        String url = HttpUtils.url + list.get(position).getIamge();
+        MyBitmapUtil utils;
+        utils = new MyBitmapUtil();
+        utils.display(url, vieewHolder.im_item_image);
 //        vieewHolder.im_item_image.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -135,16 +136,15 @@ public class FoodStyle1Adapter extends BaseAdapter    {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                EventBus.getDefault().post(new OrderInfo(0, list.get(position).getName(),
 //                        Double.valueOf( list.get(position).getPrice()), 0,true));
-                FoodinfoSmall  info =new   FoodinfoSmall(0, list.get(position).getName(),list.get(position).getDescribe(), list.get(position).getPrice(),list.get(position).getIamge());
-                Gson gson =new Gson();
-           String  str  =   gson.toJson(info);
+                FoodinfoSmall info = new FoodinfoSmall(0, list.get(position).getName(), list.get(position).getDescribe(), list.get(position).getPrice(), list.get(position).getIamge());
+                Gson gson = new Gson();
+                String str = gson.toJson(info);
                 mlistener.onFoodDetailClick(str);
             }
         });
 
-            return convertView;
-        }
-
+        return convertView;
+    }
 
 
     private class VieewHolder {
@@ -152,16 +152,14 @@ public class FoodStyle1Adapter extends BaseAdapter    {
         private ImageView im_item_image;
         private TextView tv_item_name;
         private TextView tv_item_price;
-        }
-
-
-
+    }
 
 
     /**
      * 定义一个接口，提供Activity使用
      */
     private OnFoodDetailListener mlistener;
+
     public interface OnFoodDetailListener {
         void onFoodDetailClick(String person);
     }
@@ -169,8 +167,6 @@ public class FoodStyle1Adapter extends BaseAdapter    {
     public void setOnDetailListener(OnFoodDetailListener dialogListener) {
         this.mlistener = dialogListener;
     }
-
-
 
 
 }
