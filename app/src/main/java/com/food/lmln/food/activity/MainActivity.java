@@ -89,6 +89,7 @@ import static com.food.lmln.food.db.Constant.send_msg_code5;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
     /**
      * 布局1
      * 布局2
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int startDeskNo;//临时台号是否成功
     private int tempOk = 0;//临时台号是否成功
     private int orderOk; //订单插入成功？
+    @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -374,7 +376,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JSONObject jsonObject = new JSONObject();
                 person = person.replaceAll("\\\\", "");
                 Log.d("person", person);
-                JSONObject js;
                 String js1;
                 js1 = JsonUtils.useJosn(true, Constant.CMD_CLEAR, jsonObject, deskNo, person);
                 Log.d("MainActivity", js1);
@@ -582,6 +583,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化组件
      */
     private void initView() {
+
 
         lv_main = (ListView) findViewById(R.id.lv_main);
         fab = (FloatingActionMenu) findViewById(R.id.fab);
