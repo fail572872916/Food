@@ -69,9 +69,6 @@ public class BackService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Log.d("fdsa", "onCreate"+HOST);
-        Log.d("fdsa", "onCreate"+PORT);
         initSockeTh.start();
     }
 
@@ -158,7 +155,7 @@ public class BackService extends Service {
     @Nullable
     private static Socket initSocketddd() {
 
-        Socket socket=null ;
+        Socket socket ;
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(HOST, PORT), TIME_OUT);
@@ -179,8 +176,7 @@ public class BackService extends Service {
                 if (sk != null && !sk.isClosed()) {
                     sk.close();
                 }
-                sk = null;
-                mSocket = null;
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,7 +184,7 @@ public class BackService extends Service {
     }
 
     private class InitSocketThread extends Thread {
-        public InitSocketThread initSockeTh;
+        private InitSocketThread initSockeTh;
 
         private InitSocketThread() {
         }
@@ -220,10 +216,10 @@ public class BackService extends Service {
         private boolean isStart = true;
 
         public ReadThread(Socket socket) {
-            mWeakSocket = new WeakReference<Socket>(socket);
+            mWeakSocket = new WeakReference<>(socket);
         }
 
-        public void release() {
+        private void release() {
             isStart = false;
             releaseLastSocket(mWeakSocket);
         }
@@ -269,7 +265,6 @@ public class BackService extends Service {
     @Override
     public void onDestroy() {
         Log.e("Service", "onDestroy");
-//        mReadThread.release();
         releaseLastSocket(mSocket);
         mHandler.removeCallbacks(mReadThread);
         mHandler.removeCallbacks(initSockeTh);
