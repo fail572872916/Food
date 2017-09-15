@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/f1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/pic_10"
+     tools:context="com.food.lmln.food.fragment.Blank1Fragment">
+
+<android.support.v4.view.ViewPager
+    android:id="@+id/vp_fragment1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+</android.support.v4.view.ViewPager>
+</LinearLayout>
