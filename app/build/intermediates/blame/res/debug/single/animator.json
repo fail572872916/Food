@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\animator\\add_bill_anim.xml",
+        "source": "E:\\project\\Food\\app\\src\\main\\res\\animator\\add_bill_anim.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\animator\\cart_scale.xml",
+        "source": "E:\\project\\Food\\app\\src\\main\\res\\animator\\cart_scale.xml"
+    }
+]

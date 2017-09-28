@@ -1,0 +1,396 @@
+-- Merging decision tree log ---
+manifest
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:2:1-72:12
+	package
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:3:5-33
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:4:5-67
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:18:5-67
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:4:22-64
+uses-permission#com.food.lmln.food.permission.JPUSH_MESSAGE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:7:5-83
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:16:5-81
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:7:22-80
+uses-permission#android.permission.RECEIVE_USER_PRESENT
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:8:5-79
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:17:5-79
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:8:22-76
+uses-permission#android.permission.WAKE_LOCK
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:10:5-68
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:19:5-68
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:10:22-65
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:11:5-75
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:20:5-75
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:11:22-72
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:12:5-81
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:21:5-81
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:12:22-78
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:13:5-80
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:22:5-80
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:13:22-77
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:14:5-73
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:23:5-73
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:14:22-70
+uses-permission#android.permission.VIBRATE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:15:5-66
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:24:5-66
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:15:22-63
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:16:5-84
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:25:5-84
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:16:22-81
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:17:5-79
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:26:5-79
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:17:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:18:5-76
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:27:5-76
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:18:22-73
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:19:5-77
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:30:5-78
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:19:22-75
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:24:5-81
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:31:5-81
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:24:22-78
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:25:5-76
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:32:5-76
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:25:22-73
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:26:5-79
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:33:5-79
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:26:22-76
+uses-permission#android.permission.ACCESS_LOCATION_EXTRA_COMMANDS
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:27:5-89
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:34:5-89
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:27:22-86
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:28:5-79
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:35:5-79
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:28:22-76
+application
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:30:5-70:19
+MERGED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:transition:25.3.1] C:\Users\Administrator\.android\build-cache\0ea0196ba248aa89b6e42bcca1d793bff67f2e0a\output\AndroidManifest.xml:26:5-20
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\Administrator\.android\build-cache\33c6d042a81153b57ac2265cbc1d0e3913d995a0\output\AndroidManifest.xml:12:5-20
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:37:5-128:19
+MERGED from [cn.jiguang.sdk:jcore:1.1.1] C:\Users\Administrator\.android\build-cache\963578d94aea42a8943f6d450d1dab7aac601cf0\output\AndroidManifest.xml:11:5-12:19
+MERGED from [:kalelibrary:] C:\Users\Administrator\.android\build-cache\a985c97b9ccc51208b4ed16783b469bdd3b63e0f\output\AndroidManifest.xml:11:5-17:19
+MERGED from [com.wang.avi:library:1.0.0] C:\Users\Administrator\.android\build-cache\ffd52e963b95033aeaff27c954669ec6f0992c98\output\AndroidManifest.xml:11:5-14:19
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Administrator\.android\build-cache\127f113fd8ce4dde99659a4b7776d3bdd95a527a\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Administrator\.android\build-cache\7d4cee7ee2521797208aeb3bd34f8edd298a413e\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Administrator\.android\build-cache\87a3dea04819ed933c06e0135a2e2e8bbb040180\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Administrator\.android\build-cache\0ab1ef39d8d0c22e045cfe0cca527bc88402d08e\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Administrator\.android\build-cache\c47025a6e19894b9c39a70fa65bff16cea709cf0\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Administrator\.android\build-cache\4a6165420d8431d696a42db81efbca54bc3ad26a\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Administrator\.android\build-cache\a81df418b0180652c7081711d558fe0e6e5bf43d\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Administrator\.android\build-cache\83ec009486faca7e1fe880b8de72408a89d8c754\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Administrator\.android\build-cache\54d8c12d5c7b56ee9a4ab762478940db26efd409\output\AndroidManifest.xml:29:5-20
+	android:label
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:33:9-41
+	android:supportsRtl
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:34:9-35
+	android:allowBackup
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:31:9-35
+	android:icon
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:32:9-43
+	android:theme
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:36:9-41
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:35:9-47
+activity#com.food.lmln.food.activity.MainActivity
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:37:9-50:20
+	android:screenOrientation
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:41:13-50
+	android:label
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:40:13-45
+	android:configChanges
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:39:13-113
+	android:theme
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:42:13-45
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:38:13-50
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:43:13-49:29
+action#android.intent.action.MAIN
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:44:17-47:20
+	android:launchMode
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:46:21-51
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:45:21-62
+category#android.intent.category.LAUNCHER
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:48:17-77
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:48:27-74
+receiver#com.food.lmln.food.receiver.MyReceiver
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:54:9-66:20
+	android:enabled
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:57:13-35
+	android:exported
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:56:13-37
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:55:13-48
+intent-filter#cn.jpush.android.intent.CONNECTION+cn.jpush.android.intent.MESSAGE_RECEIVED+cn.jpush.android.intent.NOTIFICATION_OPENED+cn.jpush.android.intent.NOTIFICATION_RECEIVED+cn.jpush.android.intent.REGISTRATION+com.food.lmln.food
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:58:13-65:29
+action#cn.jpush.android.intent.REGISTRATION
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:59:17-79
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:59:25-76
+action#cn.jpush.android.intent.MESSAGE_RECEIVED
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:60:17-83
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:60:25-80
+action#cn.jpush.android.intent.NOTIFICATION_RECEIVED
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:61:17-88
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:61:25-85
+action#cn.jpush.android.intent.NOTIFICATION_OPENED
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:62:17-86
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:62:25-83
+action#cn.jpush.android.intent.CONNECTION
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:63:17-77
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:63:25-74
+category#com.food.lmln.food
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:64:17-63
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:64:27-60
+service#com.food.lmln.food.services.BackService
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:68:9-57
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:68:18-54
+uses-sdk
+INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:recyclerview-v7:25.3.1] C:\Users\Administrator\.android\build-cache\123f99f6e3fd85fdb1e2099ef428cdb434ebd33f\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:transition:25.3.1] C:\Users\Administrator\.android\build-cache\0ea0196ba248aa89b6e42bcca1d793bff67f2e0a\output\AndroidManifest.xml:20:5-44
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\Administrator\.android\build-cache\33c6d042a81153b57ac2265cbc1d0e3913d995a0\output\AndroidManifest.xml:8:5-10:41
+MERGED from [jp.wasabeef:glide-transformations:2.0.1] C:\Users\Administrator\.android\build-cache\923db2e4d868eb2998f67d2bb47e21b74e4db58a\output\AndroidManifest.xml:8:5-10:41
+MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:7:5-9:41
+MERGED from [cn.jiguang.sdk:jcore:1.1.1] C:\Users\Administrator\.android\build-cache\963578d94aea42a8943f6d450d1dab7aac601cf0\output\AndroidManifest.xml:7:5-9:41
+MERGED from [:kalelibrary:] C:\Users\Administrator\.android\build-cache\a985c97b9ccc51208b4ed16783b469bdd3b63e0f\output\AndroidManifest.xml:7:5-9:41
+MERGED from [com.wang.avi:library:1.0.0] C:\Users\Administrator\.android\build-cache\ffd52e963b95033aeaff27c954669ec6f0992c98\output\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Administrator\.android\build-cache\127f113fd8ce4dde99659a4b7776d3bdd95a527a\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Administrator\.android\build-cache\7d4cee7ee2521797208aeb3bd34f8edd298a413e\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Administrator\.android\build-cache\87a3dea04819ed933c06e0135a2e2e8bbb040180\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Administrator\.android\build-cache\0ab1ef39d8d0c22e045cfe0cca527bc88402d08e\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Administrator\.android\build-cache\c47025a6e19894b9c39a70fa65bff16cea709cf0\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Administrator\.android\build-cache\4a6165420d8431d696a42db81efbca54bc3ad26a\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Administrator\.android\build-cache\a81df418b0180652c7081711d558fe0e6e5bf43d\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Administrator\.android\build-cache\83ec009486faca7e1fe880b8de72408a89d8c754\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Administrator\.android\build-cache\54d8c12d5c7b56ee9a4ab762478940db26efd409\output\AndroidManifest.xml:21:5-23:58
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:recyclerview-v7:25.3.1] C:\Users\Administrator\.android\build-cache\123f99f6e3fd85fdb1e2099ef428cdb434ebd33f\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:transition:25.3.1] C:\Users\Administrator\.android\build-cache\0ea0196ba248aa89b6e42bcca1d793bff67f2e0a\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Administrator\.android\build-cache\127f113fd8ce4dde99659a4b7776d3bdd95a527a\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Administrator\.android\build-cache\7d4cee7ee2521797208aeb3bd34f8edd298a413e\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Administrator\.android\build-cache\87a3dea04819ed933c06e0135a2e2e8bbb040180\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Administrator\.android\build-cache\0ab1ef39d8d0c22e045cfe0cca527bc88402d08e\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Administrator\.android\build-cache\c47025a6e19894b9c39a70fa65bff16cea709cf0\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Administrator\.android\build-cache\4a6165420d8431d696a42db81efbca54bc3ad26a\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Administrator\.android\build-cache\a81df418b0180652c7081711d558fe0e6e5bf43d\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Administrator\.android\build-cache\83ec009486faca7e1fe880b8de72408a89d8c754\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Administrator\.android\build-cache\54d8c12d5c7b56ee9a4ab762478940db26efd409\output\AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:26:9-47
+permission#${JPUSH_PKGNAME}.permission.JPUSH_MESSAGE
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:11:5-13:47
+	android:protectionLevel
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:13:9-44
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:12:9-65
+activity#cn.jpush.android.ui.PopWinActivity
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:40:9-43:52
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:42:13-37
+	android:theme
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:43:13-49
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:41:13-62
+activity#cn.jpush.android.ui.PushActivity
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:46:9-57:20
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:49:13-37
+	android:configChanges
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:48:13-63
+	android:theme
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:50:13-60
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:47:13-60
+intent-filter#${JPUSH_PKGNAME}+android.intent.category.DEFAULT+cn.jpush.android.ui.PushActivity
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:51:13-56:29
+action#cn.jpush.android.ui.PushActivity
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:52:17-75
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:52:25-72
+category#android.intent.category.DEFAULT
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:54:17-76
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:54:27-73
+category#${JPUSH_PKGNAME}
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:55:17-61
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:55:27-58
+service#cn.jpush.android.service.DownloadService
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:59:9-62:40
+	android:enabled
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:61:13-35
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:62:13-37
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:60:13-68
+service#cn.jpush.android.service.PushService
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:66:9-77:19
+	android:enabled
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:68:13-35
+	android:process
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:70:13-40
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:69:13-37
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:67:13-64
+intent-filter#cn.jpush.android.intent.PUSH_TIME+cn.jpush.android.intent.PushService+cn.jpush.android.intent.REGISTER+cn.jpush.android.intent.REPORT
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:71:13-76:29
+action#cn.jpush.android.intent.REGISTER
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:72:17-75
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:72:25-72
+action#cn.jpush.android.intent.REPORT
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:73:17-73
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:73:25-70
+action#cn.jpush.android.intent.PushService
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:74:17-78
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:74:25-75
+action#cn.jpush.android.intent.PUSH_TIME
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:75:17-76
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:75:25-73
+service#cn.jpush.android.service.DaemonService
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:81:9-90:19
+	android:enabled
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:83:13-35
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:84:13-36
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:82:13-66
+intent-filter#${JPUSH_PKGNAME}+cn.jpush.android.intent.DaemonService
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:85:13-89:29
+action#cn.jpush.android.intent.DaemonService
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:86:17-80
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:86:25-77
+receiver#cn.jpush.android.service.PushReceiver
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:93:9-113:20
+	android:enabled
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:95:13-35
+	android:process
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:97:13-40
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:96:13-37
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:94:13-65
+intent-filter#${JPUSH_PKGNAME}+cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:98:13-101:29
+	android:priority
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:98:28-51
+action#cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:99:17-94
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:99:25-91
+intent-filter#android.intent.action.USER_PRESENT+android.net.conn.CONNECTIVITY_CHANGE
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:102:13-105:29
+action#android.intent.action.USER_PRESENT
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:103:17-77
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:103:25-74
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:104:17-79
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:104:25-76
+intent-filter#android.intent.action.PACKAGE_ADDED+android.intent.action.PACKAGE_REMOVED
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:107:13-112:29
+action#android.intent.action.PACKAGE_ADDED
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:108:17-78
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:108:25-75
+action#android.intent.action.PACKAGE_REMOVED
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:109:17-80
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:109:25-77
+data
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:111:17-50
+	android:scheme
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:111:23-47
+receiver#cn.jpush.android.service.AlarmReceiver
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:116:9-118:40
+	android:exported
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:118:13-37
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:117:13-66
+meta-data#JPUSH_CHANNEL
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:121:9-123:48
+	android:value
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:123:13-45
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:122:13-41
+meta-data#JPUSH_APPKEY
+ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:124:9-126:47
+	android:value
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:126:13-44
+	android:name
+		ADDED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\AndroidManifest.xml:125:13-40
+activity#com.kale.lib.photo.GetSimplePhotoActivity
+ADDED from [:kalelibrary:] C:\Users\Administrator\.android\build-cache\a985c97b9ccc51208b4ed16783b469bdd3b63e0f\output\AndroidManifest.xml:14:9-16:64
+	android:theme
+		ADDED from [:kalelibrary:] C:\Users\Administrator\.android\build-cache\a985c97b9ccc51208b4ed16783b469bdd3b63e0f\output\AndroidManifest.xml:16:13-61
+	android:name
+		ADDED from [:kalelibrary:] C:\Users\Administrator\.android\build-cache\a985c97b9ccc51208b4ed16783b469bdd3b63e0f\output\AndroidManifest.xml:15:13-69

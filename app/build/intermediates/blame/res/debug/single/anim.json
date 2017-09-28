@@ -1,0 +1,102 @@
+[
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_shrink_fade_out_from_bottom.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_in_bottom.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\fab_slide_out_to_right.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\33c6d042a81153b57ac2265cbc1d0e3913d995a0\\output\\res\\anim\\fab_slide_out_to_right.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\fab_scale_up.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\33c6d042a81153b57ac2265cbc1d0e3913d995a0\\output\\res\\anim\\fab_scale_up.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_grow_fade_in_from_bottom.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\design_bottom_sheet_slide_in.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\e1baf2ead592c2a6183bdb2c803cd34e483de88c\\output\\res\\anim\\design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\fab_slide_out_to_left.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\33c6d042a81153b57ac2265cbc1d0e3913d995a0\\output\\res\\anim\\fab_slide_out_to_left.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\design_bottom_sheet_slide_out.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\e1baf2ead592c2a6183bdb2c803cd34e483de88c\\output\\res\\anim\\design_bottom_sheet_slide_out.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_popup_exit.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_popup_exit.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\pop_out.xml",
+        "source": "E:\\project\\Food\\app\\src\\main\\res\\anim\\pop_out.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_out_bottom.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\design_snackbar_in.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\e1baf2ead592c2a6183bdb2c803cd34e483de88c\\output\\res\\anim\\design_snackbar_in.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\fab_scale_down.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\33c6d042a81153b57ac2265cbc1d0e3913d995a0\\output\\res\\anim\\fab_scale_down.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_out_top.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_slide_out_top.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_fade_in.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_fade_in.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\design_snackbar_out.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\e1baf2ead592c2a6183bdb2c803cd34e483de88c\\output\\res\\anim\\design_snackbar_out.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\pop_in.xml",
+        "source": "E:\\project\\Food\\app\\src\\main\\res\\anim\\pop_in.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\cart_scale.xml",
+        "source": "E:\\project\\Food\\app\\src\\main\\res\\anim\\cart_scale.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\design_fab_out.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\e1baf2ead592c2a6183bdb2c803cd34e483de88c\\output\\res\\anim\\design_fab_out.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_in_top.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_slide_in_top.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_fade_out.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_fade_out.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\fab_slide_in_from_right.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\33c6d042a81153b57ac2265cbc1d0e3913d995a0\\output\\res\\anim\\fab_slide_in_from_right.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\abc_popup_enter.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\anim\\abc_popup_enter.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\fab_slide_in_from_left.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\33c6d042a81153b57ac2265cbc1d0e3913d995a0\\output\\res\\anim\\fab_slide_in_from_left.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\anim\\design_fab_in.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\e1baf2ead592c2a6183bdb2c803cd34e483de88c\\output\\res\\anim\\design_fab_in.xml"
+    }
+]

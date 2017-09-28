@@ -2,6 +2,7 @@ package com.food.lmln.food.fragment;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -91,6 +92,7 @@ public class BlankFragment extends Fragment {
     private String tableName;
     int[] viewSize = new int[2];
 
+    @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

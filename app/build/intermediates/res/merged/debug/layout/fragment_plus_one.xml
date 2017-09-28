@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="10dp"
+              android:background="@mipmap/main_backgranod1"
+              android:orientation="horizontal">
+
+
+
+
+        <com.food.lmln.food.view.ScrollGridView
+
+            android:id="@+id/gd_frgment1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_margin="10dp"
+            android:horizontalSpacing="10dp"
+            android:padding="5dp"
+            android:verticalSpacing="1dp"
+            android:protectionLevel="normal"></com.food.lmln.food.view.ScrollGridView>
+
+
+
+
+</LinearLayout>

@@ -87,8 +87,7 @@ public class FoodStyle1Adapter extends BaseAdapter {
         int height;
         switch (list.size()) {
             case 1:
-            case 2:
-            case 3:
+
                 height = 1;
                 gd_frgment1.setNumColumns(1);
                 break;

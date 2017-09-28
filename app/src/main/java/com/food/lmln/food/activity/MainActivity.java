@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Bundle bundle2 = msg.getData();
                     mebuLeft = (List<MenuButton>) bundle2.getSerializable("listRight");
                     fragment1 = new BlankFragment();
-                    if (mebuLeft.size() > 0) {
+                    if (mebuLeft!=null&&mebuLeft.size() > 0) {
                         String name = mebuLeft.get(0).getName();
                         EventBus.getDefault().post(new DeskInfo(name, name));
                         lv_main.setAdapter(new FoodTypeMenuAdapter(mebuLeft, MainActivity.this));
@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Bundle bundle = msg.getData();
                     int num = bundle.getInt("upOrder");
                     bt_order_place.setEnabled(true);
+                    bt_order_add_settlement.setEnabled(true);
                     isFlag(true);
                     break;
                 case send_msg_code4:
@@ -761,7 +762,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
                         Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
                     } else if (Socketudge(Constant.SOCKETPARMAR)) {
-                        bt_order_add_settlement.setEnabled(false);
+//                        bt_order_add_settlement.setEnabled(false);
                         isFlag(true);
                         selectOrderMoney();
                     }
@@ -891,13 +892,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 开启一个Fragment事务
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
+        Bundle bundle2 = new Bundle();
         hideFragments(transaction);
         int num = ++index;
         if (num % 2 == 0) {
             if (fragment2 == null) {
                 // 如果NewsFragment为空，则创建一个并添加到界面上
                 fragment2 = new Blank2Fragment();
-                Bundle bundle2 = new Bundle();
+
                 bundle2.putString("foodName", tableName);
                 fragment2.setArguments(bundle2);
                 transaction.add(R.id.myContent, fragment2);
@@ -916,7 +918,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //如果需要，添加到back栈中
                 fragmentTransaction.commit();
                 fragment2 = new Blank2Fragment();
-                Bundle bundle2 = new Bundle();
                 bundle2.putString("foodName", tableName);
                 fragment2.setArguments(bundle2);
                 transaction.add(R.id.myContent, fragment2);
@@ -925,7 +926,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (fragment1 == null) {
                 // 如果SettingFragment为空，则创建一个并添加到界面上
                 fragment1 = new BlankFragment();
-                Bundle bundle2 = new Bundle();
+
                 bundle2.putString("foodName", tableName);
                 fragment1.setArguments(bundle2);
                 transaction.add(R.id.myContent, fragment1);
@@ -945,7 +946,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentTransaction.commit();
                 Log.d("MainActivity", tableName);
                 fragment1 = new BlankFragment();
-                Bundle bundle2 = new Bundle();
+
                 bundle2.putString("foodName", tableName);
                 fragment1.setArguments(bundle2);
                 transaction.add(R.id.myContent, fragment1);
