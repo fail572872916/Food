@@ -1,5 +1,6 @@
 package com.food.lmln.food.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -115,6 +116,7 @@ public class FragmentDialogPay extends DialogFragment {
         registerMessageReceiver();
     }
 
+    @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -208,11 +210,11 @@ public class FragmentDialogPay extends DialogFragment {
             order_detail_value=temp[3];
         }
         if (type!=null&&type.equals(Constant.ALI)) {
-            String url = HttpUtils.POSTWX + "Ali_Food_Pay?";
+            String url = HttpUtils.ALI_PAY;
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
             postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_ALI);
         } else {
-            String url = HttpUtils.POSTWX + "Pay1?";
+            String url = HttpUtils.WX_PAY;
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
                 postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_WX);
         }
