@@ -1,19 +1,19 @@
 [
     {
-        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_multichoice_material.xml",
-        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\layout\\select_dialog_multichoice_material.xml"
-    },
-    {
         "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\fragement_dialog_pay.xml",
         "source": "E:\\project\\Food\\app\\src\\main\\res\\layout\\fragement_dialog_pay.xml"
     },
     {
-        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_activity_chooser_view.xml",
-        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\layout\\abc_activity_chooser_view.xml"
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_multichoice_material.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\layout\\select_dialog_multichoice_material.xml"
     },
     {
         "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\fragment_blank.xml",
         "source": "E:\\project\\Food\\app\\src\\main\\res\\layout\\fragment_blank.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_activity_chooser_view.xml",
+        "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\layout\\abc_activity_chooser_view.xml"
     },
     {
         "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_bar_up_container.xml",
@@ -44,12 +44,12 @@
         "source": "E:\\project\\Food\\app\\src\\main\\res\\layout\\item_gridview.xml"
     },
     {
-        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_setting.xml",
-        "source": "E:\\project\\Food\\app\\src\\main\\res\\layout\\dialog_setting.xml"
-    },
-    {
         "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_part_time.xml",
         "source": "C:\\Users\\Administrator\\.android\\build-cache\\127f113fd8ce4dde99659a4b7776d3bdd95a527a\\output\\res\\layout\\notification_template_part_time.xml"
+    },
+    {
+        "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_setting.xml",
+        "source": "E:\\project\\Food\\app\\src\\main\\res\\layout\\dialog_setting.xml"
     },
     {
         "merged": "E:\\project\\Food\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_bottom_sheet_dialog.xml",

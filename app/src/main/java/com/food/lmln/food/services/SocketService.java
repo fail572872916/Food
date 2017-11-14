@@ -2,7 +2,6 @@ package com.food.lmln.food.services;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
@@ -16,6 +15,8 @@ import android.util.Log;
 import com.food.lmln.IBackService;
 import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.utils.JsonUtils;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,8 +43,8 @@ public class SocketService extends Service {
     public static String HOST = "192.168.0.109";
     public static final int PORT = 30000;
     private ReadThread mReadThread;
-    public static final String MESSAGE_ACTION = "com.example.administrator.carcontrol.socket";
-    public static final String HEART_BEAT_ACTION = "com.example.administrator.carcontrol.heart";
+    public static final String MESSAGE_ACTION = "com.food.lmln.food.socket";
+    public static final String HEART_BEAT_ACTION = "com.food.lmln.food.heart";
     public static final String HEART_BEAT_STRING_RECEIVE = "{\"flaglist\":null,\"flag\":null,\"socket_ip\":null,\"message\":null,\"operationCode\":null,\"heartBeat\":\"0x0F\"}";
     public static final String HEART_BEAT_STRING = "{\"flaglist\":null,\"flag\":null,\"socket_ip\":null,\"message\":null,\"operationCode\":null,\"heartBeat\":\"0x0h\"}";
     public static final String HEART_BEAT_BREAK = "";
@@ -116,21 +117,19 @@ public class SocketService extends Service {
 
         Socket socket;
         mSocket = null;
-        socket = initSocketddd();
+        socket = initSocketLInk();
 
         if (socket != null && socket.isConnected() && !socket.isClosed()) {
             mSocket = new WeakReference<>(socket);
             mReadThread = new ReadThread(socket);
             mReadThread.start();
             String time = String.valueOf(System.currentTimeMillis());
-            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST, "", Constants.ONLINE, ""));
+            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST,  new JSONObject(), Constants.RESTAURANT, ""));
             linkSocket = true;
         }
 
     }
-
-
-    private static Socket initSocketddd() {
+    private static Socket initSocketLInk() {
 
         Socket socket;
         try {
@@ -319,7 +318,11 @@ public class SocketService extends Service {
                 mc.cancel();
                 mc.start();
             } else {
-                if (millisUntilFinished % 6 == 0 && !linkSocket) {
+
+                if (millisUntilFinished % 3 == 0) {
+                    linkSocket = false;
+                } else if (millisUntilFinished % 7 == 0 && !linkSocket) {
+                    Log.d(TAG, "a");
                     try {
                         Thread.sleep(3000);
                         if (initTask != null) {

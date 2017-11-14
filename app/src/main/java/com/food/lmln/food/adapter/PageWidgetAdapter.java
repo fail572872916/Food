@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PageWidgetAdapter extends BaseAdapter  {
+public class PageWidgetAdapter extends BaseAdapter {
     private Context mContext;
     private int count;
     private LayoutInflater inflater;
-    private List<FoodinfoSmall> foodList= new ArrayList<FoodinfoSmall>();
+    private List<FoodinfoSmall> foodList = new ArrayList<FoodinfoSmall>();
 //    private final String[] arr;
- 
+
     public PageWidgetAdapter(Context mContext, List<FoodinfoSmall> foodList) {
         this.mContext = mContext;
         this.foodList = foodList;
@@ -64,7 +64,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
 //    arr=arr;
 //
 //}
-        count = (int) Math.ceil(foodList.size()/4.0);
+        count = (int) Math.ceil(foodList.size() / 4.0);
 
     }
 
@@ -91,7 +91,7 @@ public class PageWidgetAdapter extends BaseAdapter  {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         ViewGroup layout;
-        if(convertView == null) {
+        if (convertView == null) {
             layout = (ViewGroup) inflater.inflate(R.layout.item_layout, null);
         } else {
             layout = (ViewGroup) convertView;
@@ -106,44 +106,45 @@ public class PageWidgetAdapter extends BaseAdapter  {
 
     private void setViewContent(ViewGroup group, final int position) {
 
-        MyBitmapUtil utils;   utils = new MyBitmapUtil();
+        MyBitmapUtil utils;
+        utils = new MyBitmapUtil();
         TextView text1 = (TextView) group.findViewById(R.id.tv_name01);
-        TextView    text2 = (TextView) group.findViewById(R.id.tv_name02);
-        TextView    text3 = (TextView) group.findViewById(R.id.tv_name03);
-        TextView    text4 = (TextView) group.findViewById(R.id.tv_name04);
+        TextView text2 = (TextView) group.findViewById(R.id.tv_name02);
+        TextView text3 = (TextView) group.findViewById(R.id.tv_name03);
+        TextView text4 = (TextView) group.findViewById(R.id.tv_name04);
         ImageView image1 = (ImageView) group.findViewById(R.id.im_item01);
         ImageView image2 = (ImageView) group.findViewById(R.id.im_item02);
         ImageView image3 = (ImageView) group.findViewById(R.id.im_item03);
         ImageView image4 = (ImageView) group.findViewById(R.id.im_item04);
 
-        if(position*4<foodList.size()){
-            utils.display(HttpUtils.url+foodList.get(position*4).getIamge(), image1);
-            text1.setText(foodList.get(position*4).getName()+"    ￥"+foodList.get(position*4).getPrice());
-        }else {
+        if (position * 4 < foodList.size()) {
+            utils.display(HttpUtils.URL + foodList.get(position * 4).getIamge(), image1);
+            text1.setText(foodList.get(position * 4).getName() + "    ￥" + foodList.get(position * 4).getPrice());
+        } else {
             image1.setImageResource(R.mipmap.not_photo);
 
             text1.setText("");
         }
-        if(position*4+1<foodList.size()){
-            utils.display(HttpUtils.url+foodList.get(position*4+1).getIamge(), image2);
-            text2.setText(foodList.get(position*4+1).getName()+"    ￥"+foodList.get(position*4+1).getPrice());
+        if (position * 4 + 1 < foodList.size()) {
+            utils.display(HttpUtils.URL + foodList.get(position * 4 + 1).getIamge(), image2);
+            text2.setText(foodList.get(position * 4 + 1).getName() + "    ￥" + foodList.get(position * 4 + 1).getPrice());
 
-        }else {
+        } else {
             image2.setImageResource(R.mipmap.not_photo);
             text2.setText("");
         }
-        if(position*4+2<foodList.size()){
-            utils.display( HttpUtils.url+foodList.get(position*4+2).getIamge(), image3);
-            text3.setText(foodList.get(position*4+2).getName()+"    ￥"+foodList.get(position*4+2).getPrice());
-        }else {
+        if (position * 4 + 2 < foodList.size()) {
+            utils.display(HttpUtils.URL + foodList.get(position * 4 + 2).getIamge(), image3);
+            text3.setText(foodList.get(position * 4 + 2).getName() + "    ￥" + foodList.get(position * 4 + 2).getPrice());
+        } else {
             image3.setImageResource(R.mipmap.not_photo);
             text3.setText("");
-         
+
         }
-        if(position*4+3<foodList.size()){
-            utils.display(HttpUtils.url+foodList.get(position*4+3).getIamge(), image4);
-            text4.setText(foodList.get(position*4+3).getName()+"    ￥"+foodList.get(position*4+3).getPrice());
-        }else {
+        if (position * 4 + 3 < foodList.size()) {
+            utils.display(HttpUtils.URL + foodList.get(position * 4 + 3).getIamge(), image4);
+            text4.setText(foodList.get(position * 4 + 3).getName() + "    ￥" + foodList.get(position * 4 + 3).getPrice());
+        } else {
             image4.setImageResource(R.mipmap.not_photo);
             text4.setText("");
 
@@ -152,55 +153,59 @@ public class PageWidgetAdapter extends BaseAdapter  {
             @Override
             public void onClick(View v) {
 
-                    switch (v.getId()){
-                        case R.id.im_item01:
-                            if(position*4<=foodList.size()){
+                switch (v.getId()) {
+                    case R.id.im_item01:
+                        if (position * 4 <= foodList.size()) {
 
-                                EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4).getName(),
-                                        Double.valueOf( foodList.get(position*4).getPrice()), 0,true));
+                            EventBus.getDefault().post(new OrderInfo(0, foodList.get(position * 4).getName(),
+                                    Double.valueOf(foodList.get(position * 4).getPrice()), 0, true));
                         }
+                        break;
+                        default:
+                            break;
 
-
-                    }
+                }
 
             }
-        }); image2.setOnClickListener(new View.OnClickListener() {
+        });
+        image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                            if((position*4+1)<foodList.size()){
-                                EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+1).getName(),
-                                        Double.valueOf( foodList.get(position*4+2).getPrice()), 0,true));
-                    }
+                if ((position * 4 + 1) < foodList.size()) {
+                    EventBus.getDefault().post(new OrderInfo(0, foodList.get(position * 4 + 1).getName(),
+                            Double.valueOf(foodList.get(position * 4 + 2).getPrice()), 0, true));
+                }
 
             }
-        }); image3.setOnClickListener(new View.OnClickListener() {
+        });
+        image3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                            if((position*4+2)<=foodList.size()){
-                                EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+2).getName(),
-                                        Double.valueOf( foodList.get(position*4+2).getPrice()), 0,true));
-                    }
+                if ((position * 4 + 2) <= foodList.size()) {
+                    EventBus.getDefault().post(new OrderInfo(0, foodList.get(position * 4 + 2).getName(),
+                            Double.valueOf(foodList.get(position * 4 + 2).getPrice()), 0, true));
+                }
 
             }
-        }); image4.setOnClickListener(new View.OnClickListener() {
+        });
+        image4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                            if((position*4+3)<=foodList.size()){
-                                EventBus.getDefault().post(new OrderInfo(0, foodList.get(position*4+3).getName(),
-                                        Double.valueOf( foodList.get(position*4+3).getPrice()), 0,true));
-                    }
+                if ((position * 4 + 3) <= foodList.size()) {
+                    EventBus.getDefault().post(new OrderInfo(0, foodList.get(position * 4 + 3).getName(),
+                            Double.valueOf(foodList.get(position * 4 + 3).getPrice()), 0, true));
+                }
 
             }
         });
 
 
-}
-
+    }
 
 
 }

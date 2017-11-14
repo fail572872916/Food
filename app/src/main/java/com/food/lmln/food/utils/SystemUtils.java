@@ -37,7 +37,7 @@ public class SystemUtils {
      */
     public static Map<String, Object> StringToMap(String mapText) {
 
-        if (mapText == null || mapText.equals("")) {
+        if (mapText == null || "".equals(mapText)) {
             return null;
         }
         mapText = mapText.substring(1);
@@ -73,7 +73,7 @@ public class SystemUtils {
      * @return List<?>
      */
     public static List<Object> StringToList(String listText) {
-        if (listText == null || listText.equals("")) {
+        if (listText == null || "".equals(listText)) {
             return null;
         }
         listText = listText.substring(1);

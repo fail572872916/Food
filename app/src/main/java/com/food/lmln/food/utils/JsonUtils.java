@@ -27,7 +27,7 @@ public class JsonUtils {
      * @param heartBeat
      * @return
      */
-    public static String initSend(String flag, String ip, String message, String operationCode, String heartBeat) {
+    public static String initSend(String flag, String ip, JSONObject message, String operationCode, String heartBeat) {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         try {
@@ -79,7 +79,7 @@ public class JsonUtils {
      * @param data
      * @return jsonObject
      */
-    public static String useJosn(boolean rs, String cmd, JSONObject data,String Deskno,String clear) {
+    public static JSONObject useJosn(boolean rs, String cmd, JSONObject data,String Deskno,String clear) {
 
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject1= new JSONObject();
@@ -95,7 +95,7 @@ public class JsonUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return jsonObject.toString();
+        return jsonObject;
     }
 
     /**

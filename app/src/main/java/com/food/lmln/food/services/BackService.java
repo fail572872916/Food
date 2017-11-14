@@ -241,7 +241,7 @@ public class BackService extends Service {
                                     length)).trim();
                             Log.i(TAG, "收到服务器发送来的消息：" + message);
                             // 收到服务器过来的消息，就通过Broadcast发送出去
-                            if (message.equals("ok")) {// 处理心跳回复
+                            if ("ok".equals(message)) {// 处理心跳回复
                                 Intent intent = new Intent(HEART_BEAT_ACTION);
                                 sendBroadcast(intent);
                             } else {

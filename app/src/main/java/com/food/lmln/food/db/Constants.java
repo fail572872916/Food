@@ -51,6 +51,15 @@ public class Constants {
 
 
 
+
+    public static  final String  ORDER_PRINT ="P001" ;
+    public static  final String  ORDER_SETTLE ="P002";
+
+
+
+
+
+
     /**
      *Shopdeks
      */
@@ -116,26 +125,27 @@ public class Constants {
     /**
      * Handler执行码
      */
-    public static final int send_msg_code0 = 0x100;
-    public static final int send_msg_code1 = 0x101;
-    public static final int send_msg_code2 = 0x102;
-    public static final int send_msg_code3 = 0x103;
-    public static final int send_msg_code4 = 0x104;
-    public static final int send_msg_code5 = 0x105;
-    public static final int send_msg_code6 = 0x106;
-    public static final int send_msg_code7 = 0x107;
-    public static final int send_msg_code8 = 0x108;
-    public static final int send_msg_code9 = 0x109;
-    public static final int send_msg_code10 = 0x110;
-    public static final int send_msg_code11 = 0x111;
-    public static final int send_msg_code12 = 0x112;
-    public static final int send_msg_code13 = 0x113;
+    public static final int SEND_MSG_CODE0 = 0x100;
+    public static final int SEND_MSG_CODE1 = 0x101;
+    public static final int SEND_MSG_CODE2 = 0x102;
+    public static final int SEND_MSG_CODE3 = 0x103;
+    public static final int SEND_MSG_CODE4 = 0x104;
+    public static final int SEND_MSG_CODE5 = 0x105;
+    public static final int SEND_MSG_CODE6 = 0x106;
+    public static final int SEND_MSG_CODE7 = 0x107;
+    public static final int SEND_MSG_CODE8 = 0x108;
+    public static final int SEND_MSG_CODE9 = 0x109;
+    public static final int SEND_MSG_CODE10 = 0x110;
+    public static final int SEND_MSG_CODE11 = 0x111;
+    public static final int SEND_MSG_CODE12 = 0x112;
+    public static final int SEND_MSG_CODE13 = 0x113;
 
 
     /**
      * 上线(Socket连接上第一次发送)
      */
     public static final String ONLINE = "onLine";
+    public static final String  RESTAURANT="R001";
     public static final String SOECKET_HEART = "0x0F";
     public static final String SOCKET_MSG_CAR_HEART = "H001";
     public static final String SOCKET_MSG_CAR_INFO= "C001";

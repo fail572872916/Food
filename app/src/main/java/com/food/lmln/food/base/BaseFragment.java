@@ -16,7 +16,7 @@ import com.food.lmln.food.inteface.IActivity;
  * @author jwzhangjie
  * Date: 2014-12-6 下午1:51:19
  * version 1.0
- * {@link    http://blog.csdn.net/jwzhangjie}
+ * {@link  http://blog.csdn.net/jwzhangjie}
  * Description:Fagment基础类
  */
 public class BaseFragment extends Fragment implements IActivity {

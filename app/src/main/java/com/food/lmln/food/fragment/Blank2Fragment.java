@@ -1,4 +1,6 @@
 package com.food.lmln.food.fragment;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +14,7 @@ import android.widget.BaseAdapter;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.PageWidgetAdapter;
 import com.food.lmln.food.bean.FoodinfoSmall;
+import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.view.PageWidget;
 
@@ -24,29 +27,31 @@ import java.util.List;
 import static com.food.lmln.food.db.Constants.PASSWORD;
 import static com.food.lmln.food.db.Constants.SQLURL;
 import static com.food.lmln.food.db.Constants.USERNAME;
-import static com.food.lmln.food.db.Constants.send_msg_code1;
 
 public class Blank2Fragment extends Fragment {
 
-    private List<FoodinfoSmall> foodList= new ArrayList<FoodinfoSmall>();
+    private List<FoodinfoSmall> foodList = new ArrayList<FoodinfoSmall>();
     private Connection conn; //Connection连接
 
-    String  tableName;
+    String tableName;
     private PageWidget page;
     private BaseAdapter adapter;
     Handler mHandler;
     private View view;
 
+    @SuppressLint("HandlerLeak")
     public Blank2Fragment() {
         // Required empty public constructor
-        mHandler= new Handler(){
+        mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case send_msg_code1:
+                    case Constants.SEND_MSG_CODE1:
                         adapter = new PageWidgetAdapter(getActivity(), foodList);
                         page.setAdapter(adapter);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -62,56 +67,32 @@ public class Blank2Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();//从activity传过来的Bundle
-        if(bundle!=null) {
+        if (bundle != null) {
             tableName = bundle.getString("foodName");
         }
-        view = inflater.inflate(R.layout.fragment_blank2, container,false);
+        view = inflater.inflate(R.layout.fragment_blank2, container, false);
         page = (PageWidget) view.findViewById(R.id.main_pageWidget);
 
         initView();
         return view;
     }
+
     private void initView() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 conn = MysqlDb.openConnection(SQLURL, USERNAME, PASSWORD);
-                foodList = MysqlDb.selectFood(conn, "select  * from  "+tableName+"");
+                foodList = MysqlDb.selectFood(conn, "select  * from  " + tableName + "");
                 Log.d("Blank2Fragment", "foodList1:" + foodList);
                 Message msg = new Message();
-        msg.what = send_msg_code1;
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("lookList", (Serializable) foodList);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
+                msg.what = Constants.SEND_MSG_CODE1;
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("lookList", (Serializable) foodList);
+                msg.setData(bundle);
+                mHandler.sendMessage(msg);
 //                initFood(tableName);
             }
         }).start();
-    }
-//    private void initFood(String tableName) {
-//        int pageCount;  //总页数
-//        pageCount = (int) Math.ceil(foodList1.size() / (double) pageSize);
-//        pageNum = (int) Math.ceil(pageCount / (double) pageSize);
-//
-//        for (int i = 1; i < pageNum + 1; i++) {
-//            FoodInfo f = new FoodInfo();
-//            f.setKey(i);
-//            personList = MysqlDb.ByPageIndex(conn, tableName, pageIndex, pageSize);
-//            f.setList(personList);
-//            foodList.add(f);
-//        }
-//
-//        Message msg = new Message();
-//        msg.what = send_msg_code1;
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("lookList", (Serializable) foodList);
-//        msg.setData(bundle);
-//        mHandler.sendMessage(msg);
-//    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
 

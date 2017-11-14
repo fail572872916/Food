@@ -23,11 +23,15 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
+
+
 /**
- * Created by Weili on 2017/7/3.
  * 设置ip
+ *  @author Weli
+ *  @time 2017-11-14  15:52
+ *  @describe
  */
-public class DialogTablde {
+public class DialogTable {
     private static SQLiteDatabase db;
     static SqlHelper helper;
     static int isUpdate =0;
@@ -35,7 +39,7 @@ public class DialogTablde {
     /**
      * 定义一个接口，提供Activity使用
      */
- public static OnDialogCloseListener mlistener;
+ public static OnDialogCloseListener mListener;
     public   interface OnDialogCloseListener {
 
 
@@ -43,7 +47,7 @@ public class DialogTablde {
     }
 
     public void setCloseListener(OnDialogCloseListener dialogListener) {
-        this.mlistener = dialogListener;
+        mListener = dialogListener;
     }
 
     public  static  void showDialog(final Context mContext) {
@@ -57,13 +61,13 @@ public class DialogTablde {
         dialog.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         Window window =dialog.getWindow();
-//        View view = View.inflate(mContext, R.layout.dialog_setting, null);
+
         window.setContentView( R.layout.dialog_setting);
-//        builder.setCancelable(true);
+
         helper=DbManger.getInstance(mContext);
         db = helper.getWritableDatabase();
-        final MaterialEditText tv_dialog_ip= (MaterialEditText) window.findViewById(R.id.tv_dialog_ip);//输入内容
-        final   MaterialEditText tv_dialog_tesk= (MaterialEditText) window.findViewById(R.id.tv_dialog_tesk);//输入内容
+        final MaterialEditText tv_dialog_ip= (MaterialEditText) window.findViewById(R.id.tv_dialog_ip);
+        final   MaterialEditText tv_dialog_tesk= (MaterialEditText) window.findViewById(R.id.tv_dialog_tesk);
         final   Button btn_cancel=(Button)window.findViewById(R.id.btn_cancel);//取消按钮
         final   Button btn_comfirm=(Button)window.findViewById(R.id.btn_comfirm);//确定按钮
         iv_dialog = (ImageView) window.findViewById(R.id.iv_dialog);
@@ -86,9 +90,9 @@ public class DialogTablde {
                 db = helper.getWritableDatabase();
                 String serverIp=tv_dialog_ip.getText().toString();
                 String  tabDesk=tv_dialog_tesk.getText().toString();
-                if(serverIp.equals("")||serverIp==""){
+                if("".equals(serverIp) ||serverIp==""){
                     Toast.makeText(mContext,R.string.tip_ip , Toast.LENGTH_SHORT).show();
-                }else if(tabDesk.equals("")||tabDesk==""){
+                }else if("".equals(tabDesk) ||tabDesk==""){
                     Toast.makeText(mContext,  R.string.tip_desk_no, Toast.LENGTH_SHORT).show();
                 }else if(SystemUtils.isboolIp(serverIp)==false){
                     Toast.makeText(mContext,  R.string.tip_check_ip, Toast.LENGTH_SHORT).show();
@@ -96,7 +100,7 @@ public class DialogTablde {
                 else {
                     DbManger.insertIP(db,serverIp,tabDesk,isUpdate);
 
-                    mlistener.onDialogCloseClick();
+                    mListener.onDialogCloseClick();
                     dialog.dismiss();
                 }
             }

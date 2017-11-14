@@ -1,5 +1,6 @@
 package com.food.lmln.food.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,28 +17,33 @@ import android.widget.TextView;
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodStyle1Adapter;
 import com.food.lmln.food.bean.FoodInfo;
+import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.db.DbManger;
 
 import java.util.List;
 
-import static com.food.lmln.food.db.Constants.send_msg_code1;
+
 import static com.food.lmln.food.utils.ScreenUtils.getScreenHeight;
 
 public class Blank5Fragment extends Fragment {
     private static final String TAG = "MainActivity";
+    @SuppressLint("HandlerLeak")
     public Handler handlerMain = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case send_msg_code1:
+                case Constants.SEND_MSG_CODE1:
 
                     break;
 //                case send_msg_code2:
 //
 //                    lv_main_order.setAdapter(new FoodOrderAdapter(list_order, MainActivity.this));
 //                    break;
+                default:
+                    break;
+
             }
 
         }
@@ -58,7 +64,7 @@ public class Blank5Fragment extends Fragment {
     private String text;
     private String big_imageUrl;
     private String small_imageUrl;
-    private     int  [] getInfo = new int[2];
+    private int[] getInfo = new int[2];
     private int heiget;
     private DbManger dbManager;
 
@@ -107,7 +113,6 @@ public class Blank5Fragment extends Fragment {
 //        tv_small_text.setText(tesxtSmall+"");
 //
 //    }
-
     private void initView() {
         gd_frgment1 = (GridView) view.findViewById(R.id.gd_frgment1);
 //        ib_big = (ImageView) view.findViewById(R.id.im_big);
@@ -120,7 +125,7 @@ public class Blank5Fragment extends Fragment {
     /**
      * 获取组件宽高
      */
-    private  void getLayoutInfo(){
+    private void getLayoutInfo() {
 
         heiget = getScreenHeight(getActivity());
         ViewTreeObserver vto2 = gd_frgment1.getViewTreeObserver();
@@ -140,4 +145,4 @@ public class Blank5Fragment extends Fragment {
         });
 
     }
-    }
+}

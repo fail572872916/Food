@@ -39,10 +39,7 @@ import static com.food.lmln.food.db.Constants.USERNAME;
 
 //组件宽高
 public class Blank3Fragment extends Fragment {
-
-
     MyAdapter adapter; //适配器
-
     private View view;
     LinearLayout rl;
     private ViewPager viewPager;
@@ -191,7 +188,7 @@ public class Blank3Fragment extends Fragment {
             for (int i = 0; i < 6; i++) {
                 if (simpleList.size() >= 1) {
                     imageUrl1 = simpleList.get(0).getIamge();
-                    loadUrl1 = HttpUtils.url + imageUrl1;
+                    loadUrl1 = HttpUtils.URL + imageUrl1;
 
                     utils.display(loadUrl1, viewHolder.im_big1);
                 }
@@ -212,11 +209,11 @@ public class Blank3Fragment extends Fragment {
                 }
 
 
-                loadUrl2 = HttpUtils.url + imageUrl2;
-                loadUrl3 = HttpUtils.url + imageUrl3;
-                loadUrl4 = HttpUtils.url + imageUrl4;
-                loadUrl5 = HttpUtils.url + imageUrl5;
-                loadUrl6 = HttpUtils.url + imageUrl6;
+                loadUrl2 = HttpUtils.URL + imageUrl2;
+                loadUrl3 = HttpUtils.URL + imageUrl3;
+                loadUrl4 = HttpUtils.URL + imageUrl4;
+                loadUrl5 = HttpUtils.URL + imageUrl5;
+                loadUrl6 = HttpUtils.URL + imageUrl6;
 
             }
 

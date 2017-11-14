@@ -26,7 +26,7 @@ import java.util.List;
 public class FoodOrderAdapter extends BaseAdapter {
 
     LayoutInflater mInfnflater;
-    private List<OrderInfo> list;    //功能集合
+    private List<OrderInfo> list;
     private Context mContext;
 
     public FoodOrderAdapter(List<OrderInfo> list, Context mContext) {

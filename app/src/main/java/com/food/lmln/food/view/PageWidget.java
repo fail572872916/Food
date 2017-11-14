@@ -106,7 +106,7 @@ public class PageWidget extends FrameLayout {
         mPaint.setStyle(Paint.Style.FILL);
 
         ColorMatrix cm = new ColorMatrix();
-        float array[] = {0.55f, 0, 0, 0, 80.0f, 0, 0.55f, 0, 0, 80.0f, 0, 0,
+        float[] array = {0.55f, 0, 0, 0, 80.0f, 0, 0.55f, 0, 0, 80.0f, 0, 0,
                 0.55f, 0, 80.0f, 0, 0, 0, 0.2f, 0};
         cm.set(array);
         mColorMatrixFilter = new ColorMatrixColorFilter(cm);
@@ -267,11 +267,11 @@ public class PageWidget extends FrameLayout {
             mCornerY = mHeight;
         }
         if ((mCornerX == 0 && mCornerY == mHeight)
-                || (mCornerX == mWidth && mCornerY == 0))
+                || (mCornerX == mWidth && mCornerY == 0)) {
             mIsRTandLB = true;
-        else{
+        } else {
             mIsRTandLB = false;
-    }
+        }
     }
 
     /**

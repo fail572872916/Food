@@ -96,7 +96,7 @@ public class FragmentFoodDetail extends DialogFragment {
             MyBitmapUtil utils;
             utils = new MyBitmapUtil();
 
-            utils.display(HttpUtils.url + foodinfoSmall.getIamge(), im_detail_food);
+            utils.display(HttpUtils.URL + foodinfoSmall.getIamge(), im_detail_food);
 
 
             bt_detail_food.setOnClickListener(new View.OnClickListener() {

@@ -28,17 +28,19 @@ import java.util.Map;
 import static com.food.lmln.food.utils.ScreenUtils.getGridViewWeight;
 
 
-/**
- * Created by Weili on 2017/6/2.
- * 左侧适配器
- */
 
+/**
+ *  @author Weli
+ *  左侧适配器
+ *  @time 2017-11-14  15:30
+ *  @describe
+ */
 public class FoodStyle1Adapter extends BaseAdapter {
     LayoutInflater mInfnflater;
-    private List<FoodinfoSmall> list;    //功能集合
-    private Context mContext; //上下文
+    private List<FoodinfoSmall> list;
+    private Context mContext;
     private ScrollGridView gd_frgment1;
-    private int viewSize[];
+    private int[] viewSize;
 
     public FoodStyle1Adapter(List<FoodinfoSmall> list, Context mContext, ScrollGridView gd_frgment1, int[] viewsize) {
         this.list = list;
@@ -114,7 +116,7 @@ public class FoodStyle1Adapter extends BaseAdapter {
 
         vieewHolder.tv_item_name.setText(list.get(position).getName());
         vieewHolder.tv_item_price.setText("￥" + list.get(position).getPrice() + "");
-        String url = HttpUtils.url + list.get(position).getIamge();
+        String url = HttpUtils.URL + list.get(position).getIamge();
         MyBitmapUtil utils;
         utils = new MyBitmapUtil();
         utils.display(url, vieewHolder.im_item_image);
