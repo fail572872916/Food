@@ -1,21 +1,76 @@
 package com.food.lmln.food.utils;
-
+import android.text.TextUtils;
 import android.util.Log;
-
+import com.food.lmln.food.bean.ReceiveSocket;
+import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 /**
- * Created by Weili on 2017/8/16.
- *
- * @author Weli
- * @version 1.0.0
- * @Josn工具类
+ * @author Administrator
+ * @name CarControl
+ * @class name：com.example.administrator.carcontrol.utils
+ * @class describe
+ * @time 2017-10-13 10:59
+ * @change
+ * @chang time
+ * @class describe
  */
-
 public class JsonUtils {
+    /**
+     * 发送的Socket json数据
+     *
+     * @param flag
+     * @param ip
+     * @param message
+     * @param operationCode
+     * @param heartBeat
+     * @return
+     */
+    public static String initSend(String flag, String ip, String message, String operationCode, String heartBeat) {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        try {
+            jsonObject.put("flaglist", jsonArray);
+            jsonObject.put("flag", flag);
+            jsonObject.put("socket_ip", ip);
+            jsonObject.put("message", message);
+            jsonObject.put("operationCode", operationCode);
+            jsonObject.put("heartBeat", heartBeat);
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+    /**
+     * 解析接收的东西
+     *
+     * @param json
+     * @return String  message
+     */
+    public static String jsonResolve(String json) {
+        Gson gson = new Gson();
+        String message = null;
+        ReceiveSocket receiveSocket = gson.fromJson(json, ReceiveSocket.class);
+        if (!TextUtils.isEmpty(receiveSocket.getOperationCode())) {
+                message = receiveSocket.getMessage();
+        }
+        return message;
+
+    }
+
+    public static String jsonResolveType(String json) {
+        Gson gson = new Gson();
+        String messageType =null;
+        ReceiveSocket receiveSocket = gson.fromJson(json, ReceiveSocket.class);
+        if (!TextUtils.isEmpty(receiveSocket.getOperationCode())) {
+            messageType = receiveSocket.getOperationCode();
+        }
+        return messageType;
+
+}
     /**
      * 接收 数据，打包成通用
      *
@@ -70,6 +125,7 @@ public class JsonUtils {
         }
         return jsonObject1.toString();
     }
+
 
 
 }

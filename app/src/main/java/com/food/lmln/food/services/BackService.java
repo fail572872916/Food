@@ -74,7 +74,6 @@ public class BackService extends Service {
 
     // 发送心跳包
     private Handler mHandler = new Handler();
-
     class MyRunnable implements Runnable {
         private MyRunnable() {
         }
@@ -86,6 +85,7 @@ public class BackService extends Service {
             }
             return instance;
         }
+        @Override
         public void run() {
             boolean isSuccess = sendMsg("0xFF");// 就发送一个\r\n过去, 如果发送失败，就重新初始化一个socket
             if (!isSuccess) {
@@ -258,8 +258,6 @@ public class BackService extends Service {
             }
         }
     }
-
-
     /**
      * 服务被销毁时调用
      */

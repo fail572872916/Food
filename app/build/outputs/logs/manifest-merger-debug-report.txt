@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:2:1-72:12
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:2:1-76:12
 	package
 		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:3:5-33
 		INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml
@@ -104,7 +104,7 @@ MERGED from [cn.jiguang.sdk:jpush:3.0.3] C:\Users\Administrator\.android\build-c
 	android:name
 		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:28:22-76
 application
-ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:30:5-70:19
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:30:5-74:19
 MERGED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:29:5-20
 MERGED from [com.android.support:transition:25.3.1] C:\Users\Administrator\.android\build-cache\0ea0196ba248aa89b6e42bcca1d793bff67f2e0a\output\AndroidManifest.xml:26:5-20
 MERGED from [com.github.clans:fab:1.6.4] C:\Users\Administrator\.android\build-cache\33c6d042a81153b57ac2265cbc1d0e3913d995a0\output\AndroidManifest.xml:12:5-20
@@ -195,6 +195,14 @@ service#com.food.lmln.food.services.BackService
 ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:68:9-57
 	android:name
 		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:68:18-54
+service#com.food.lmln.food.services.SocketService
+ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:69:9-72:39
+	android:enabled
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:71:13-35
+	android:exported
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:72:13-36
+	android:name
+		ADDED from E:\project\Food\app\src\main\AndroidManifest.xml:70:13-51
 uses-sdk
 INJECTED from E:\project\Food\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:design:25.3.1] C:\Users\Administrator\.android\build-cache\e1baf2ead592c2a6183bdb2c803cd34e483de88c\output\AndroidManifest.xml:21:5-23:62

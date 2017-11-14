@@ -11,7 +11,7 @@ import android.widget.ImageView;
  * Author: android_wangyidong
  * Description: TODO
  */
-public class MoveImageView extends ImageView {
+public class MoveImageView extends android.support.v7.widget.AppCompatImageView {
     public MoveImageView(Context context) {
         super(context);
     }

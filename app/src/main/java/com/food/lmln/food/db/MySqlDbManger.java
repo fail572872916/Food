@@ -6,12 +6,7 @@ import android.util.Log;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.ResultSet;
 import com.mysql.jdbc.Statement;
-
-import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
-import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
-import static com.food.lmln.food.db.Constant.DESK_TEMP;
 
 /**
  * Created by Weili on 2017/7/4.

@@ -1,22 +1,14 @@
 package com.food.lmln.food.utils;
 
 import android.os.Environment;
-import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static com.food.lmln.food.db.Constant.FILENAME;
+import static com.food.lmln.food.db.Constants.FILENAME;
 import static com.food.lmln.food.utils.FileUtils.readList;
 import static com.food.lmln.food.utils.FileUtils.rewrite;
 

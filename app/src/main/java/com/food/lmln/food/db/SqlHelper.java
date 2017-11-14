@@ -26,7 +26,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 
 
     public SqlHelper(Context context) {
-        super(context,Constant.DATABASE_NAME,null,Constant.DATABASE_VERSION);
+        super(context, Constants.DATABASE_NAME,null, Constants.DATABASE_VERSION);
     }
     /**
      * 数据库创建时调用

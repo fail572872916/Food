@@ -211,7 +211,7 @@ public class MysqlDb {
             result = statement.executeQuery(sql);
             while (result.next()) {//将结果集信息添加到返回向量中
                 num = 1;
-                String food_name = result.getString(Constant.ORDER_INFO);
+                String food_name = result.getString(Constants.ORDER_INFO);
                 rewriteOrdera(food_name);
             }
         } catch (SQLException e) {
@@ -259,7 +259,7 @@ public class MysqlDb {
                 result.previous();
                 //在执行while 循环
                 while (result.next()) {
-                    status = result.getString(Constant.SHOP_STATUS);
+                    status = result.getString(Constants.SHOP_STATUS);
                 }
             }
         } catch (SQLException e) {
@@ -367,7 +367,7 @@ public class MysqlDb {
                 result.previous();
                 //在执行while 循环
                 while (result.next()) {
-                    status = result.getString(Constant.CONSUMPTIONID);
+                    status = result.getString(Constants.CONSUMPTIONID);
                 }
             }
         } catch (SQLException e) {
@@ -414,7 +414,7 @@ public class MysqlDb {
                 result.previous();
                 //在执行while 循环
                 while (result.next()) {
-                    status = result.getString(Constant.ORDER_ID);
+                    status = result.getString(Constants.ORDER_ID);
                 }
             }
         } catch (SQLException e) {

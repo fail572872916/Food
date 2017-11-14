@@ -28,14 +28,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.food.lmln.food.R;
-import com.food.lmln.food.db.Constant;
+import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.receiver.LocalBroadcastManager;
 import com.food.lmln.food.utils.ExampleUtil;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.JsonUtils;
 import com.food.lmln.food.utils.ScreenUtils;
-import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -43,11 +43,14 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.kale.lib.time.AdvancedCountdownTimer;
 import com.wang.avi.AVLoadingIndicatorView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,6 +61,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static org.greenrobot.eventbus.EventBus.TAG;
+
 /**
  * Created by Weili on 2017/7/27.
  */
@@ -68,8 +72,8 @@ public class FragmentDialogPay extends DialogFragment {
     public static final String KEY_TITLE = "title";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
-    private String  order_detail_value; //订单信息
-    private String  order_detail_key="order_detail_key";//订单
+    private String order_detail_value; //订单信息
+    private String order_detail_key = "order_detail_key";//订单
     public String registration_id_key = "registration_id_key"; //极光id
     public String registration_id_value = "";
     public String product_id_key = "product_id_key";
@@ -100,7 +104,7 @@ public class FragmentDialogPay extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(Constant.PAY_TYPE);
+            mParam1 = getArguments().getString(Constants.PAY_TYPE);
         }
     }
 
@@ -123,33 +127,33 @@ public class FragmentDialogPay extends DialogFragment {
             avloadingIndicatorView_BallClipRotatePulse.setVisibility(View.GONE);
             super.handleMessage(msg);
             switch (msg.what) {
-                case Constant.send_msg_code1:
+                case Constants.send_msg_code1:
                     Bundle data = msg.getData();
                     String val = data.getString("value");
                     String order = data.getString("order");
                     int type = data.getInt("pay_type");
-                    if (val!=null&&val.equals("error")) {
-                        startCustomCountDownTime(3, null,type);
+                    if (val != null && val.equals("error")) {
+                        startCustomCountDownTime(3, null, type);
                         Toast.makeText(getActivity(), R.string.error_htp, Toast.LENGTH_SHORT).show();
                     } else {
-                        startCustomCountDownTime(90, order,type);
+                        startCustomCountDownTime(90, order, type);
                         im_pay_show.setImageBitmap(generateBitmap(val, 500, 500));
                     }
                     break;
-                case Constant.send_msg_code2:
+                case Constants.send_msg_code2:
                     Bundle bundle1 = msg.getData();
                     String order_no = bundle1.getString("order_no");
                     Log.d("look", order_no);
                     postCirculation(order_no);
                     break;
-                case Constant.send_msg_code3:
+                case Constants.send_msg_code3:
                     Bundle bundle2 = msg.getData();
                     String query = bundle2.getString("query");
                     if (query != null) {
 
                         setCostomMsg(query);
                     }
-                        break;
+                    break;
                 default:
                     break;
             }
@@ -162,11 +166,13 @@ public class FragmentDialogPay extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getDialog().setCanceledOnTouchOutside(false);  //点击外部不消失
+        //点击外部不消失
+        getDialog().setCanceledOnTouchOutside(false);
         view = inflater.inflate(R.layout.fragement_dialog_pay, container, false);
         initView();
         return view;
     }
+
 
     /**
      * 初始化布局
@@ -202,28 +208,29 @@ public class FragmentDialogPay extends DialogFragment {
         String ordrNo = null;
 
         if (mParam1 != null) {
-            Log.d("jpush", mParam1+"dsadsa");
+            Log.d("jpush", mParam1 + "dsadsa");
             String temp[] = mParam1.split("####");
             type = temp[0];
             ordrNo = temp[1];
             product_id_value = temp[2];
-            order_detail_value=temp[3];
+            order_detail_value = temp[3];
         }
-        if (type!=null&&type.equals(Constant.ALI)) {
+        if (type != null && type.equals(Constants.ALI)) {
             String url = HttpUtils.ALI_PAY;
             view_pay_bg.setBackgroundResource(R.mipmap.pay_ali_bg);
-            postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_ALI);
+            postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url, Constants.PAY_TYEPE_ALI);
         } else {
             String url = HttpUtils.WX_PAY;
             view_pay_bg.setBackgroundResource(R.mipmap.pay_wx_bg);
-                postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url,Constant.PAY_TYEPE_WX);
+            postAsynHttp(product_id_value, registration_id_value, time_value, ordrNo, url, Constants.PAY_TYEPE_WX);
         }
     }
+
     /**
      * "
      * 循环查询
      *
-     * @param str  OrderNO
+     * @param str OrderNO
      */
     private void postCirculation(String str) {
         String url = HttpUtils.WX_QUERY;
@@ -240,7 +247,7 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 Message msg = new Message();
-                msg.what = Constant.send_msg_code3;
+                msg.what = Constants.send_msg_code3;
                 Bundle data = new Bundle();
                 data.putString("query", null);
                 msg.setData(data);
@@ -250,21 +257,21 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
-                JSONObject jsonObject ;
+                JSONObject jsonObject;
                 Log.d("FragmentDialogPay", str);
                 try {
                     jsonObject = new JSONObject(str);
-                        boolean result= jsonObject.getBoolean("result");
-                        String  money = jsonObject.getString("money");
-                        if(result && money!=null) {
-                            Message msg = new Message();
-                            msg.what = Constant.send_msg_code3;
-                            Bundle data = new Bundle();
-                            data.putString("query", jsonObject.toString());
+                    boolean result = jsonObject.getBoolean("result");
+                    String money = jsonObject.getString("money");
+                    if (result && money != null) {
+                        Message msg = new Message();
+                        msg.what = Constants.send_msg_code3;
+                        Bundle data = new Bundle();
+                        data.putString("query", jsonObject.toString());
 
-                            msg.setData(data);
-                            handler.sendMessage(msg);
-                        }
+                        msg.setData(data);
+                        handler.sendMessage(msg);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -300,7 +307,7 @@ public class FragmentDialogPay extends DialogFragment {
 //                Log.d("FragmentDialogPay", e.getMessage());
 //                Toast.makeText(getActivity(),  R.string.tip_net_fail, Toast.LENGTH_SHORT).show();
                 Message msg = new Message();
-                msg.what = Constant.send_msg_code1;
+                msg.what = Constants.send_msg_code1;
                 Bundle data = new Bundle();
                 data.putString("value", "error");
                 data.putInt("pay_type", type);
@@ -311,9 +318,9 @@ public class FragmentDialogPay extends DialogFragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
-                String url ;
+                String url;
                 String order = null;
-                JSONObject josn ;
+                JSONObject josn;
                 try {
                     josn = new JSONObject(str);
                     boolean flag = josn.getBoolean("result");
@@ -324,7 +331,7 @@ public class FragmentDialogPay extends DialogFragment {
                         url = "error";
                     }
                     Message msg = new Message();
-                    msg.what = Constant.send_msg_code1;
+                    msg.what = Constants.send_msg_code1;
                     Bundle data = new Bundle();
                     data.putString("value", url);
                     data.putString("order", order);
@@ -448,8 +455,8 @@ public class FragmentDialogPay extends DialogFragment {
                 JSONObject json = null;
                 String data = null;
                 try {
-                     json= new JSONObject(extras);
-                 data=json.getString("data");
+                    json = new JSONObject(extras);
+                    data = json.getString("data");
 
                     setCostomMsg(data);
                 } catch (JSONException e) {
@@ -465,20 +472,22 @@ public class FragmentDialogPay extends DialogFragment {
             }
         }
     }
+
     /**
      * 收到信息打印
      *
-     * @param msg  json
+     * @param msg json
      */
     private void setCostomMsg(String msg) {
 //        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-        String json = JsonUtils.useJpushJosn(msg,order_detail_value);
+        String json = JsonUtils.useJpushJosn(msg, order_detail_value);
         Log.d("aaaa", json);
         if (json != null) {
             mlistener.onDialogClick(json);
             closeScale(lin_bg);
         }
     }
+
     @Override
     public void onResume() {
         isForeground = true;
@@ -497,8 +506,9 @@ public class FragmentDialogPay extends DialogFragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
-        if (null != countdownTimer)
+        if (null != countdownTimer) {
             countdownTimer.cancel();
+        }
         Log.d(TAG, "exit");
         super.onDestroy();
     }
@@ -507,8 +517,8 @@ public class FragmentDialogPay extends DialogFragment {
      * 开始计时 传入参数 time ，单位秒
      *
      * @param time 秒
-     * @param   str 订单号
-     * @param   type  类型
+     * @param str  订单号
+     * @param type 类型
      */
     private void startCustomCountDownTime(long time, final String str, final int type) {
         countdownTimer = new AdvancedCountdownTimer(time * 1000, 1000) {
@@ -518,14 +528,14 @@ public class FragmentDialogPay extends DialogFragment {
                 if (isAdded()) {
                     String sAgeFormat = getResources().getString(R.string.text_surplus_time);
                     String sFinalAge = String.format(sAgeFormat, time + "");
-                    if(type == Constant.PAY_TYEPE_WX) {
+                    if (type == Constants.PAY_TYEPE_WX) {
                         if (time < 81 && time % 8 == 0 && str != null) {
                             Log.d("FragmentDialogPay", "time:" + time);
                             Message msg = new Message();
                             Bundle bundle = new Bundle();
                             bundle.putString("order_no", str);
                             msg.setData(bundle);
-                            msg.what = Constant.send_msg_code2;
+                            msg.what = Constants.send_msg_code2;
                             handler.sendMessage(msg);
                         }
                     }
@@ -535,6 +545,7 @@ public class FragmentDialogPay extends DialogFragment {
                     tv_pay_time.setText(sFinalAge);
                 }
             }
+
             @Override
             public void onFinish() {
                 closeScale(lin_bg);
@@ -548,9 +559,11 @@ public class FragmentDialogPay extends DialogFragment {
      * 定义一个接口，提供Activity使用
      */
     OnDialogListener mlistener;
+
     public interface OnDialogListener {
         void onDialogClick(String person);
     }
+
     public void setOnDialogListener(OnDialogListener dialogListener) {
         this.mlistener = dialogListener;
     }

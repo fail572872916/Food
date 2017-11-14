@@ -21,7 +21,7 @@ package com.food.lmln.food.utils;
         import android.graphics.BitmapFactory;
         import android.os.Environment;
         import android.util.Log;
-        import com.food.lmln.food.db.Constant;
+        import com.food.lmln.food.db.Constants;
         import static com.food.lmln.food.utils.OrderUtils.getOrderId;
 
 
@@ -178,7 +178,7 @@ public class FileUtils {
             int num=1;
             Date current = new Date();
             String date = format(current);
-             File      file = new File(CACHE_PATH, Constant.FILENAME);
+             File      file = new File(CACHE_PATH, Constants.FILENAME);
             if(!file.exists()) {
                 getOrderId();
 

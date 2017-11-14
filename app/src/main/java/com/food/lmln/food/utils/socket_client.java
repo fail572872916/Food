@@ -164,7 +164,7 @@ public class socket_client extends Activity {
                 dataStream = client.getInputStream();
                 //得到数据长度
                 bufferLength = dataStream.read(buffer);
-                if (bufferLength == -1) break;
+                if (bufferLength == -1){ break;}
                 if (buffer[0] == 1) {
                     receiveMsg = new String(buffer, 1, buffer.length - 1, "UTF8");
                     String receiveMsg2 = receiveMsg.replace("\0", "");   //去掉接收到的字符后面的null

@@ -36,7 +36,7 @@ import com.food.lmln.food.adapter.FoodStyle1Adapter;
 import com.food.lmln.food.bean.DeskInfo;
 import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
-import com.food.lmln.food.db.Constant;
+import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.db.SqlHelper;
@@ -56,9 +56,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import static com.food.lmln.food.db.Constant.PASSWORD;
-import static com.food.lmln.food.db.Constant.SQLURL;
-import static com.food.lmln.food.db.Constant.USERNAME;
+import static com.food.lmln.food.db.Constants.PASSWORD;
+import static com.food.lmln.food.db.Constants.SQLURL;
+import static com.food.lmln.food.db.Constants.USERNAME;
 
 public class BlankFragment extends Fragment {
 
@@ -68,10 +68,6 @@ public class BlankFragment extends Fragment {
     private List<FoodinfoSmall> foodList1 = new ArrayList<>();
     List<FoodInfo> foodList = new ArrayList<>();
     private FoodStyle1Adapter mAdapter;
-    String big_imageUrl;
-    String small_imageUrl;
-    String big_img;
-    String small_img;
     ScrollGridView gd_frgment1;
     private int pageCount;//总个数
     private int pageSize = 9;//每页显示的个数
@@ -110,9 +106,7 @@ public class BlankFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);  //注册
-
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -454,7 +448,6 @@ public class BlankFragment extends Fragment {
         img.setY(childCoordinate[1] - parentCoordinate[1]);
         //4.父布局添加该Img
         holdRootView.addView(img);
-
         //5.利用 二次贝塞尔曲线 需首先计算出 MoveImageView的2个数据点和一个控制点
         PointF startP = new PointF();
         PointF endP = new PointF();
@@ -578,7 +571,7 @@ public class BlankFragment extends Fragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         Bundle bundle = new Bundle();
 
-        bundle.putString(Constant.FOOD_DETAIL,info);
+        bundle.putString(Constants.FOOD_DETAIL,info);
         editNameDialog.setArguments(bundle);
         editNameDialog.show(fm, "payDialog");
     }

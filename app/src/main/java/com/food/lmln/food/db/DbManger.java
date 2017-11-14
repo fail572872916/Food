@@ -1,6 +1,5 @@
 package com.food.lmln.food.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,9 +7,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.food.lmln.food.bean.DeskInfo;
-import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
-import com.food.lmln.food.bean.MenuButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,12 +17,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.food.lmln.food.db.Constant.ASSETS_NAME;
-import static com.food.lmln.food.db.Constant.BUFFER_SIZE;
-import static com.food.lmln.food.db.Constant.DATABASE_NAME;
+import static com.food.lmln.food.db.Constants.ASSETS_NAME;
+import static com.food.lmln.food.db.Constants.BUFFER_SIZE;
+import static com.food.lmln.food.db.Constants.DATABASE_NAME;
 
-import static com.food.lmln.food.db.Constant.TABLE_NAME_DESCRIBE;
-import static com.food.lmln.food.db.Constant.TABLE_NAME_FOODINFO;
+import static com.food.lmln.food.db.Constants.TABLE_NAME_FOODINFO;
 
 /**
  * Created by Weili on 2017/6/14.
@@ -170,13 +166,13 @@ public class DbManger {
         List<FoodinfoSmall> list = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            int columnIndex = cursor.getColumnIndex(Constant.MID);
+            int columnIndex = cursor.getColumnIndex(Constants.MID);
             int id = cursor.getInt((columnIndex));
-            String name = cursor.getString(cursor.getColumnIndex(Constant.MEAT_NAME));
-            String describe = cursor.getString(cursor.getColumnIndex(Constant.MEAT_DESCRIBE));
-            int mid = cursor.getInt(cursor.getColumnIndex(Constant.MEAT_MID));
-            double price = cursor.getDouble(cursor.getColumnIndex(Constant.MEAT_PRICE));
-            String image = cursor.getString(cursor.getColumnIndex(Constant.MEAT_IMAGE));
+            String name = cursor.getString(cursor.getColumnIndex(Constants.MEAT_NAME));
+            String describe = cursor.getString(cursor.getColumnIndex(Constants.MEAT_DESCRIBE));
+            int mid = cursor.getInt(cursor.getColumnIndex(Constants.MEAT_MID));
+            double price = cursor.getDouble(cursor.getColumnIndex(Constants.MEAT_PRICE));
+            String image = cursor.getString(cursor.getColumnIndex(Constants.MEAT_IMAGE));
             FoodinfoSmall person = new FoodinfoSmall(id, name, describe, String.valueOf(price), image);
             list.add(person);
         }
@@ -195,10 +191,10 @@ public class DbManger {
         if (db != null) {
             String sql;
             if (update == 0) {
-                sql = "insert into " + Constant.DESK_INFO + " values(1,'" + ip + "','" + desk + "');";
+                sql = "insert into " + Constants.DESK_INFO + " values(1,'" + ip + "','" + desk + "');";
                 db.execSQL(sql);
             } else {
-                sql = "update " + Constant.DESK_INFO + " set  local_ip ='" + ip + "',local_desk ='" + desk + "';";
+                sql = "update " + Constants.DESK_INFO + " set  local_ip ='" + ip + "',local_desk ='" + desk + "';";
                 Log.d("DbManger", sql);
 //                ContentValues updateCV=new ContentValues();
 //                updateCV.put("local_ip", ip);
@@ -215,18 +211,18 @@ public class DbManger {
 
     }
 
-    //    /**
-//     * 查询Ip
-//     * @param
-//     */
+        /**
+     * 查询Ip
+     * @param
+     */
     public static List<DeskInfo> selectDeskInfo(SQLiteDatabase db, String tabName) {
         List<DeskInfo> result = new ArrayList<>();
         if (db != null) {
             Cursor cursor = db.rawQuery("select * from " + tabName, null);
             DeskInfo foodInfo;
             while (cursor.moveToNext()) {
-                String local_ip = cursor.getString(cursor.getColumnIndex(Constant.DESK_LOCAL_IP));
-                String local_desk = cursor.getString(cursor.getColumnIndex(Constant.DESK_LOCAL_DESK));
+                String local_ip = cursor.getString(cursor.getColumnIndex(Constants.DESK_LOCAL_IP));
+                String local_desk = cursor.getString(cursor.getColumnIndex(Constants.DESK_LOCAL_DESK));
 
                 foodInfo = new DeskInfo(local_ip, local_desk);
                 result.add(foodInfo);

@@ -8,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Toast;
 
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.PageWidgetAdapter;
-import com.food.lmln.food.bean.FoodInfo;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.db.MysqlDb;
 import com.food.lmln.food.view.PageWidget;
@@ -23,24 +21,22 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.food.lmln.food.db.Constant.PASSWORD;
-import static com.food.lmln.food.db.Constant.SQLURL;
-import static com.food.lmln.food.db.Constant.USERNAME;
-import static com.food.lmln.food.db.Constant.send_msg_code1;
-import static com.food.lmln.food.db.Constant.send_msg_code3;
+import static com.food.lmln.food.db.Constants.PASSWORD;
+import static com.food.lmln.food.db.Constants.SQLURL;
+import static com.food.lmln.food.db.Constants.USERNAME;
+import static com.food.lmln.food.db.Constants.send_msg_code1;
 
 public class Blank2Fragment extends Fragment {
-    private List<FoodinfoSmall> simpleList = new ArrayList<FoodinfoSmall>();
-    private List<FoodinfoSmall> personList= new ArrayList<FoodinfoSmall>();
+
     private List<FoodinfoSmall> foodList= new ArrayList<FoodinfoSmall>();
     private Connection conn; //Connection连接
-    private int pageIndex=1; //当前页数;
-    private int  pageSize=4;//每页显示的个数
-    private int  pageNum;//每页显示的个数
+
     String  tableName;
     private PageWidget page;
     private BaseAdapter adapter;
     Handler mHandler;
+    private View view;
+
     public Blank2Fragment() {
         // Required empty public constructor
         mHandler= new Handler(){
@@ -69,7 +65,7 @@ public class Blank2Fragment extends Fragment {
         if(bundle!=null) {
             tableName = bundle.getString("foodName");
         }
-        View view = inflater.inflate(R.layout.fragment_blank2, null);
+        view = inflater.inflate(R.layout.fragment_blank2, container,false);
         page = (PageWidget) view.findViewById(R.id.main_pageWidget);
 
         initView();

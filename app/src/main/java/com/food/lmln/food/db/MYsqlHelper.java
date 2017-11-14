@@ -1,21 +1,13 @@
 package com.food.lmln.food.db;
 
-import android.os.Bundle;
-import android.os.Message;
-
 import com.mysql.jdbc.Connection;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.food.lmln.food.db.Constant.CONSUMPTIONID;
-import static com.food.lmln.food.db.Constant.DESKTEMP_TIME;
-import static com.food.lmln.food.db.Constant.DESK_TEMP;
-
-import static com.food.lmln.food.db.Constant.send_msg_code4;
-import static com.food.lmln.food.utils.FileUtils.rewriteOrdera;
+import static com.food.lmln.food.db.Constants.CONSUMPTIONID;
+import static com.food.lmln.food.db.Constants.DESK_TEMP;
 
 /**
  * Created by Weili on 2017/7/7.

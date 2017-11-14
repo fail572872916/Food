@@ -78,6 +78,10 @@
         </receiver>
 
         <service android:name="com.food.lmln.food.services.BackService" />
+        <service
+            android:name="com.food.lmln.food.services.SocketService"
+            android:enabled="true"
+            android:exported="true" />
 
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity

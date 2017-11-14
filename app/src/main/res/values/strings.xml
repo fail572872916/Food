@@ -42,7 +42,8 @@
     <string name="netrock_check">请检查网络是否连接</string>
     <string name="tip_order_exption">桌台无订单</string>
 
-
+    <string name="server_off">没有连接，可能是服务器已断开</string>
+    <string name="link_fail">连接失败</string>
 
 
     <string name="order_item_text">%1$s&#160;%2$d</string>

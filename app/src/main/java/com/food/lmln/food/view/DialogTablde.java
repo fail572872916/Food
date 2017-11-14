@@ -14,10 +14,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.food.lmln.food.R;
 import com.food.lmln.food.bean.DeskInfo;
-import com.food.lmln.food.db.Constant;
+import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.db.DbManger;
 import com.food.lmln.food.db.SqlHelper;
-import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.utils.SystemUtils;
 
 import java.util.List;
@@ -68,10 +67,10 @@ public class DialogTablde {
         final   Button btn_cancel=(Button)window.findViewById(R.id.btn_cancel);//取消按钮
         final   Button btn_comfirm=(Button)window.findViewById(R.id.btn_comfirm);//确定按钮
         iv_dialog = (ImageView) window.findViewById(R.id.iv_dialog);
-            int  set=     DbManger.getCountPerson(db, Constant.DESK_INFO);
+            int  set=     DbManger.getCountPerson(db, Constants.DESK_INFO);
             if(set>0){
                 db = helper.getWritableDatabase();
-            List<DeskInfo> li=    DbManger.selectDeskInfo(db, Constant.DESK_INFO);
+            List<DeskInfo> li=    DbManger.selectDeskInfo(db, Constants.DESK_INFO);
                     tv_dialog_ip.setText(li.get(0).getLocal_ip());
                 tv_dialog_tesk.setText(li.get(0).getLocal_desk());
                 isUpdate=1;

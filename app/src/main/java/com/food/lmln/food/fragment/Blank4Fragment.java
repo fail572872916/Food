@@ -1,13 +1,9 @@
 package com.food.lmln.food.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,27 +11,15 @@ import android.view.ViewTreeObserver;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.food.lmln.food.R;
-import com.food.lmln.food.adapter.FoodStyle1Adapter;
 import com.food.lmln.food.adapter.FoodStyle2Adapter;
 import com.food.lmln.food.bean.FoodInfo;
-import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.db.DbManger;
-import com.food.lmln.food.utils.MyBitmapUtil;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import static com.food.lmln.food.db.Constant.send_msg_code1;
+import static com.food.lmln.food.db.Constants.send_msg_code1;
 
 import static com.food.lmln.food.utils.ScreenUtils.getScreenHeight;
 

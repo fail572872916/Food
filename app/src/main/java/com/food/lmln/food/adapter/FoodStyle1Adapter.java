@@ -103,11 +103,11 @@ public class FoodStyle1Adapter extends BaseAdapter {
                 break;
         }
         LinearLayout.LayoutParams linearParams;
-        if (height < 3)
+        if (height < 3) {
             linearParams = new LinearLayout.LayoutParams(viewSize[0] - (height * 100) / height, (viewSize[1] - (height * 100)) / height);
-        else
+        }    else {
             linearParams = new LinearLayout.LayoutParams(viewSize[0] / height, (viewSize[1] - (height * 50)) / height);
-
+        }
         vieewHolder.lin_item.setLayoutParams(linearParams);
         LinearLayout.LayoutParams lin = new LinearLayout.LayoutParams((viewSize[0] - (height * 60) / height), ((viewSize[1] - (height * 150)) / height));
         vieewHolder.im_item_image.setLayoutParams(lin);

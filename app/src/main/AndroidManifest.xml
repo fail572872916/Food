@@ -66,6 +66,10 @@
         </receiver>
 
         <service android:name=".services.BackService" />
+        <service
+            android:name=".services.SocketService"
+            android:enabled="true"
+            android:exported="true" />
 
     </application>
 

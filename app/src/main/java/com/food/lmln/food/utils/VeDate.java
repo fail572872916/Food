@@ -506,7 +506,7 @@ public class VeDate {
     }
 
     /**
-     * @param args
+     * @param date
      */
     public static boolean RightDate(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

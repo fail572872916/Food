@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.food.lmln.food.R;
 import com.food.lmln.food.bean.FoodinfoSmall;
 import com.food.lmln.food.bean.OrderInfo;
-import com.food.lmln.food.db.Constant;
+import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.utils.HttpUtils;
 import com.food.lmln.food.utils.MyBitmapUtil;
 import com.food.lmln.food.utils.ScreenUtils;
@@ -44,7 +44,7 @@ public class FragmentFoodDetail extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(Constant.FOOD_DETAIL);
+            mParam1 = getArguments().getString(Constants.FOOD_DETAIL);
 
         }
     }
