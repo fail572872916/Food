@@ -254,8 +254,8 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 case Constants.SEND_MSG_CODE10:
                     if (tempOk >= 1) {
                         Toast.makeText(MainActivity.this, +R.string.order_ok_print, Toast.LENGTH_SHORT).show();
-                        JSONObject jsonObj = new JSONObject();//创建json格式的数据
-                        JSONArray jsonArr = new JSONArray();//json格式的数组
+                        JSONObject jsonObj = new JSONObject();
+                        JSONArray jsonArr = new JSONArray();
                         try {
                             for (OrderInfo orderInfo : listOrder) {
                                 JSONObject jsonObjArr = new JSONObject();
@@ -270,7 +270,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        JSONObject json = JsonUtils.useJosn(true, Constants.CMD_PRINT, jsonObj, "", "");
+                        JSONObject json = JsonUtils.createJson(true, jsonObj, deskNo);
                         Log.d("json1", "jsonObj:" + json);
                         String uJson = JsonUtils.initSend("", deskIp,json, Constants.ORDER_PRINT, "");
                         Log.d(TAG,"uijson"+uJson);
@@ -345,14 +345,16 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
-                JSONObject jsonObject = new JSONObject();
                 person = person.replaceAll("\\\\", "");
                 Log.d("person", person);
                 JSONObject js1;
-                js1 = JsonUtils.useJosn(true, Constants.CMD_CLEAR, jsonObject, deskNo, person);
+                js1 = JsonUtils.createJson(true, person, deskNo);
                 Log.d("MainActivity", js1.toString());
+
+
                 dao.updOrderemp(new OrderTemp(""));
                 String uJson = JsonUtils.initSend("", "",js1, Constants.ORDER_SETTLE, "");
+                Log.d(TAG, "jiezhang"+uJson);
                 sendPrint(uJson);
 
             }
@@ -362,8 +364,8 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
             @Override
             public void onDialogCloseClick() {
                 selectIpDesk();
-                if (!TextUtils.isEmpty(deskNo)) {
-                    change(deskNo);
+                if (!TextUtils.isEmpty(deskIp)) {
+                    change(deskIp);
                 }
             }
         });
@@ -635,7 +637,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.bt_order_place:
-                    if (!socketSend(Constants.SOCKETPARMAR)) {
+                    if (!socketSend(Constants.HEART_BEAT_STRING_RECEIVE)) {
                         Toast.makeText(MainActivity.this, R.string.socket_seng_check, Toast.LENGTH_SHORT).show();
                     } else if (addList == null || addList.size() < 1) {
                         Toast.makeText(MainActivity.this, R.string.tip_not_order, Toast.LENGTH_SHORT).show();
@@ -694,7 +696,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 case R.id.bt_order_add_settlement:
                     if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
                         Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
-                    } else if (socketSend(Constants.SOCKETPARMAR)) {
+                    } else if (socketSend(Constants.HEART_BEAT_STRING_RECEIVE)) {
 //                        bt_order_add_settlement.setEnabled(false);
                         isFlag(true);
                         selectOrderMoney();
@@ -757,7 +759,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 }
             }
         }
-
         @Override
         public void run() {
             super.run();
@@ -795,7 +796,8 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
      * 打印数据
      */
     private void sendPrint(String jsonObj) {
-        if (socketSend(Constants.SOCKETPARMAR)) {
+        Log.d(TAG, jsonObj);
+        if (socketSend(Constants.HEART_BEAT_STRING_RECEIVE)) {
             socketSend(jsonObj);
             addList.clear();
             listOrder.clear();
@@ -855,7 +857,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
             if (fragment1 == null) {
                 // 如果SettingFragment为空，则创建一个并添加到界面上
                 fragment1 = new BlankFragment();
-
                 bundle2.putString("foodName", tableName);
                 fragment1.setArguments(bundle2);
                 transaction.add(R.id.myContent, fragment1);

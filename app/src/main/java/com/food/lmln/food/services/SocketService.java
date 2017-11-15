@@ -37,11 +37,12 @@ public class SocketService extends Service {
     /**
      * HEART_BEAT_RATE    心跳包频率
      */
-
-    private static final long HEART_BEAT_RATE = 6 * 1000;
     private static final int TIME_OUT = 5 * 1000;
     public static String HOST = "192.168.0.109";
     public static final int PORT = 30000;
+    int ss = 1000;
+
+    int dayMill = 86400000;
     private ReadThread mReadThread;
     public static final String MESSAGE_ACTION = "com.food.lmln.food.socket";
     public static final String HEART_BEAT_ACTION = "com.food.lmln.food.heart";
@@ -76,7 +77,7 @@ public class SocketService extends Service {
         initTask.execute();
         Log.d(TAG, "create");
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
-        mc = new MyCountDownTimer(99999999, 2000).getInstance();
+        mc = new MyCountDownTimer(dayMill, ss).getInstance();
     }
 
     public boolean sendMsg(String msg) {
@@ -124,11 +125,13 @@ public class SocketService extends Service {
             mReadThread = new ReadThread(socket);
             mReadThread.start();
             String time = String.valueOf(System.currentTimeMillis());
-            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST,  new JSONObject(), Constants.RESTAURANT, ""));
+//            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST,  new JSONObject(), Constants.ONLINE, ""));
+            sendMsg(JsonUtils.initSend("alice" + 666, HOST, new JSONObject(), Constants.ONLINE, ""));
             linkSocket = true;
         }
 
     }
+
     private static Socket initSocketLInk() {
 
         Socket socket;
@@ -250,6 +253,11 @@ public class SocketService extends Service {
                     while (!socket.isClosed() && !socket.isInputShutdown()
                             && isStart && ((length = is.read(buffer)) != -1)) {
                         if (length > 0) {
+                            if (mc != null) {
+                                mc.cancel();
+                                mc.start();
+                                linkSocket = true;
+                            }
                             String message = new String(Arrays.copyOf(buffer,
                                     length)).trim();
                             Log.i(TAG, "收到服务器发送来的消息：" + message + "______________________");
@@ -257,14 +265,17 @@ public class SocketService extends Service {
                             //处理心跳回复
                             String code = JsonUtils.jsonResolveType(message);
                             if (code.equals(Constants.SOCKET_MSG_CAR_HEART)) {
+                                linkSocket = true;
                                 if (!sendMsg(HEART_BEAT_STRING_RECEIVE)) {
                                     linkSocket = false;
                                 }
                                 Intent intent = new Intent(HEART_BEAT_ACTION);
                                 mLocalBroadcastManager.sendBroadcast(intent);
-                                linkSocket = true;
+
                             } else if (code.equals(Constants.ONLINE)) {
+                                linkSocket = true;
                                 continue;
+
                             } else {
                                 //其他消息回复
                                 Intent intent = new Intent(MESSAGE_ACTION);
@@ -276,8 +287,11 @@ public class SocketService extends Service {
                         }
                     }
                 } catch (IOException e) {
+
                     release();
                     releaseLastSocket(mSocket);
+                    Log.d(TAG, "服务器断开");
+                    linkSocket = false;
                     e.printStackTrace();
                 }
             }
@@ -289,7 +303,7 @@ public class SocketService extends Service {
 
         private synchronized MyCountDownTimer getInstance() {
             if (myCountDownTimer == null) {
-                myCountDownTimer = new MyCountDownTimer(99999999, 2000);
+                myCountDownTimer = new MyCountDownTimer(dayMill, ss);
             }
             return myCountDownTimer;
         }
@@ -318,13 +332,13 @@ public class SocketService extends Service {
                 mc.cancel();
                 mc.start();
             } else {
-
-                if (millisUntilFinished % 3 == 0) {
+                if (millisUntilFinished % 4 == 0 && linkSocket && millisUntilFinished % 7 != 0) {
                     linkSocket = false;
+                    Log.d("ssssssssssssss", linkSocket + "sss:" + millisUntilFinished);
                 } else if (millisUntilFinished % 7 == 0 && !linkSocket) {
-                    Log.d(TAG, "a");
+                    Log.d("ssssssssssssss", linkSocket + "millisUntilFinished:" + millisUntilFinished);
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(2000);
                         if (initTask != null) {
                             releaseLastSocket(mSocket);
                             initTask.cancel(true);
@@ -338,7 +352,6 @@ public class SocketService extends Service {
                         e.printStackTrace();
                     }
                 }
-
             }
         }
     }

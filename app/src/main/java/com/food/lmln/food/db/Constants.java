@@ -7,7 +7,7 @@ package com.food.lmln.food.db;
 
 public class Constants {
     public static final int SOCKET_PORT =30000;      //socket端口号
-    public static  final String SOCKETPARMAR = "0xFF";
+//    public static  final String SOCKETPARMAR = "0xFF";
     /**
      * MyslSqlConnection
      */
@@ -152,6 +152,7 @@ public class Constants {
     public static final String SOCKET_MSG_CAR_RUN= "C002";
     public static final String SOCKET_MSG_CAR_LINE= "onLine";
 
+    public static final String HEART_BEAT_STRING_RECEIVE = "";
 
 
 }

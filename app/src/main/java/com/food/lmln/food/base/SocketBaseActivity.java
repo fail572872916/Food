@@ -58,7 +58,6 @@ public class SocketBaseActivity extends AppCompatActivity {
     private boolean flag = false;
     public String deskNo = ""; //当前桌台号
     public String deskIp = ""; //连接ip
-    DbManger dbManger;
     SqlHelper helper;
     private SQLiteDatabase db;
     private ServiceConnection conn = new ServiceConnection() {
@@ -151,8 +150,10 @@ public class SocketBaseActivity extends AppCompatActivity {
      */
     public void change(String string) {
         if (flag) {
+            Log.d("SocketBaseActivity", string);
             if (mReciver != null) {
                 localBroadcastManager.unregisterReceiver(mReciver);
+                Log.d("SocketBaseActivity", "我走了");
             }
             stopService();
             SocketService.HOST = string;
@@ -163,7 +164,7 @@ public class SocketBaseActivity extends AppCompatActivity {
             isBound = bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
             startService(mServiceIntent);
         } else {
-
+            Log.d("SocketBaseActivity", "aa");
             flag = true;
             SocketService.HOST = string;
             if (localBroadcastManager == null) {

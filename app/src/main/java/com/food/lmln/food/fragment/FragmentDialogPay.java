@@ -480,7 +480,7 @@ public class FragmentDialogPay extends DialogFragment {
      * @param msg json
      */
     private void setCustomMsg(String msg) {
-        String json = JsonUtils.useJpushJosn(msg, order_detail_value);
+        String json = JsonUtils.useJpushJson(msg, order_detail_value);
         Log.d("aaaa", json);
         if (json != null) {
             mlistener.onDialogClick(json);
