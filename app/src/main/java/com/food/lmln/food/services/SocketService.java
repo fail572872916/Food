@@ -335,7 +335,7 @@ public class SocketService extends Service {
                 if (millisUntilFinished % 4 == 0 && linkSocket && millisUntilFinished % 7 != 0) {
                     linkSocket = false;
                     Log.d("ssssssssssssss", linkSocket + "sss:" + millisUntilFinished);
-                } else if (millisUntilFinished % 7 == 0 && !linkSocket) {
+                } else if (millisUntilFinished % 7 == 0 && !linkSocket && millisUntilFinished % 4 != 0) {
                     Log.d("ssssssssssssss", linkSocket + "millisUntilFinished:" + millisUntilFinished);
                     try {
                         Thread.sleep(2000);
