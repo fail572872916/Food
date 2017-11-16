@@ -1,11 +1,10 @@
 package com.food.lmln.food.bean;
 
-import java.util.List;
-
 /**
- * Created by Weili on 2017/7/6.
+ *  @author Weli
+ *  @time 2017-11-16  11:51
+ *  @describe
  */
-
 public class TemporaryOrder {
 
     /**

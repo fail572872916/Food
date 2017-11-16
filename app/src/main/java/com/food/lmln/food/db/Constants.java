@@ -56,6 +56,7 @@ public class Constants {
     public static  final String  ORDER_SETTLE ="P002";
 
 
+    public static  final String  CLL_MACHINE ="H001";
 
 
 

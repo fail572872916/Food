@@ -92,6 +92,7 @@ public class FragmentDialogPay extends DialogFragment {
     public static boolean isForeground = false;
     OkHttpClient mOkHttpClient;
     private AdvancedCountdownTimer countdownTimer;
+    private String deskNo;
 
     public static FragmentDialogPay newInstance() {
         Bundle args = new Bundle();
@@ -213,6 +214,7 @@ public class FragmentDialogPay extends DialogFragment {
             ordrNo = temp[1];
             product_id_value = temp[2];
             order_detail_value = temp[3];
+            deskNo = temp[4];
         }
         if (type != null && type.equals(Constants.ALI)) {
             String url = HttpUtils.ALI_PAY;
@@ -344,7 +346,8 @@ public class FragmentDialogPay extends DialogFragment {
         });
     }
 
-    /* 加载动画
+    /**
+     * loading animation
      * @param view
      */
     public static void slideToUp(View view) {
@@ -450,8 +453,6 @@ public class FragmentDialogPay extends DialogFragment {
                 String extras = intent.getStringExtra(KEY_EXTRAS);
                 StringBuilder showMsg = new StringBuilder();
                 Log.d("jpush", extras);
-
-
                 Log.d("jpush", extras);
                 JSONObject json = null;
                 String data = null;
@@ -480,14 +481,13 @@ public class FragmentDialogPay extends DialogFragment {
      * @param msg json
      */
     private void setCustomMsg(String msg) {
-        String json = JsonUtils.useJpushJson(msg, order_detail_value);
+        String json = JsonUtils.useJpushJson(msg, order_detail_value,deskNo);
         Log.d("aaaa", json);
         if (json != null) {
-            mlistener.onDialogClick(json);
+            onDialogListener.onDialogClick(json);
             closeScale(lin_bg);
         }
     }
-
     @Override
     public void onResume() {
         isForeground = true;
@@ -558,13 +558,17 @@ public class FragmentDialogPay extends DialogFragment {
     /**
      * 定义一个接口，提供Activity使用
      */
-    OnDialogListener mlistener;
+    OnDialogListener onDialogListener;
 
     public interface OnDialogListener {
+        /**
+         * 回传支付的订单
+         * @param person
+         */
         void onDialogClick(String person);
     }
 
     public void setOnDialogListener(OnDialogListener dialogListener) {
-        this.mlistener = dialogListener;
+        this.onDialogListener = dialogListener;
     }
 }

@@ -126,11 +126,9 @@ public class SocketService extends Service {
             mReadThread = new ReadThread(socket);
             mReadThread.start();
             String time = String.valueOf(System.currentTimeMillis());
-//            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST,  new JSONObject(), Constants.ONLINE, ""));
-            sendMsg(JsonUtils.initSend("alice" + 666, HOST, new JSONObject(), Constants.ONLINE, ""));
+            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST, String.valueOf(new JSONObject()), Constants.ONLINE, ""));
             linkSocket = true;
         }
-
     }
 
     private static Socket initSocketLInk() {
@@ -264,32 +262,34 @@ public class SocketService extends Service {
                             Log.i(TAG, "收到服务器发送来的消息：" + message + "______________________");
                             // 收到服务器过来的消息，就通过Broadcast发送出去
                             //处理心跳回复
-                            String code = JsonUtils.jsonResolveType(message);
+
                             if (TextUtils.isEmpty(message)) {
                                 continue;
-                            } else if (code.equals(Constants.SOCKET_MSG_CAR_HEART)) {
-                                linkSocket = true;
-                                if (!sendMsg(HEART_BEAT_STRING_RECEIVE)) {
-                                    linkSocket = false;
-                                }
-                                Intent intent = new Intent(HEART_BEAT_ACTION);
-                                mLocalBroadcastManager.sendBroadcast(intent);
-
-                            } else if (code.equals(Constants.ONLINE)) {
-                                linkSocket = true;
-                                continue;
-
                             } else {
-                                //其他消息回复
-                                Intent intent = new Intent(MESSAGE_ACTION);
-                                intent.putExtra("message", message);
-                                intent.putExtra("code", code);
-                                mLocalBroadcastManager.sendBroadcast(intent);
-                                linkSocket = true;
+                                String code = JsonUtils.jsonResolveType(message);
+                                if (code.equals(Constants.SOCKET_MSG_CAR_HEART)) {
+                                    linkSocket = true;
+                                    if (!sendMsg(HEART_BEAT_STRING_RECEIVE)) {
+                                        linkSocket = false;
+                                    }
+                                    Intent intent = new Intent(HEART_BEAT_ACTION);
+                                    mLocalBroadcastManager.sendBroadcast(intent);
+
+                                } else if (code.equals(Constants.ONLINE)) {
+                                    linkSocket = true;
+                                    continue;
+
+                                } else {
+                                    //其他消息回复
+                                    Intent intent = new Intent(MESSAGE_ACTION);
+                                    intent.putExtra("message", message);
+                                    intent.putExtra("code", code);
+                                    mLocalBroadcastManager.sendBroadcast(intent);
+                                    linkSocket = true;
+                                }
                             }
                         }
                     }
-                    Log.d(TAG, "sssss");
                 } catch (IOException e) {
 
                     release();
@@ -363,7 +363,6 @@ public class SocketService extends Service {
                     e.printStackTrace();
                 }
             }
-
+        }
     }
-}
 }

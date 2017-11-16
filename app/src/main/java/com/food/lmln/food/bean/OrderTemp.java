@@ -1,10 +1,11 @@
 package com.food.lmln.food.bean;
 
 /**
- * Created by Administrator on 17/9/3.
- * 临时订单号
+ * 订单临时
+ *  @author Weli
+ *  @time 2017-11-16  11:51
+ *  @describe
  */
-
 public class OrderTemp {
     private String order_temp;
 

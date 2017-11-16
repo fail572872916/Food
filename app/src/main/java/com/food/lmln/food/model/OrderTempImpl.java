@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.food.lmln.food.bean.DeskTemp;
 import com.food.lmln.food.bean.OrderTemp;
 import com.food.lmln.food.db.SqlHelper;
 

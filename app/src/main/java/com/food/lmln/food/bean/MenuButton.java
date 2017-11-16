@@ -1,9 +1,10 @@
 package com.food.lmln.food.bean;
 
 /**
- * Created by Weili on 2017/6/2.
+ *  @author Weli
+ *  @time 2017-11-16  11:57
+ *  @describe 
  */
-
 public class MenuButton {
     private int id;
     private String name;

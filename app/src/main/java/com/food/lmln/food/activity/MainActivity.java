@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
@@ -182,7 +183,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                     Bundle bundle1 = msg.getData();
                     newList = (List<OrderInfo>) bundle1.getSerializable("List");
                     newList = (List<OrderInfo>) bundle1.getSerializable("List");
-                    if (stopCode == 2 && newList !=null) {
+                    if (stopCode == 2 && newList != null) {
                         mAdapterRight = new FoodOrderAdapter(newList, MainActivity.this);
                         mAdapterRight.notifyDataSetChanged();
                         mLvRight.setAdapter(mAdapterRight);
@@ -270,11 +271,10 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        JSONObject json = JsonUtils.createJson(true, jsonObj, deskNo);
-                        Log.d("json1", "jsonObj:" + json);
-                        String uJson = JsonUtils.initSend("", deskIp,json, Constants.ORDER_PRINT, "");
-                        Log.d(TAG,"uijson"+uJson);
-                        sendPrint(uJson);
+                        Log.d(TAG, "jsonObj:" + jsonObj);
+                        String uJson = JsonUtils.initSend("", deskIp, jsonObj, Constants.ORDER_PRINT, "");
+                        Log.d(TAG, "uijson" + uJson);
+                        sendPrint(uJson.toString());
                     }
                     break;
                 case Constants.SEND_MSG_CODE11:
@@ -347,12 +347,12 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
             public void onDialogClick(String person) {
                 person = person.replaceAll("\\\\", "");
                 Log.d("person", person);
-                JSONObject js1;
-                js1 = JsonUtils.createJson(true, person, deskNo);
-                Log.d("MainActivity", js1.toString());
+
+
                 dao.updOrderemp(new OrderTemp(""));
-                String uJson = JsonUtils.initSend("", "",js1, Constants.ORDER_SETTLE, "");
-                Log.d(TAG, "jiezhang"+uJson);
+                String uJson = JsonUtils.initSend("", "", person, Constants.ORDER_SETTLE, "");
+                Log.d(TAG, "jiezhang" + uJson);
+
                 sendPrint(uJson);
 
             }
@@ -619,7 +619,21 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 Toast.makeText(this, "呼叫机器人", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.fab_vending_machine:
-                Toast.makeText(this, "呼叫售卖机", Toast.LENGTH_SHORT).show();
+
+                if (!socketSend(Constants.HEART_BEAT_STRING_RECEIVE)) {
+                    Toast.makeText(MainActivity.this, R.string.socket_seng_check, Toast.LENGTH_SHORT).show();
+                } else {
+                    JSONObject jsonObj = new JSONObject();
+                    try {
+                        jsonObj.put(" local_ip", deskIp);
+                        jsonObj.put(" local_desk_str", deskNo);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String uJson = JsonUtils.initSend("", deskIp, jsonObj, Constants.CLL_MACHINE, "");
+                    sendPrint(uJson.toString());
+                }
                 break;
             default:
                 break;
@@ -757,6 +771,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 }
             }
         }
+
         @Override
         public void run() {
             super.run();
@@ -924,7 +939,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                     flag = true;
                     break;
                 } else {
-                    d.setId(dt.getId()  +1);
+                    d.setId(dt.getId() + 1);
                 }
             }
             if (!flag) {
@@ -934,7 +949,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         }
         mHandler.sendEmptyMessage(Constants.SEND_MSG_CODE2);
     }
-
 
     /**
      * 判断停止线程
@@ -965,13 +979,13 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 Bundle bundle = new Bundle();
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
-                        bundle.putString(Constants.PAY_TYPE, Constants.ALI + "####" + orderNo + "####" + String.valueOf(money) + "####" + list);
+                        bundle.putString(Constants.PAY_TYPE, Constants.ALI + "####" + orderNo + "####" + String.valueOf(money) + "####" + list + "####" + deskNo);
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
-                        bundle.putString(Constants.PAY_TYPE, Constants.WEIXIN + "####" + orderNo + "####" + String.valueOf(money) + "####" + list);
+                        bundle.putString(Constants.PAY_TYPE, Constants.WEIXIN + "####" + orderNo + "####" + String.valueOf(money) + "####" + list + "####" + deskNo);
                         editNameDialog.setArguments(bundle);
                         editNameDialog.show(fm, "payDialog");
                         p.dismiss();
@@ -996,7 +1010,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                     String code = intent.getStringExtra("code");
                     Log.d(TAG, code);
                     if (code.equals(Constants.SOCKET_MSG_CAR_INFO)) {
-
                     }
                 }
             }

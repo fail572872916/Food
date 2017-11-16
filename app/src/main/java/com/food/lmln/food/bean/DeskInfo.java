@@ -1,9 +1,10 @@
 package com.food.lmln.food.bean;
 
 /**
- * Created by Weili on 2017/7/20.
+ *  @author Weli
+ *  @time 2017-11-16  14:24
+ *  @describe 
  */
-
 public class DeskInfo {
     private int id;
     private  String  local_ip;
