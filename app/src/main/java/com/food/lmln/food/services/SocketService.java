@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.food.lmln.IBackService;
@@ -42,7 +43,7 @@ public class SocketService extends Service {
     public static final int PORT = 30000;
     int ss = 1000;
 
-    int dayMill = 86400000;
+    int dayMill = 10000;
     private ReadThread mReadThread;
     public static final String MESSAGE_ACTION = "com.food.lmln.food.socket";
     public static final String HEART_BEAT_ACTION = "com.food.lmln.food.heart";
@@ -264,7 +265,9 @@ public class SocketService extends Service {
                             // 收到服务器过来的消息，就通过Broadcast发送出去
                             //处理心跳回复
                             String code = JsonUtils.jsonResolveType(message);
-                            if (code.equals(Constants.SOCKET_MSG_CAR_HEART)) {
+                            if (TextUtils.isEmpty(message)) {
+                                continue;
+                            } else if (code.equals(Constants.SOCKET_MSG_CAR_HEART)) {
                                 linkSocket = true;
                                 if (!sendMsg(HEART_BEAT_STRING_RECEIVE)) {
                                     linkSocket = false;
@@ -286,6 +289,7 @@ public class SocketService extends Service {
                             }
                         }
                     }
+                    Log.d(TAG, "sssss");
                 } catch (IOException e) {
 
                     release();
@@ -300,6 +304,13 @@ public class SocketService extends Service {
 
     class MyCountDownTimer extends CountDownTimer {
         private MyCountDownTimer myCountDownTimer;
+        /**
+         * When the countdown is 10, take effect
+         * MySelf break timer 7s
+         * MySelf  check link timer 3s
+         */
+        private int anInt = 7;
+        private int anInt1 = 3;
 
         private synchronized MyCountDownTimer getInstance() {
             if (myCountDownTimer == null) {
@@ -325,34 +336,34 @@ public class SocketService extends Service {
             mc.cancel();
         }
 
+        /**
+         * @param millisUntilFinished this is millisUntilFinished ,You have to use seconds  /1000
+         */
         @Override
         public void onTick(long millisUntilFinished) {
-            Log.i("MainActivity", millisUntilFinished / 1000 + "");
-            if (millisUntilFinished == 0) {
+            int num = (int) (millisUntilFinished / 1000);
+            if (num == anInt) {
+                linkSocket = false;
+
+            } else if (millisUntilFinished == 0) {
                 mc.cancel();
                 mc.start();
-            } else {
-                if (millisUntilFinished % 4 == 0 && linkSocket && millisUntilFinished % 7 != 0) {
-                    linkSocket = false;
-                    Log.d("ssssssssssssss", linkSocket + "sss:" + millisUntilFinished);
-                } else if (millisUntilFinished % 7 == 0 && !linkSocket && millisUntilFinished % 4 != 0) {
-                    Log.d("ssssssssssssss", linkSocket + "millisUntilFinished:" + millisUntilFinished);
-                    try {
-                        Thread.sleep(2000);
-                        if (initTask != null) {
-                            releaseLastSocket(mSocket);
-                            initTask.cancel(true);
-                            Log.d(TAG, "initTask.getStatus():" + initTask.getStatus());
-                            initTask = new InitTask();
-                            initTask.execute();
-                            mHandler.removeCallbacks(mReadThread);
-                            releaseLastSocket(mSocket);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+            } else if (num < anInt1 && !linkSocket) {
+                try {
+                    Thread.sleep(2000);
+                    if (initTask != null) {
+                        releaseLastSocket(mSocket);
+                        initTask.cancel(true);
+                        initTask = new InitTask();
+                        initTask.execute();
+                        mHandler.removeCallbacks(mReadThread);
+                        releaseLastSocket(mSocket);
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-        }
+
     }
+}
 }

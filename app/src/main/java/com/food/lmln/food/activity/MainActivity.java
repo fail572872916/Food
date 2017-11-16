@@ -350,8 +350,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 JSONObject js1;
                 js1 = JsonUtils.createJson(true, person, deskNo);
                 Log.d("MainActivity", js1.toString());
-
-
                 dao.updOrderemp(new OrderTemp(""));
                 String uJson = JsonUtils.initSend("", "",js1, Constants.ORDER_SETTLE, "");
                 Log.d(TAG, "jiezhang"+uJson);
