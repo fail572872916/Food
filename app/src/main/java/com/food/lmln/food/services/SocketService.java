@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.food.lmln.IBackService;
+import com.food.lmln.food.R;
 import com.food.lmln.food.db.Constants;
 import com.food.lmln.food.utils.JsonUtils;
 
@@ -29,9 +30,11 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 
 /**
- * Created by WeLi on 2016/10/7 0007.
+ * Socket service
+ *  @author Weli
+ *  @time 2017-11-17  9:55
+ *  @describe
  */
-
 public class SocketService extends Service {
     private static final String TAG = "SocketService";
     public MyCountDownTimer mc;
@@ -103,8 +106,6 @@ public class SocketService extends Service {
         }
         return true;
     }
-
-
     /**
      * 初始化socket
      *
@@ -125,8 +126,7 @@ public class SocketService extends Service {
             mSocket = new WeakReference<>(socket);
             mReadThread = new ReadThread(socket);
             mReadThread.start();
-            String time = String.valueOf(System.currentTimeMillis());
-            sendMsg(JsonUtils.initSend("alice" + time.substring(time.length() - 3, time.length()), HOST, String.valueOf(new JSONObject()), Constants.ONLINE, ""));
+            sendMsg(JsonUtils.initSend(getString(R.string.text_tag_equipment), HOST, String.valueOf(new JSONObject()), Constants.ONLINE, ""));
             linkSocket = true;
         }
     }
@@ -180,16 +180,13 @@ public class SocketService extends Service {
         Log.e("Service", "onDestroy");
         mc.cancel();
         mHandler.removeCallbacks(mReadThread);
-
         if (mReadThread != null) {
             mReadThread.release();
         }
         releaseLastSocket(mSocket);
         if (initTask != null) {
             initTask.cancel(true);
-
         }
-
         super.onDestroy();
     }
 
@@ -291,7 +288,6 @@ public class SocketService extends Service {
                         }
                     }
                 } catch (IOException e) {
-
                     release();
                     releaseLastSocket(mSocket);
                     Log.d(TAG, "服务器断开");
@@ -301,7 +297,6 @@ public class SocketService extends Service {
             }
         }
     }
-
     class MyCountDownTimer extends CountDownTimer {
         private MyCountDownTimer myCountDownTimer;
         /**
@@ -311,7 +306,6 @@ public class SocketService extends Service {
          */
         private int anInt = 7;
         private int anInt1 = 3;
-
         private synchronized MyCountDownTimer getInstance() {
             if (myCountDownTimer == null) {
                 myCountDownTimer = new MyCountDownTimer(dayMill, ss);

@@ -44,6 +44,7 @@ public final class LocalBroadcastManager {
     private LocalBroadcastManager(Context context) {
         this.mAppContext = context;
         this.mHandler = new Handler(context.getMainLooper()) {
+            @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:

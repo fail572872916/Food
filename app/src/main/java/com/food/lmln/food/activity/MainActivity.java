@@ -625,8 +625,9 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 } else {
                     JSONObject jsonObj = new JSONObject();
                     try {
-                        jsonObj.put(" local_ip", deskIp);
                         jsonObj.put(" local_desk_str", deskNo);
+                        //1 呼叫 2，加水，3，加饭。
+                        jsonObj.put("server_type", "1");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -771,7 +772,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 }
             }
         }
-
         @Override
         public void run() {
             super.run();

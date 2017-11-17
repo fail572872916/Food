@@ -641,6 +641,7 @@
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="tesk">桌台</string>
     <string name="text_surplus_time">剩余%1$s秒</string>
+    <string name="text_tag_equipment">平板</string>
     <string name="tip_check_desk">请检查桌台</string>
     <string name="tip_check_ip">请检查你的Ip</string>
     <string name="tip_desk_no">请输入桌台号</string>
