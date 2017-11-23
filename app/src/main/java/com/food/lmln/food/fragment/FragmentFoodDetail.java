@@ -30,7 +30,9 @@ import org.greenrobot.eventbus.EventBus;
 
 
 /**
- * Created by Administrator on 2017/8/23.
+ *  @author Weli
+ *  @time 2017-11-23  18:34
+ *  @describe
  */
 
 public class FragmentFoodDetail extends DialogFragment {
@@ -63,7 +65,8 @@ public class FragmentFoodDetail extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getDialog().setCanceledOnTouchOutside(false);  //点击外部不消失
+        //点击外部不消失
+        getDialog().setCanceledOnTouchOutside(false);
         view = inflater.inflate(R.layout.fragment_food_detail, container, false);
         initView();
         return view;

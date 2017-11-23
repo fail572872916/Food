@@ -68,12 +68,10 @@ public class SocketService extends Service {
 
     public boolean linkSocket = false;
     private InitTask initTask;
-
     @Override
     public IBinder onBind(Intent arg0) {
         return iBackService;
     }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,7 +81,6 @@ public class SocketService extends Service {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mc = new MyCountDownTimer(dayMill, ss).getInstance();
     }
-
     public boolean sendMsg(String msg) {
         if (null == mSocket || null == mSocket.get()) {
             return false;

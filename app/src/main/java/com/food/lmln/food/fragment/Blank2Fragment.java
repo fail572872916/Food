@@ -27,7 +27,11 @@ import java.util.List;
 import static com.food.lmln.food.db.Constants.PASSWORD;
 import static com.food.lmln.food.db.Constants.SQLURL;
 import static com.food.lmln.food.db.Constants.USERNAME;
-
+/**
+ *  @author Weli
+ *  @time 2017-11-23  18:34
+ *  @describe
+ */
 public class Blank2Fragment extends Fragment {
 
     private List<FoodinfoSmall> foodList = new ArrayList<FoodinfoSmall>();

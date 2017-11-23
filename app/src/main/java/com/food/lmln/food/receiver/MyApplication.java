@@ -6,9 +6,10 @@ import android.app.Application;
 import cn.jpush.android.api.JPushInterface;
 
 /**
- * Created by HDL on 2016/9/8.
+ *  @author Weli
+ *  @time 2017-11-23  18:34
+ *  @describe
  */
-
 public class MyApplication extends Application {
     @Override
     public void onCreate() {

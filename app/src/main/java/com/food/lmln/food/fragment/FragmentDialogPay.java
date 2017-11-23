@@ -63,7 +63,9 @@ import okhttp3.Response;
 import static org.greenrobot.eventbus.EventBus.TAG;
 
 /**
- * Created by Weili on 2017/7/27.
+ *  @author Weli
+ *  @time 2017-11-23  18:34
+ *  @describe
  */
 public class FragmentDialogPay extends DialogFragment {
     //for receive customer msg from jpush server

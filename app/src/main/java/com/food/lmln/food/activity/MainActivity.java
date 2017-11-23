@@ -107,7 +107,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
      */
     private BlankFragment fragment1;
     private Blank2Fragment fragment2;
-    FragmentDialogPay editNameDialog;
+    FragmentDialogPay fragmentDialogPay;
     private DbManger dbManager;
     private List<OrderInfo> newList = new ArrayList<>();
     private List<OrderInfo> addList = new ArrayList<>();
@@ -222,7 +222,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
 //                        }
 //                        String json =JsonUtils.useJosn(true, Constant.CMD_PRINT, jsonObject);
 //                        sendPrint(json);
-                        dao.updOrderemp(new OrderTemp(""));
+                        dao.updOrderTemp(new OrderTemp(""));
                         startTemp();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.tip_fail_desk, Toast.LENGTH_SHORT).show();
@@ -335,21 +335,21 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         thread.start();
         dao = new OrderTempImpl(new SqlHelper(this));
         fragment1 = new BlankFragment();
-        editNameDialog = new FragmentDialogPay();
+        fragmentDialogPay = new FragmentDialogPay();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.myContent, fragment1);
         transaction.commit();
         isFlag(true);
         SocketService.HOST = deskIp;
-        editNameDialog.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
+        fragmentDialogPay.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
             public void onDialogClick(String person) {
                 person = person.replaceAll("\\\\", "");
                 Log.d("person", person);
 
 
-                dao.updOrderemp(new OrderTemp(""));
+                dao.updOrderTemp(new OrderTemp(""));
                 String uJson = JsonUtils.initSend("", "", person, Constants.ORDER_SETTLE, "");
                 Log.d(TAG, "jiezhang" + uJson);
 
@@ -405,16 +405,16 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String order = dao.getOrderemp();
+                String order = dao.getOrderTemp();
                 OrderTemp ot = new OrderTemp();
                 boolean down = false;
                 if (order == null || "".equals(order)) {
                     orderNowNo = getOrderId();
                     ot.setOrder_temp(orderNowNo);
-                    dao.updOrderemp(ot);
+                    dao.updOrderTemp(ot);
                     down = true;
                 } else {
-                    orderNowNo = dao.getOrderemp();
+                    orderNowNo = dao.getOrderTemp();
                 }
                 String sql;
                 for (OrderInfo orderInfo : addList) {
@@ -627,12 +627,12 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                     try {
                         jsonObj.put(" local_desk_str", deskNo);
                         //1 呼叫 2，加水，3，加饭。
-                        jsonObj.put("server_type", "1");
+                        jsonObj.put("server_type", 1);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    String uJson = JsonUtils.initSend("", deskIp, jsonObj, Constants.CLL_MACHINE, "");
+                    String uJson = JsonUtils.initSend("", deskIp, jsonObj, Constants.MACHINE_MOVE, "");
                     sendPrint(uJson.toString());
                 }
                 break;
@@ -980,14 +980,14 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 switch (v.getId()) {
                     case R.id.im_pay_ali:
                         bundle.putString(Constants.PAY_TYPE, Constants.ALI + "####" + orderNo + "####" + String.valueOf(money) + "####" + list + "####" + deskNo);
-                        editNameDialog.setArguments(bundle);
-                        editNameDialog.show(fm, "payDialog");
+                        fragmentDialogPay.setArguments(bundle);
+                        fragmentDialogPay.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     case R.id.im_pay_weixin:
                         bundle.putString(Constants.PAY_TYPE, Constants.WEIXIN + "####" + orderNo + "####" + String.valueOf(money) + "####" + list + "####" + deskNo);
-                        editNameDialog.setArguments(bundle);
-                        editNameDialog.show(fm, "payDialog");
+                        fragmentDialogPay.setArguments(bundle);
+                        fragmentDialogPay.show(fm, "payDialog");
                         p.dismiss();
                         break;
                     default:

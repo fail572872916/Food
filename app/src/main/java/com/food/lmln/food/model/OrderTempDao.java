@@ -9,10 +9,10 @@ import com.food.lmln.food.bean.OrderTemp;
 
 public interface OrderTempDao {
 
-     void setOrderemp(OrderTemp temp);
-     String getOrderemp();
-     String delOrderemp(OrderTemp temp);
-     void updOrderemp(OrderTemp temp);
+     void setOrderTemp(OrderTemp temp);
+     String getOrderTemp();
+     String delOrderTemp(OrderTemp temp);
+     void updOrderTemp(OrderTemp temp);
 
 
 }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.food.lmln.food.activity.MainActivity;
 import com.food.lmln.food.fragment.FragmentDialogPay;
 import com.food.lmln.food.utils.ExampleUtil;
 import com.food.lmln.food.utils.Logger;
@@ -21,11 +20,15 @@ import java.util.Iterator;
 import cn.jpush.android.api.JPushInterface;
 
 /**
- * 自定义接收器
+ *
+ *  自定义接收器
  *
  * 如果不定义这个 Receiver，则：
  * 1) 默认用户会打开主界面
  * 2) 接收不到自定义消息
+ *  @author Weli
+ *  @time 2017-11-23  18:32
+ *  @describe
  */
 public class MyReceiver extends BroadcastReceiver {
     private static final String TAG = "MyReceiver";
@@ -69,7 +72,12 @@ public class MyReceiver extends BroadcastReceiver {
 
         }
     }
-    // 打印所有的 intent extra 数据
+
+    /**
+     * 打印所有的 intent extra 数据
+     * @param bundle
+     * @return
+     */
     private static String printBundle(Bundle bundle) {
         StringBuilder sb = new StringBuilder();
         for (String key : bundle.keySet()) {

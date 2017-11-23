@@ -24,7 +24,11 @@ import java.util.List;
 
 
 import static com.food.lmln.food.utils.ScreenUtils.getScreenHeight;
-
+/**
+ *  @author Weli
+ *  @time 2017-11-23  18:34
+ *  @describe
+ */
 public class Blank5Fragment extends Fragment {
     private static final String TAG = "MainActivity";
     @SuppressLint("HandlerLeak")
