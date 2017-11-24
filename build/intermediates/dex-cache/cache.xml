@@ -12,51 +12,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Administrator\.android\build-cache\33c6d042a81153b57ac2265cbc1d0e3913d995a0\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="1c3b9743fe8bb166a90a7e98b9b9f1f8021d80cd">
-        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\classes_e355f2dcc1ef1a1e94102c0b811edec2e2f3c0ad.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Administrator\Develops\Sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
-        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\support-annotations-25.3.1_7b345037434e087b5ef085ed8edfeb91dd13dcdf.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
-        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\glide-3.7.0_1f3ddf859a86296da03fddcf50d19f29d652df81.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Administrator\.android\build-cache\ffd52e963b95033aeaff27c954669ec6f0992c98\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="476390e81d32f9d08f9f5aab6c2b28f314a37828">
-        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\classes_86e543fa668c2cdbd86a1f5574eadce989e6ff23.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.2.0\f7873a2ebde246a45c2a8d6f3247108b4c88a879\okhttp-3.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="f7873a2ebde246a45c2a8d6f3247108b4c88a879">
-        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\okhttp-3.2.0_e97c4d684058659f4c78fd063d89ce0d8b400297.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\Administrator\.android\build-cache\95b6c2806cf4b5064cacbe5026b52c255ac00577\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
@@ -72,6 +27,24 @@
         revision="25.0.3"
         sha1="1dc44f4cec20a64cebb68b90b4218f82ac7948b1">
         <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\okio-1.7.0_b18a8c4ef088002a1228949d7ea25693a69db659.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Administrator\.android\build-cache\33c6d042a81153b57ac2265cbc1d0e3913d995a0\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="1c3b9743fe8bb166a90a7e98b9b9f1f8021d80cd">
+        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\classes_e355f2dcc1ef1a1e94102c0b811edec2e2f3c0ad.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Administrator\Develops\Sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\support-annotations-25.3.1_7b345037434e087b5ef085ed8edfeb91dd13dcdf.jar" />
     </item>
     <item
         is-multidex="false"
@@ -111,6 +84,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\glide-3.7.0_1f3ddf859a86296da03fddcf50d19f29d652df81.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\com.nineoldandroids\library\2.4.0\e9b63380f3a242dbdbf103a2355ad7e43bad17cb\library-2.4.0.jar"
         jumboMode="false"
         optimize="true"
@@ -126,6 +108,15 @@
         revision="25.0.3"
         sha1="df451c6f391e3e32022fc964ed87bd57a5869128">
         <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\classes_85c32ad864618748e08d72c0bfe993904fd9b643.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Administrator\.android\build-cache\ffd52e963b95033aeaff27c954669ec6f0992c98\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="476390e81d32f9d08f9f5aab6c2b28f314a37828">
+        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\classes_86e543fa668c2cdbd86a1f5574eadce989e6ff23.jar" />
     </item>
     <item
         is-multidex="false"
@@ -153,6 +144,15 @@
         revision="25.0.3"
         sha1="7b9bfb6c4e4885660378a9c13330915c321f6cca">
         <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\mysql-connector-java-5.0.8-bin_e27638adadcceb6469b8abae192481b564396c02.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.2.0\f7873a2ebde246a45c2a8d6f3247108b4c88a879\okhttp-3.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="f7873a2ebde246a45c2a8d6f3247108b4c88a879">
+        <dex dex="E:\project\Food\app\build\intermediates\pre-dexed\debug\okhttp-3.2.0_e97c4d684058659f4c78fd063d89ce0d8b400297.jar" />
     </item>
 
 </items>

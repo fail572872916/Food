@@ -1,4 +1,4 @@
-#Thu Sep 28 17:17:58 CST 2017
+#Fri Nov 24 18:32:00 CST 2017
 file.9=E\:\\project\\Food\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_e355f2dcc1ef1a1e94102c0b811edec2e2f3c0ad\\classes.dex
 base.10=E\:\\project\\Food\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\okio-1.7.0_b18a8c4ef088002a1228949d7ea25693a69db659
 file.8=E\:\\project\\Food\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\library-2.4.0_dd460f45d27a359687729c3c169358b1eda3100b\\classes.dex

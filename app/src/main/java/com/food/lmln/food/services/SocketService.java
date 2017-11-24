@@ -68,6 +68,8 @@ public class SocketService extends Service {
 
     public boolean linkSocket = false;
     private InitTask initTask;
+    private int millis=15*1000;
+
     @Override
     public IBinder onBind(Intent arg0) {
         return iBackService;
@@ -341,7 +343,7 @@ public class SocketService extends Service {
                 mc.start();
             } else if (num < anInt1 && !linkSocket) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(millis);
                     if (initTask != null) {
                         releaseLastSocket(mSocket);
                         initTask.cancel(true);
