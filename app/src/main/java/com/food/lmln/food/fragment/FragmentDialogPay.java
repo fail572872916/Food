@@ -75,13 +75,13 @@ public class FragmentDialogPay extends DialogFragment {
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
     private String order_detail_value; //订单信息
-    private String order_detail_key = "order_detail_key";//订单
     public String registration_id_key = "registration_id_key"; //极光id
     public String registration_id_value = "";
     public String product_id_key = "product_id_key";
     public String product_id_value = null;
     public String time_key = "time_key";
-    public String order_key = "order_key"; //订单好
+
+    public String order_key = "order_key";
     public String time_value = null;
     private String mParam1;
     private View view;
@@ -95,6 +95,8 @@ public class FragmentDialogPay extends DialogFragment {
     OkHttpClient mOkHttpClient;
     private AdvancedCountdownTimer countdownTimer;
     private String deskNo;
+    private String order_id;
+    private String order_price;
 
     public static FragmentDialogPay newInstance() {
         Bundle args = new Bundle();
@@ -292,12 +294,19 @@ public class FragmentDialogPay extends DialogFragment {
      */
     private void postAsynHttp(String mId, String Rid, String Rtime, String order, String url, final int type) {
         avloadingIndicatorView_BallClipRotatePulse.setVisibility(View.VISIBLE);
+        Log.d(TAG, url);
+
         mOkHttpClient = new OkHttpClient();
+        /**
+         * 价格
+         * 订单
+         */
+        order_id = "order_id";
+        order_price = "order_price";
         RequestBody formBody = new FormBody.Builder()
-                .add(product_id_key, mId)
+                .add(order_price, mId)
                 .add(registration_id_key, Rid)
-                .add(time_key, Rtime)
-                .add(order_key, order)
+                .add(order_id, order)
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -324,6 +333,7 @@ public class FragmentDialogPay extends DialogFragment {
                 String url;
                 String order = null;
                 JSONObject josn;
+                Log.d("FragmentDialogPay", str);
                 try {
                     josn = new JSONObject(str);
                     boolean flag = josn.getBoolean("result");

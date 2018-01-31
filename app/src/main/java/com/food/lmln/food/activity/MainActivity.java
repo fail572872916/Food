@@ -340,7 +340,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.myContent, fragment1);
         transaction.commit();
-        isFlag(true);
+//        isFlag(true);
         SocketService.HOST = deskIp;
         fragmentDialogPay.setOnDialogListener(new FragmentDialogPay.OnDialogListener() {
             @Override
@@ -397,7 +397,6 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
         //取消注册事件
         EventBus.getDefault().unregister(this);
     }
-
     /**
      * 临时下单
      */
@@ -709,7 +708,7 @@ public class MainActivity extends SocketBaseActivity implements View.OnClickList
                 case R.id.bt_order_add_settlement:
                     if (!NetWorkCheck.isNetworkAvailable(MainActivity.this)) {
                         Toast.makeText(MainActivity.this, +R.string.netrock_check, Toast.LENGTH_SHORT).show();
-                    } else if (socketSend(Constants.HEART_BEAT_STRING_RECEIVE)) {
+                    } else  {
 //                        bt_order_add_settlement.setEnabled(false);
                         isFlag(true);
                         selectOrderMoney();

@@ -31,9 +31,10 @@ import java.util.Arrays;
 
 /**
  * Socket service
- *  @author Weli
- *  @time 2017-11-17  9:55
- *  @describe
+ *
+ * @author Weli
+ * @time 2017-11-17  9:55
+ * @describe
  */
 public class SocketService extends Service {
     private static final String TAG = "SocketService";
@@ -68,12 +69,13 @@ public class SocketService extends Service {
 
     public boolean linkSocket = false;
     private InitTask initTask;
-    private int millis=15*1000;
+    private int millis = 15 * 1000;
 
     @Override
     public IBinder onBind(Intent arg0) {
         return iBackService;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,6 +85,7 @@ public class SocketService extends Service {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mc = new MyCountDownTimer(dayMill, ss).getInstance();
     }
+
     public boolean sendMsg(String msg) {
         if (null == mSocket || null == mSocket.get()) {
             return false;
@@ -105,6 +108,7 @@ public class SocketService extends Service {
         }
         return true;
     }
+
     /**
      * 初始化socket
      *
@@ -296,6 +300,7 @@ public class SocketService extends Service {
             }
         }
     }
+
     class MyCountDownTimer extends CountDownTimer {
         private MyCountDownTimer myCountDownTimer;
         /**
@@ -305,6 +310,7 @@ public class SocketService extends Service {
          */
         private int anInt = 7;
         private int anInt1 = 3;
+
         private synchronized MyCountDownTimer getInstance() {
             if (myCountDownTimer == null) {
                 myCountDownTimer = new MyCountDownTimer(dayMill, ss);
@@ -324,6 +330,7 @@ public class SocketService extends Service {
             super(millisInFuture, countDownInterval);
         }
 
+
         @Override
         public void onFinish() {
             mc.cancel();
@@ -335,7 +342,8 @@ public class SocketService extends Service {
         @Override
         public void onTick(long millisUntilFinished) {
             int num = (int) (millisUntilFinished / 1000);
-            if (num == anInt) {
+
+            if (num == anInt1) {
                 linkSocket = false;
 
             } else if (millisUntilFinished == 0) {
@@ -343,8 +351,11 @@ public class SocketService extends Service {
                 mc.start();
             } else if (num < anInt1 && !linkSocket) {
                 try {
+                    Log.d(TAG, "start_time");
                     Thread.sleep(millis);
+                    Log.d(TAG, "end_time");
                     if (initTask != null) {
+                        Log.d(TAG, "run");
                         releaseLastSocket(mSocket);
                         initTask.cancel(true);
                         initTask = new InitTask();
