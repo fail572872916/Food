@@ -1,5 +1,4 @@
 package com.food.lmln.food.activity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.food.lmln.food.R;
 import com.food.lmln.food.adapter.FoodOrderAdapter;
 import com.food.lmln.food.adapter.FoodTypeMenuAdapter;
@@ -52,27 +50,23 @@ import com.food.lmln.food.view.MyPopWindow;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import static com.food.lmln.food.db.Constants.DESK_TEMP;
 import static com.food.lmln.food.db.Constants.ORDERTABLE;
 import static com.food.lmln.food.db.Constants.PASSWORD;
 import static com.food.lmln.food.db.Constants.SQLURL;
 import static com.food.lmln.food.db.Constants.USERNAME;
 import static com.food.lmln.food.utils.OrderUtils.getOrderId;
-
 /**
  * @author Weli
  * @time 2017-11-14  13:05
